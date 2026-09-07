@@ -1,0 +1,2 @@
+import InfoPage from "@/components/layout/InfoPage";
+export default function MedicalDisclaimerPage() { return <InfoPage eyebrow="ROOTS / LEGAL" title="Medical Disclaimer" intro="ROOTS-AI is an educational biological assessment and reporting service." sections={[{ title: "Not medical advice", text: "Information in the service does not diagnose, treat, cure, or prevent any disease or condition." }, { title: "Talk to a professional", text: "Discuss health concerns and decisions with a qualified healthcare professional." }]} />; }

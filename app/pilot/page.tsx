@@ -1,0 +1,2 @@
+import InfoPage from "@/components/layout/InfoPage";
+export default function PilotPage() { return <InfoPage eyebrow="ROOTS / PILOT" title="Help shape the next layer." intro="Pilot participation is optional and separately consented. Your feedback helps us improve the experience." sections={[{ title: "What pilots test", text: "We test usability, report comprehension, and the responsible presentation of validated signals." }, { title: "Separate consent", text: "Service access is never conditioned on research or pilot participation." }]} />; }

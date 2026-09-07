@@ -1,0 +1,2 @@
+import InfoPage from "@/components/layout/InfoPage";
+export default function CookiesPage() { return <InfoPage eyebrow="ROOTS / LEGAL" title="Cookie Notice" intro="We use necessary technologies to operate the service and limited analytics only where your choices allow it." sections={[{ title: "Necessary cookies", text: "These support security, navigation, and session functionality." }, { title: "Your choices", text: "You can manage optional analytics preferences through your browser settings." }]} />; }

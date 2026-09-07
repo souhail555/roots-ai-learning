@@ -1,0 +1,2 @@
+import InfoPage from "@/components/layout/InfoPage";
+export default function TermsPage() { return <InfoPage eyebrow="ROOTS / LEGAL" title="Terms of Use" intro="These terms describe the conditions for using the ROOTS-AI educational assessment and reporting service." sections={[{ title: "Educational service", text: "The service provides educational information and is not medical advice, diagnosis, or treatment." }, { title: "Your responsibility", text: "Provide accurate responses and protect any secure links or account information associated with your assessment." }]} />; }

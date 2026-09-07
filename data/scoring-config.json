@@ -1,0 +1,24 @@
+{
+  "categories": {
+    "identity": {
+      "label": "Identity & Roots",
+      "maxPerQuestion": 5,
+      "weight": 1
+    },
+    "learning": {
+      "label": "Learning Style",
+      "maxPerQuestion": 5,
+      "weight": 1
+    },
+    "motivation": {
+      "label": "Goals & Motivation",
+      "maxPerQuestion": 5,
+      "weight": 1
+    }
+  },
+  "bands": [
+    { "min": 0, "max": 40, "label": "Emerging" },
+    { "min": 41, "max": 70, "label": "Developing" },
+    { "min": 71, "max": 100, "label": "Strong" }
+  ]
+}

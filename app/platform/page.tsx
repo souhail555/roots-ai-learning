@@ -1,0 +1,6 @@
+const available = [["Assessment", "Structured assessment experience."], ["AI Engine", "Governed report engine."]];
+const upcoming = [["Labs", "Laboratory data integration."], ["DNA", "DNA and epigenetic insights."], ["Microbiome", "Microbiome analysis."], ["Wearables", "Wearable integrations."], ["Biological Twin", "ROOTS Biological Twin™."]];
+
+export default function PlatformPage() {
+  return <main className="marketing-page inner-page"><section className="page-heading compact-heading"><p className="phase-label">Phase 1</p><h1>Available now</h1></section><section className="platform-grid available-grid">{available.map(([title, text]) => <article key={title}><span className="status available">Available</span><h2>{title}</h2><p>{text}</p></article>)}</section><section className="page-heading platform-heading"><h2>Coming soon</h2></section><section className="platform-grid coming-grid">{upcoming.map(([title, text]) => <article key={title}><span className="status">Coming Soon</span><h2>{title}</h2><p>Coming Soon: {text}</p></article>)}</section><section className="architecture"><h2>Architecture principle</h2><p>Future layers will expand biological context only after separate validation, governance and implementation.</p></section></main>;
+}

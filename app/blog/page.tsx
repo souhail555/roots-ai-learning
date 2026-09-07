@@ -1,0 +1,2 @@
+import InfoPage from "@/components/layout/InfoPage";
+export default function BlogPage() { return <InfoPage eyebrow="ROOTS / JOURNAL" title="Ideas for clearer context." intro="Notes on biological context, responsible AI, and the conversations that data can support." sections={[{ title: "Why context matters", text: "A number becomes useful when it is presented with its source, limits, and meaning." }, { title: "Designing for trust", text: "Consent and transparent language are product features, not afterthoughts." }]} />; }

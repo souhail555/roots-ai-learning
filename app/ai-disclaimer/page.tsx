@@ -1,0 +1,2 @@
+import InfoPage from "@/components/layout/InfoPage";
+export default function AiDisclaimerPage() { return <InfoPage eyebrow="ROOTS / LEGAL" title="AI Disclaimer" intro="AI is used in a limited and governed role within the ROOTS-AI reporting workflow." sections={[{ title: "What AI does", text: "AI assists with language generation from approved inputs and rules." }, { title: "What AI does not do", text: "AI does not diagnose, prescribe, change scores, or invent participant facts." }]} />; }
