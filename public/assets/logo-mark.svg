@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 40" role="img" aria-labelledby="title desc">
+  <title id="title">ROOTS-AI mark</title>
+  <desc id="desc">ROOTS-AI root mark without wordmark</desc>
+  <path d="M16 36S5 25 5 14C5 6 10 2 16 2s11 4 11 12c0 11-11 22-11 22Z" fill="#FFFFFF"/>
+  <path d="M16 36V2M8 12h16M8 20h16" fill="none" stroke="#9EDBD3" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="16" cy="14" r="3" fill="#1A2A4A"/>
+</svg>

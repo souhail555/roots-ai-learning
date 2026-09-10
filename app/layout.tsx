@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Roots | AI Learning",
-  description: "A reflective learning map for your roots, learning style, and goals.",
+  title: "ROOTS-AI™ | Biological Intelligence Platform",
+  description: "A governed biological intelligence assessment and reporting platform.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -25,7 +25,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col"><Header />{children}<Footer /></body>
+      <body className="min-h-full flex flex-col"><a className="skip-link" href="#main-content">Skip to main content</a><Header />{children}<Footer /></body>
     </html>
   );
 }
