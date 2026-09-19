@@ -19,7 +19,7 @@ export default function AssessmentStartPage() {
       <h1>Your ROOTS Biological Assessment</h1>
       <p className="route-lede">Answer 73 questions across 13 short modules. Most people finish in about 10–12 minutes. You can save, pause and resume securely.</p>
       <form className="route-form" onSubmit={startAssessment}>
-        <label htmlFor="email">Email address</label>
+        <label htmlFor="email">Email Address</label>
         <input id="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" required />
         <button className="continue-button" type="submit">Begin Assessment</button>
       </form>
