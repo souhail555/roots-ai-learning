@@ -1,10 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ROOTS-AI™ Biological Intelligence Platform
+
+A governed biological intelligence assessment and reporting platform that turns structured assessments into comprehensive biological intelligence reports.
+
+## Project Overview
+
+ROOTS-AI™ helps users understand patterns in metabolism, hunger, sleep, circadian timing, stress, inflammation-related signals, and perceived biological resistance through a structured 73-question assessment across 13 biological domains.
+
+### Key Features
+
+- **73 Canonical Questions**: Structured assessment across 13 biological modules
+- **Deterministic Scoring**: AI assists with explanation, not calculation
+- **Secure Session Management**: HTTPOnly cookies with 15-minute expiry
+- **Autosave Functionality**: Automatic progress saving with status indicators
+- **Resume Capability**: Secure session restoration after leaving
+- **Access Isolation**: Cross-user data protection and session validation
+- **WCAG 2.1 AA Compliant**: Accessible design with keyboard navigation support
+
+### Biological Domains
+
+1. **MR** - Metabolic Resistance™
+2. **HS** - Hunger & Satiety Signals™
+3. **SR** - Sleep Recovery Index™
+4. **CH** - Circadian Health Score™
+5. **SL** - Stress Load™
+6. **IB** - Inflammation Burden Index™
+7. **BS** - Biological Safety Signals™
+
+## Tech Stack
+
+- **Framework**: Next.js 16.3.4 with React 19.2.8
+- **Styling**: Tailwind CSS 4
+- **Build Tool**: Turbopack
+- **Language**: TypeScript
+- **Deployment**: Vercel
+- **Database**: In-memory Map storage (Supabase integration planned)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+ 
+- npm, yarn, pnpm, or bun
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/souhail555/roots-ai-learning.git
+cd roots-ai-learning
+
+# Install dependencies
+npm install
+# or
+yarn install
+# or
+pnpm install
+# or
+bun install
+```
+
+### Development
+
+```bash
+# Run the development server
 npm run dev
 # or
 yarn dev
@@ -16,21 +74,128 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Production Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Build for production
+npm run build
+# or
+yarn build
+# or
+pnpm build
+# or
+bun build
 
-## Learn More
+# Start production server
+npm start
+# or
+yarn start
+# or
+pnpm start
+# or
+bun start
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+roots-ai-learning/
+├── app/                    # Next.js app directory
+│   ├── assessment/         # Assessment routes and pages
+│   ├── api/               # API routes for sessions and answers
+│   ├── layout.tsx         # Root layout with header/footer
+│   ├── page.tsx           # Homepage with biological visualization
+│   └── globals.css        # Global styles and CSS variables
+├── components/            # React components
+│   └── layout/           # Header, Footer, and other layout components
+├── lib/                  # Core business logic
+│   ├── canonicalAssessment.ts  # 73 canonical questions across 13 modules
+│   ├── db.ts             # Session management and data storage
+│   ├── scoring.ts        # Deterministic scoring logic
+│   └── utils.ts          # Utility functions
+├── docs/                 # Documentation
+│   └── m1/              # M1 compliance documentation
+├── public/              # Static assets (logos, images)
+└── package.json         # Dependencies and scripts
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## API Routes
 
-## Deploy on Vercel
+### Session Management
+- `POST /api/assessment/sessions` - Create new assessment session
+- `GET /api/assessment/sessions/[sessionId]` - Get session details
+- `POST /api/assessment/sessions/[sessionId]/answers` - Save assessment answers
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Assessment Routes
+- `/assessment` - Assessment start page
+- `/assessment/[sessionId]/module/[moduleId]` - Assessment question pages
+- `/assessment/[sessionId]/resume` - Resume saved assessment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## M1 Compliance
+
+This project implements all M1 requirements according to the Vendor Package v1.4:
+
+- ✅ **G0–G2 Closure**: Technical foundation established
+- ✅ **ROOTS-Owned Repository**: Code in controlled GitHub repository
+- ✅ **Architecture**: Next.js with proper API structure
+- ✅ **Authentication**: HTTPOnly session cookies with 15-minute expiry
+- ✅ **Canonical Assessment Shell**: 73 questions across 13 modules
+- ✅ **Autosave**: Debounced autosave with status indicators
+- ✅ **Resume**: Secure session restoration
+- ✅ **Access Isolation**: Session-based data protection
+- ✅ **M1 Traceability**: Complete requirement → implementation mapping
+
+See `docs/m1/M1_FINAL_UNIFIED_PACKAGE.md` for comprehensive M1 documentation.
+
+## Security Features
+
+- **Session Security**: HTTPOnly, sameSite cookies
+- **XSS Protection**: Input sanitization and React's built-in protections
+- **CSRF Protection**: Session-based validation
+- **Data Isolation**: Session-based data separation
+- **Access Control**: API route validation
+
+## Accessibility
+
+- WCAG 2.1 AA compliant
+- Keyboard navigation support
+- Screen reader compatibility
+- Focus management
+- ARIA labels and roles
+- Skip navigation links
+
+## Deployment
+
+### Vercel Deployment
+
+The project is deployed on Vercel: https://roots-ai-learning.vercel.app/
+
+```bash
+# Deploy to Vercel
+vercel deploy
+```
+
+### Environment Variables
+
+No environment variables required for current implementation. Future Supabase integration will require:
+- `SUPABASE_URL`
+- `SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+
+## Contributing
+
+This is a controlled package following ROOTS-AI development standards. All changes must align with the Vendor Package v1.4 specifications.
+
+## License
+
+© 2026 ROOTS AI HEALTH SYSTEMS, Inc. All rights reserved.
+
+## Support
+
+For issues or questions, refer to the M1 documentation in `docs/m1/` or contact the development team.
+
+---
+
+**Version**: 1.0.0  
+**M1 Status**: Functionally Complete  
+**Production URL**: https://roots-ai-learning.vercel.app/

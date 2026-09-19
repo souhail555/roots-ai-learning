@@ -1,0 +1,19 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Brain with circuit patterns -->
+  <g transform="translate(5, 5)">
+    <!-- Brain outline -->
+    <path d="M15 5C10 5 5 10 5 15C5 20 10 25 15 25C20 25 25 20 25 15C25 10 20 5 15 5Z" stroke="#ADD8E6" stroke-width="1.5" fill="none"/>
+    
+    <!-- Circuit patterns -->
+    <path d="M13 7L10 10M13 9L9 12M13 11L8 14M13 13L7 16" stroke="#ADD8E6" stroke-width="0.8"/>
+    <path d="M17 7L20 10M17 9L21 12M17 11L22 14M17 13L23 16" stroke="#ADD8E6" stroke-width="0.8"/>
+    
+    <!-- Z letter -->
+    <path d="M7 19L23 19L7 31L23 31" stroke="#ADD8E6" stroke-width="1.5" fill="none"/>
+    
+    <!-- Roots -->
+    <path d="M15 31C13 33 10 35 7 37C5 39 3 41 3 43" stroke="#ADD8E6" stroke-width="1" fill="none"/>
+    <path d="M15 31C17 33 20 35 23 37C25 39 27 41 27 43" stroke="#ADD8E6" stroke-width="1" fill="none"/>
+    <path d="M15 31C15 33 15 35 15 37C15 39 15 41 15 43" stroke="#ADD8E6" stroke-width="1" fill="none"/>
+  </g>
+</svg>
