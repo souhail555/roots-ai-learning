@@ -23,7 +23,7 @@ export default function InfoPage({ eyebrow, title, intro, sections }: InfoPagePr
           </article>
         ))}
       </section>
-      <div className="center-actions"><Link href="/assessment" className="primary-button">Start Your Assessment</Link></div>
+      <div className="center-actions"><Link href="/assessment/start" className="primary-button">Start Your Assessment</Link></div>
     </main>
   );
 }

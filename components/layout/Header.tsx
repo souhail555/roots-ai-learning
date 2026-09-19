@@ -17,6 +17,7 @@ export default function Header() {
     ["Research", "/research"],
     ["About", "/about"],
   ];
+  const mobileLinks = [["Home", "/"], ...links, ["Healthcare Professionals", "/healthcare-professionals"]];
 
   const closeMenu = () => {
     setMenuOpen(false);
@@ -66,16 +67,16 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="site-header-inner">
-        <Link href="/" className="site-logo" aria-label="ROOTS-AI home" onClick={closeMenu}><img src="/assets/ROOTS-wordmark-dark.svg" alt="ROOTS-AI" /></Link>
+        <Link href="/" className="site-logo" aria-label="ROOTS-AI home" onClick={closeMenu}><img src="/assets/logo-mark.svg" alt="ROOTS-AI" /></Link>
         <nav className="site-nav" aria-label="Main navigation">
           {links.map(([label, href]) => <Link key={href} href={href} className={pathname === href ? "active" : ""}>{label}</Link>)}
           <button type="button" className="more-nav-button" aria-expanded={moreOpen} aria-controls="more-menu" onClick={() => setMoreOpen((open) => !open)}>More</button>
-          {moreOpen && <div id="more-menu" className="more-menu"><Link href="/healthcare-professionals" onClick={() => setMoreOpen(false)}>Healthcare Professionals</Link><Link href="/pilot" onClick={() => setMoreOpen(false)}>Pilot Program</Link><Link href="/contact" onClick={() => setMoreOpen(false)}>Contact</Link><Link href="/blog" onClick={() => setMoreOpen(false)}>Blog</Link></div>}
+          {moreOpen && <div id="more-menu" className="more-menu"><Link href="/pilot" onClick={() => setMoreOpen(false)}>Pilot Program</Link><Link href="/blog" onClick={() => setMoreOpen(false)}>Blog</Link><Link href="/contact" onClick={() => setMoreOpen(false)}>Contact</Link></div>}
         </nav>
-        <Link href="/assessment/start" className="header-cta">Start Your Assessment</Link>
+        <Link href="/assessment" className="header-cta">Start Your Assessment</Link>
         <button ref={menuButtonRef} className="mobile-menu-button" type="button" aria-label={menuOpen ? "Close navigation" : "Open navigation"} aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={() => setMenuOpen((open) => !open)}>{menuOpen ? "×" : "☰"}</button>
       </div>
-      {menuOpen && <div id="mobile-navigation" className="mobile-navigation" role="dialog" aria-modal="true" aria-label="Mobile navigation"><div className="mobile-navigation-panel"><div className="mobile-navigation-head"><strong>ROOTS-AI™</strong><button ref={closeButtonRef} type="button" aria-label="Close navigation" onClick={closeMenu}>×</button></div><nav aria-label="Mobile main navigation">{[["Home", "/"], ...links, ["About", "/about"], ["Pilot Program", "/pilot"], ["Contact", "/contact"], ["Blog", "/blog"], ["Privacy", "/privacy"], ["Terms", "/terms"], ["Cookies", "/cookies"], ["Medical Disclaimer", "/medical-disclaimer"], ["AI Disclaimer", "/ai-disclaimer"]].map(([label, href]) => <Link key={href} href={href} onClick={closeMenu}>{label}</Link>)}<Link href="/assessment/start" className="mobile-navigation-cta" onClick={closeMenu}>Start Your Assessment</Link></nav></div><button className="mobile-navigation-scrim" type="button" aria-label="Close navigation" onClick={closeMenu} /></div>}
+      {menuOpen && <div id="mobile-navigation" className="mobile-navigation" role="dialog" aria-modal="true" aria-label="Mobile navigation"><div className="mobile-navigation-panel"><div className="mobile-navigation-head"><strong>ROOTS-AI™</strong><button ref={closeButtonRef} type="button" aria-label="Close navigation" onClick={closeMenu}>×</button></div><nav aria-label="Mobile main navigation">{[...mobileLinks, ["Pilot Program", "/pilot"], ["Contact", "/contact"], ["Blog", "/blog"], ["Privacy", "/privacy"], ["Terms", "/terms"], ["Cookies", "/cookies"], ["Medical Disclaimer", "/medical-disclaimer"], ["AI Disclaimer", "/ai-disclaimer"]].map(([label, href]) => <Link key={href} href={href} onClick={closeMenu}>{label}</Link>)}<Link href="/assessment" className="mobile-navigation-cta" onClick={closeMenu}>Start Your Assessment</Link></nav></div><button className="mobile-navigation-scrim" type="button" aria-label="Close navigation" onClick={closeMenu} /></div>}
     </header>
   );
 }

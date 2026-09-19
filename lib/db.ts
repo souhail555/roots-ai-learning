@@ -1,12 +1,10 @@
-import sqlite3 from "sqlite3";
-import path from "path";
-import fs from "fs";
-
 export interface SessionRecord {
   id: string;
   createdAt: string;
-  answers: Record<string, number>;
+  email?: string;
+  answers: Record<string, string | string[]>;
   completedModules: string[];
+  updatedAt?: string;
 }
 
 export interface ReportRecord {
@@ -17,96 +15,44 @@ export interface ReportRecord {
   createdAt: string;
 }
 
-const DB_DIR = path.join(process.cwd(), "data");
-const DB_PATH = path.join(DB_DIR, "app.db");
-
-let dbInstance: sqlite3.Database | null = null;
-
-function getDb(): sqlite3.Database {
-  if (dbInstance) return dbInstance;
-
-  if (!fs.existsSync(DB_DIR)) fs.mkdirSync(DB_DIR, { recursive: true });
-
-  const db = new sqlite3.Database(DB_PATH);
-  db.serialize(() => {
-    db.run(`
-      CREATE TABLE IF NOT EXISTS sessions (
-        id TEXT PRIMARY KEY,
-        created_at TEXT NOT NULL,
-        answers TEXT NOT NULL DEFAULT '{}',
-        completed_modules TEXT NOT NULL DEFAULT '[]'
-      )
-    `);
-    db.run(`
-      CREATE TABLE IF NOT EXISTS reports (
-        id TEXT PRIMARY KEY,
-        session_id TEXT NOT NULL,
-        scores TEXT NOT NULL,
-        band TEXT NOT NULL,
-        created_at TEXT NOT NULL
-      )
-    `);
-  });
-
-  dbInstance = db;
-  return db;
-}
-
-function run(sql: string, params: unknown[] = []): Promise<void> {
-  return new Promise((resolve, reject) => {
-    getDb().run(sql, params, (err) => (err ? reject(err) : resolve()));
-  });
-}
-
-function get<T>(sql: string, params: unknown[] = []): Promise<T | undefined> {
-  return new Promise((resolve, reject) => {
-    getDb().get(sql, params, (err, row) => (err ? reject(err) : resolve(row as T)));
-  });
-}
+const sessions = new Map<string, SessionRecord>();
+const reports = new Map<string, ReportRecord>();
 
 export async function createSession(id: string): Promise<SessionRecord> {
-  const createdAt = new Date().toISOString();
-  await run(
-    "INSERT INTO sessions (id, created_at, answers, completed_modules) VALUES (?, ?, ?, ?)",
-    [id, createdAt, "{}", "[]"]
-  );
-  return { id, createdAt, answers: {}, completedModules: [] };
+  const timestamp = new Date().toISOString();
+  const session: SessionRecord = { id, createdAt: timestamp, answers: {}, completedModules: [], updatedAt: timestamp };
+  sessions.set(id, session);
+  return session;
 }
 
 export async function getSession(id: string): Promise<SessionRecord | null> {
-  const row = await get<{
-    id: string;
-    created_at: string;
-    answers: string;
-    completed_modules: string;
-  }>("SELECT * FROM sessions WHERE id = ?", [id]);
-  if (!row) return null;
-  return {
-    id: row.id,
-    createdAt: row.created_at,
-    answers: JSON.parse(row.answers),
-    completedModules: JSON.parse(row.completed_modules),
-  };
+  return sessions.get(id) ?? null;
+}
+
+export async function setSessionEmail(sessionId: string, email: string): Promise<void> {
+  const session = sessions.get(sessionId);
+  if (!session) throw new Error(`Session ${sessionId} not found`);
+  session.email = email;
+  session.updatedAt = new Date().toISOString();
 }
 
 export async function saveModuleAnswers(
   sessionId: string,
   moduleId: string,
-  answers: Record<string, number>
+  answers: Record<string, string | string[]>
 ): Promise<SessionRecord> {
-  const session = await getSession(sessionId);
+  const session = sessions.get(sessionId);
   if (!session) throw new Error(`Session ${sessionId} not found`);
 
-  const mergedAnswers = { ...session.answers, ...answers };
-  const completedModules = Array.from(new Set([...session.completedModules, moduleId]));
-
-  await run("UPDATE sessions SET answers = ?, completed_modules = ? WHERE id = ?", [
-    JSON.stringify(mergedAnswers),
-    JSON.stringify(completedModules),
-    sessionId,
-  ]);
-
-  return { ...session, answers: mergedAnswers, completedModules };
+  const updatedAt = new Date().toISOString();
+  const updated: SessionRecord = {
+    ...session,
+    answers: { ...session.answers, ...answers },
+    completedModules: Array.from(new Set([...session.completedModules, moduleId])),
+    updatedAt,
+  };
+  sessions.set(sessionId, updated);
+  return updated;
 }
 
 export async function createReport(
@@ -115,28 +61,11 @@ export async function createReport(
   scores: Record<string, number>,
   band: string
 ): Promise<ReportRecord> {
-  const createdAt = new Date().toISOString();
-  await run(
-    "INSERT INTO reports (id, session_id, scores, band, created_at) VALUES (?, ?, ?, ?, ?)",
-    [id, sessionId, JSON.stringify(scores), band, createdAt]
-  );
-  return { id, sessionId, scores, band, createdAt };
+  const report = { id, sessionId, scores, band, createdAt: new Date().toISOString() };
+  reports.set(id, report);
+  return report;
 }
 
 export async function getReport(id: string): Promise<ReportRecord | null> {
-  const row = await get<{
-    id: string;
-    session_id: string;
-    scores: string;
-    band: string;
-    created_at: string;
-  }>("SELECT * FROM reports WHERE id = ?", [id]);
-  if (!row) return null;
-  return {
-    id: row.id,
-    sessionId: row.session_id,
-    scores: JSON.parse(row.scores),
-    band: row.band,
-    createdAt: row.created_at,
-  };
+  return reports.get(id) ?? null;
 }
