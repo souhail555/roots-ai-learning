@@ -31,73 +31,8 @@ const steps = [
 ];
 
 function ReferenceHeroVisual() {
-  const [biologicalState, setBiologicalState] = useState(61);
-  const [stateLabel, setStateLabel] = useState("STRAINED");
-  const [showControls, setShowControls] = useState(false);
-  
   const nodes = [["MR", "Metabolic", "node-left node-mr"], ["HU", "Hunger", "node-top node-hu"], ["SR", "Sleep", "node-right node-sr"], ["CH", "Circadian", "node-right node-ch"], ["SL", "Stress", "node-right node-sl"], ["IN", "Inflammation", "node-bottom node-in"], ["SA", "Safety", "node-left node-sa"]];
-  
-  const getStateLabel = (score: number) => {
-    if (score <= 24) return "OPTIMIZED";
-    if (score <= 49) return "COMPENSATING";
-    if (score <= 74) return "STRAINED";
-    return "DYSREGULATED";
-  };
-  
-  const handleStateChange = (newState: number) => {
-    setBiologicalState(newState);
-    setStateLabel(getStateLabel(newState));
-  };
-  
-  return (
-    <div className="company-hero-visual orbit-hero-visual" aria-label="Seven connected biological domains surrounding Biological State">
-      <div className="orbit-plane orbit-plane-one" />
-      <div className="orbit-plane orbit-plane-two" />
-      <div className="orbit-plane orbit-plane-three" />
-      <div className="orbit-grid" />
-      <div className="company-hero-state">
-        <small>BIOLOGICAL</small>
-        <strong>STATE</strong>
-        <em>{biologicalState} / 100</em>
-        <b>{stateLabel}</b>
-      </div>
-      {nodes.map(([code, label, className]) => (
-        <div className={`orbit-domain-node ${className}`} key={code}>
-          <strong>{code}</strong>
-          <span>{label}</span>
-        </div>
-      ))}
-      <button 
-        className="hero-controls-toggle" 
-        onClick={() => setShowControls(!showControls)}
-        aria-label="Toggle controls"
-      >
-        ⚙️
-      </button>
-      {showControls && (
-        <div className="hero-controls-panel">
-          <label>
-            Biological State Score:
-            <input 
-              type="range" 
-              min="0" 
-              max="100" 
-              value={biologicalState} 
-              onChange={(e) => handleStateChange(Number(e.target.value))}
-            />
-            <span>{biologicalState}</span>
-          </label>
-          <div className="control-buttons">
-            <button onClick={() => handleStateChange(0)}>0</button>
-            <button onClick={() => handleStateChange(25)}>25</button>
-            <button onClick={() => handleStateChange(50)}>50</button>
-            <button onClick={() => handleStateChange(75)}>75</button>
-            <button onClick={() => handleStateChange(100)}>100</button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+  return <div className="company-hero-visual orbit-hero-visual" aria-label="Seven connected biological domains surrounding Biological State"><div className="orbit-plane orbit-plane-one" /><div className="orbit-plane orbit-plane-two" /><div className="orbit-plane orbit-plane-three" /><div className="orbit-grid" /><div className="company-hero-state"><small>BIOLOGICAL</small><strong>STATE</strong><em>61 / 100</em><b>STRAINED</b></div>{nodes.map(([code, label, className]) => <div className={`orbit-domain-node ${className}`} key={code}><strong>{code}</strong><span>{label}</span></div>)}</div>;
 }
 
 export default function Home() {

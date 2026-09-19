@@ -379,19 +379,8 @@ body { background: #fafaf8; color: #1a2a4a; }
 .feature-card, .step-card { border-color: #d9e0e8; border-radius: 7px; }.feature-card { border-top-color: #2b8a86; }.feature-card h3, .step-card h3 { color: #1a2a4a; }
 .domain-section { background: #f4f5f3; }.report-section { background: #eef1f4; }.report-shell { border-color: #d9e0e8; box-shadow: 14px 16px 0 rgba(26, 42, 74, .08); }
 .pilot-layout ul { background: #eef1f4; border-color: #2b8a86; color: #52657d; }.final-cta { background: #1a2a4a; }
-.hero-controls-toggle { position: absolute; top: 10px; right: 10px; z-index: 10; width: 32px; height: 32px; border: none; border-radius: 50%; background: rgba(255, 255, 255, 0.9); cursor: pointer; font-size: 16px; display: grid; place-items: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); transition: all 0.2s ease; }
-.hero-controls-toggle:hover { background: white; transform: scale(1.1); }
-.hero-controls-panel { position: absolute; top: 50px; right: 10px; z-index: 10; background: white; border-radius: 8px; padding: 16px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); min-width: 200px; }
-.hero-controls-panel label { display: block; margin-bottom: 12px; font-size: 12px; font-weight: 600; color: #1a2a4a; }
-.hero-controls-panel input[type="range"] { width: 100%; margin: 8px 0; }
-.hero-controls-panel span { margin-left: 8px; font-weight: bold; color: #d4a849; }
-.control-buttons { display: flex; gap: 4px; flex-wrap: wrap; }
-.control-buttons button { flex: 1; min-width: 36px; padding: 6px 8px; border: 1px solid #d9e0e8; border-radius: 4px; background: #f8fafb; color: #1a2a4a; cursor: pointer; font-size: 11px; font-weight: 600; transition: all 0.2s ease; }
-.control-buttons button:hover { background: #e9eff5; border-color: #d4a849; }
-.control-buttons button:active { background: #d4a849; color: white; }
-
 @media (max-width: 900px) { .hero-layout { grid-template-columns: 1fr; padding-block: 54px 68px; }.company-hero-visual { min-height: 510px; } }
-@media (max-width: 750px) { .site-header { height: auto; }.site-header-inner { width: calc(100% - 32px); min-height: 56px; }.site-logo { min-height: 56px; }.site-logo img { width: 31px; height: 40px; }.header-cta { margin-left: auto; }.pub-shell { width: calc(100% - 32px); }.pub-page .hero-copy h1 { font-size: 46px; }.company-hero-visual { min-height: 390px; }.company-hero-state { width: 104px; height: 104px; }.company-hero-state strong { font-size: 27px; }.trust-grid { grid-template-columns: repeat(2, 1fr); }.trust-grid span { min-height: 66px; }.pub-section, .report-section { padding-block: 70px; } .hero-controls-panel { right: 5px; min-width: 160px; } }
+@media (max-width: 750px) { .site-header { height: auto; }.site-header-inner { width: calc(100% - 32px); min-height: 56px; }.site-logo { min-height: 56px; }.site-logo img { width: 31px; height: 40px; }.header-cta { margin-left: auto; }.pub-shell { width: calc(100% - 32px); }.pub-page .hero-copy h1 { font-size: 46px; }.company-hero-visual { min-height: 390px; }.company-hero-state { width: 104px; height: 104px; }.company-hero-state strong { font-size: 27px; }.trust-grid { grid-template-columns: repeat(2, 1fr); }.trust-grid span { min-height: 66px; }.pub-section, .report-section { padding-block: 70px; } }
 
 /* M1 assessment and report rhythm */
 .route-shell { width: min(760px, calc(100% - 48px)); padding-block: 72px 104px; color: #1a2a4a; }
