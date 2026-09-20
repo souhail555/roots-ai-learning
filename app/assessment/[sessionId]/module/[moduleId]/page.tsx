@@ -28,6 +28,15 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
     const formData = new FormData(form);
     const answers: Record<string, string | string[]> = {};
     module.questions.forEach((question) => {
+      if (question.type === "decimal_with_unit") {
+        // Package the numeric value and the canonical unit into one answer.
+        const value = String(formData.get(`${question.id}__value`) ?? "").trim();
+        const unit = String(formData.get(`${question.id}__unit`) ?? "").trim();
+        if (value !== "" && unit !== "") {
+          answers[question.id] = JSON.stringify({ value: Number(value), unit });
+        }
+        return;
+      }
       const values = formData.getAll(question.id).map(String);
       if (values.length === 1) answers[question.id] = values[0];
       if (values.length > 1) answers[question.id] = values;
@@ -50,6 +59,20 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
     if (saveTimer.current) clearTimeout(saveTimer.current);
     setSaveStatus("saving");
     saveTimer.current = setTimeout(() => { void persistAnswers(collectAnswers(form)); }, 700);
+  }
+
+  /** Enforce NONE / N/A mutual exclusivity at the point of interaction. */
+  function onChange(event: FormEvent<HTMLFormElement>) {
+    const target = event.target as HTMLInputElement;
+    if (target.type === "checkbox" && target.name.startsWith("Q")) {
+      const boxes = Array.from(event.currentTarget.querySelectorAll<HTMLInputElement>(`input[type=checkbox][name="${target.name}"]`));
+      if (target.checked && target.dataset.exclusive === "true") {
+        boxes.filter((box) => box !== target).forEach((box) => (box.checked = false));
+      } else if (target.checked) {
+        boxes.filter((box) => box.dataset.exclusive === "true").forEach((box) => (box.checked = false));
+      }
+    }
+    queueAutosave(event.currentTarget);
   }
 
   async function submitModule(event: FormEvent<HTMLFormElement>) {
@@ -83,7 +106,7 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
       <h1>{module.title}</h1>
       <p className="route-lede">{module.purpose}. Use your usual experience during the last four weeks unless a question says otherwise.</p>
       <ProgressBar current={module.order} total={assessmentModules.length} className="route-progress" />
-      <form className="question-form" onSubmit={submitModule} onChange={(event) => queueAutosave(event.currentTarget)}>
+      <form className="question-form" onSubmit={submitModule} onChange={onChange}>
         <div className={`save-status save-status-${saveStatus}`} role="status" aria-live="polite">{saveStatus === "saving" ? "Saving…" : saveStatus === "failed" ? "Save failed. Try again." : "Saved"}</div>
         {module.questions.map((question) => <QuestionCard key={question.id} question={question} defaultValue={savedAnswers[question.id] as string | undefined} />)}
         <button className="continue-button" type="submit">{module.order === assessmentModules.length ? "Review and Submit" : "Save and Continue"}</button>

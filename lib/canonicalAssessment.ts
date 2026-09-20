@@ -145,10 +145,38 @@ export function validateAnswers(answers: Record<string, unknown>): ValidationErr
       continue;
     }
 
-    // Numeric response types are validated by range, not by option id. For
-    // decimal_with_unit the option set describes the allowed unit and the
-    // numeric value is carried separately.
-    if (["integer", "decimal", "integer_scale", "decimal_with_unit"].includes(question.type)) {
+    // decimal_with_unit: a JSON {value, unit} response; the unit must be an
+    // approved C-01 unit option and the value must be in range.
+    if (question.type === "decimal_with_unit") {
+      let parsed: { value?: unknown; unit?: unknown } | null = null;
+      try {
+        parsed = typeof scalar === "string" ? JSON.parse(scalar) : null;
+      } catch {
+        parsed = null;
+      }
+      const unitIds = new Set((question.options ?? []).map((option) => option.id));
+      if (!parsed || typeof parsed.unit !== "string" || !unitIds.has(parsed.unit)) {
+        errors.push({ questionId: question.id, message: `Question ${question.id} must include an approved unit.` });
+        continue;
+      }
+      const numeric = Number(parsed.value);
+      if (!Number.isFinite(numeric)) {
+        errors.push({ questionId: question.id, message: `Required question ${question.id} must be a number.` });
+        continue;
+      }
+      if (question.min !== undefined && numeric < question.min) {
+        errors.push({ questionId: question.id, message: `Question ${question.id} is below the minimum allowed value.` });
+        continue;
+      }
+      if (question.max !== undefined && numeric > question.max) {
+        errors.push({ questionId: question.id, message: `Question ${question.id} is above the maximum allowed value.` });
+        continue;
+      }
+      continue;
+    }
+
+    // Numeric response types are validated by range, not by option id.
+    if (["integer", "decimal", "integer_scale"].includes(question.type)) {
       const numeric = typeof scalar === "number" ? scalar : Number(scalar);
       if (!Number.isFinite(numeric)) {
         errors.push({ questionId: question.id, message: `Required question ${question.id} must be a number.` });

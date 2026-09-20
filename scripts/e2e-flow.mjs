@@ -17,7 +17,7 @@ const record = (id, desc, ok, detail) => {
 };
 
 const answers = {
-  Q1: 42, Q2: "FEMALE", Q3: 168, Q4: 74, Q5: 68, Q6: 88,
+  Q1: 42, Q2: "FEMALE", Q3: 168, Q4: 74, Q5: 68, Q6: JSON.stringify({ value: 88, unit: "CM" }),
   Q7: "1_3Y", Q8: "CYCLING",
   Q9: "GRADUAL", Q10: "SMT", Q11: "OFT", Q12: "TWO",
   Q13: ["PREDIABETES"], Q14: ["NONE"], Q15: "NO",
