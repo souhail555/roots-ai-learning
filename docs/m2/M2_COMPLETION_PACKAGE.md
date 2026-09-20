@@ -20,7 +20,7 @@
 | 8. 30 Golden Tests | ✅ | 34/34 PASS → `docs/m2/M2_GOLDEN_TEST_EVIDENCE.txt` |
 | 9. Security / negative tests | ✅ | 15/15 PASS → `docs/m2/M2_SECURITY_TESTS.txt` |
 | 10. Controlled technical source | ✅ | `lib/canonical/{source,optionSets,modules}.ts`; verify script |
-| 11. GitHub push | ⚠️ | `git` not available on the authoring machine — see §9 |
+| 11. GitHub push + deployment | ✅ | Pushed to `github.com/souhail555/roots-ai-learning` (commit `afd5ab4`); deployed to Vercel — see §11 |
 | 12. Consolidated package | ✅ | This document |
 
 ---
@@ -226,7 +226,26 @@ identity.
 
 ---
 
-## 11. Reproduction commands
+## 11. Deployment and GitHub
+- **Repository:** `https://github.com/souhail555/roots-ai-learning` (branch `master`).
+- **M2 commit:** `afd5ab4`.
+- **Vercel production deployment:** `dpl_Cvmbd6QMYoN5KW43Yx2mdoSMfpg9`
+  (readyState `READY`, promoted to production).
+- **Production alias:** `https://roots-ai-learning.vercel.app`
+- **Git auto-deploy:** the Vercel project is linked to the GitHub repo
+  (`link.type = github`, production branch `master`), so subsequent pushes deploy
+  automatically.
+
+Verified directly against the production deployment:
+
+| Suite | Result | Evidence |
+|---|---|---|
+| End-to-end flow (production) | **20/20 PASS** | `docs/m2/M2_E2E_FLOW_PRODUCTION.txt` |
+| Security / negative (production) | **15/15 PASS** | `docs/m2/M2_SECURITY_TESTS_PRODUCTION.txt` |
+
+---
+
+## 11b. Reproduction commands
 
 ```powershell
 npm install
@@ -242,11 +261,8 @@ node scripts/e2e-flow.mjs http://localhost:3000   # 20/20 PASS -> docs/m2/M2_E2E
 
 ## 12. Outstanding (not M2 acceptance conditions)
 
-- Git push to the ROOTS-owned repository could not be performed from the
-  authoring machine because `git` is not installed on PATH. The working tree is
-  ready to commit; provide Git access (or the repository URL with credentials)
-  and it will be pushed as the current working codebase, including all
-  interconnected future work.
+- Git push and Vercel deployment are **complete** (§11). The GitHub repository
+  is linked to Vercel, so future pushes deploy automatically.
 - The controlled C-01 / C-02 XLSX files (and the RLS negative-test baseline) are
   requested to mechanically regenerate expectations and run the RLS suite.
 - Pre-existing lint errors remain in unrelated baseline files (`Footer.tsx`,

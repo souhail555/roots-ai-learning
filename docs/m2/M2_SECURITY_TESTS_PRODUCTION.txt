@@ -1,0 +1,20 @@
+﻿ROOTS-AI(TM) M2 Security / Negative Tests against https://roots-ai-learning.vercel.app
+
+SEC-01     | PASS | User A session created -> 58293352-4110-40fd-b9e4-caa111b1dbdf
+SEC-02     | PASS | User B session created -> 32e4d77a-b9ba-4fc2-af18-5b26ce26b70f
+SEC-03     | PASS | No cookie cannot read a session -> status 403
+SEC-04     | PASS | Cross-user session read is rejected -> status 403
+SEC-05     | PASS | Cross-user answer write is rejected -> status 403
+SEC-06     | PASS | Cross-user progress read is rejected -> status 403
+SEC-07     | PASS | Cross-user result read is rejected -> status 403
+SEC-08     | PASS | Unknown module rejected -> status 400
+SEC-09     | PASS | Cross-module question injection rejected -> status 400
+SEC-10     | PASS | Unknown option value rejected -> status 400
+SEC-11     | PASS | Empty required multi-select is flagged -> status 200
+SEC-12     | PASS | NONE combined with another option is flagged -> status 400
+SEC-13     | PASS | Incomplete assessment cannot produce a result -> status 400
+SEC-14     | PASS | Unauthenticated result creation rejected -> status 403
+SEC-15     | PASS | Invalid email rejected at session creation -> status 400
+
+=== Summary ===
+Passed: 15  Failed: 0
