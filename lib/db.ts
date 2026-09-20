@@ -5,6 +5,10 @@ export interface SessionRecord {
   answers: Record<string, string | string[]>;
   completedModules: string[];
   updatedAt?: string;
+  canonicalVersions: {
+    questionnaire: string;
+    scoring: string;
+  };
 }
 
 export interface ReportRecord {
@@ -13,14 +17,27 @@ export interface ReportRecord {
   scores: Record<string, number>;
   band: string;
   createdAt: string;
+  canonicalVersions: {
+    questionnaire: string;
+    scoring: string;
+  };
 }
 
 const sessions = new Map<string, SessionRecord>();
 const reports = new Map<string, ReportRecord>();
 
+import { CANONICAL_VERSIONS } from "@/lib/canonicalAssessment";
+
 export async function createSession(id: string): Promise<SessionRecord> {
   const timestamp = new Date().toISOString();
-  const session: SessionRecord = { id, createdAt: timestamp, answers: {}, completedModules: [], updatedAt: timestamp };
+  const session: SessionRecord = { 
+    id, 
+    createdAt: timestamp, 
+    answers: {}, 
+    completedModules: [], 
+    updatedAt: timestamp,
+    canonicalVersions: { ...CANONICAL_VERSIONS }
+  };
   sessions.set(id, session);
   return session;
 }
@@ -61,7 +78,17 @@ export async function createReport(
   scores: Record<string, number>,
   band: string
 ): Promise<ReportRecord> {
-  const report = { id, sessionId, scores, band, createdAt: new Date().toISOString() };
+  const session = sessions.get(sessionId);
+  if (!session) throw new Error(`Session ${sessionId} not found`);
+  
+  const report = { 
+    id, 
+    sessionId, 
+    scores, 
+    band, 
+    createdAt: new Date().toISOString(),
+    canonicalVersions: { ...session.canonicalVersions }
+  };
   reports.set(id, report);
   return report;
 }

@@ -92,10 +92,20 @@ export function calculateScores(answers: Record<string, unknown>): ScoringResult
 
   const availableScores = domainOrder.map((domain) => domains[domain]).filter((value): value is number => value !== null);
   const biologicalState = availableScores.length >= 5 ? roundHalfAwayFromZero(availableScores.reduce((sum, value) => sum + value, 0) / availableScores.length) : null;
-  const eligibleDrivers = domainOrder.filter((domain) => domains[domain] !== null && (domains[domain] as number) >= 25).sort((a, b) => ((domains[b] ?? 0) - (domains[a] ?? 0)) || domainOrder.indexOf(a) - domainOrder.indexOf(b));
-  const drivers = eligibleDrivers.length >= 2 && Math.abs((domains[eligibleDrivers[0]] ?? 0) - (domains[eligibleDrivers[1]] ?? 0)) <= 3
-    ? [`${eligibleDrivers[0]}+${eligibleDrivers[1]} co-primary`, ...eligibleDrivers.slice(1, 3)]
-    : eligibleDrivers.slice(0, 3);
+  const eligibleDrivers = domainOrder.filter((domain) => domains[domain] !== null).sort((a, b) => ((domains[b] ?? 0) - (domains[a] ?? 0)) || domainOrder.indexOf(a) - domainOrder.indexOf(b));
+  const drivers: string[] = [];
+  
+  if (eligibleDrivers.length >= 2 && Math.abs((domains[eligibleDrivers[0]] ?? 0) - (domains[eligibleDrivers[1]] ?? 0)) <= 3) {
+    // Co-primary behavior: render as one entry, no duplication
+    drivers.push(`${eligibleDrivers[0]}+${eligibleDrivers[1]} co-primary`);
+    // Add only the next eligible driver after the co-primary pair
+    if (eligibleDrivers.length > 2) {
+      drivers.push(eligibleDrivers[2]);
+    }
+  } else {
+    // Regular case: take top 3 drivers
+    drivers.push(...eligibleDrivers.slice(0, 3));
+  }
 
   const protectiveCount = [
     [answerPoints("Q46", answers.Q46), answerPoints("Q47", answers.Q47)],

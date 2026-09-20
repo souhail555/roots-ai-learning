@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { saveModuleAnswers } from "@/lib/db";
 import { cookies } from "next/headers";
+import { validateAnswers } from "@/lib/canonicalAssessment";
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ sessionId: string }> }) {
   const { sessionId } = await params;
@@ -10,6 +11,15 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ se
 
   if (!body?.moduleId || !body.answers || typeof body.answers !== "object") {
     return NextResponse.json({ error: "moduleId and answers are required." }, { status: 400 });
+  }
+
+  // Validate answers before saving
+  const validationErrors = validateAnswers(body.answers);
+  if (validationErrors.length > 0) {
+    return NextResponse.json({ 
+      error: "Validation failed", 
+      validationErrors 
+    }, { status: 400 });
   }
 
   try {

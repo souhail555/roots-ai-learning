@@ -70,3 +70,82 @@ export const assessmentModules: AssessmentModule[] = moduleData.map(([id, title,
 export const allQuestions = questions;
 export const questionCount = 73;
 export const moduleCount = 13;
+
+// Canonical versions as required by M2
+export const CANONICAL_VERSIONS = {
+  questionnaire: "C-01 v1.0.1 CORRECTED",
+  scoring: "C-02 v1.0.1 CORRECTED"
+};
+
+// Required multi-select questions that need at least one selection
+export const REQUIRED_MULTI_SELECT_QUESTIONS = ["Q13", "Q14", "Q52", "Q53", "Q54"];
+
+export interface ValidationError {
+  questionId: string;
+  message: string;
+}
+
+export function validateAnswers(answers: Record<string, unknown>): ValidationError[] {
+  const errors: ValidationError[] = [];
+  
+  for (const question of allQuestions) {
+    const answer = answers[question.id];
+    const isAnswered = answer !== undefined && answer !== null && answer !== "";
+    const isArrayAnswered = Array.isArray(answer) && answer.length > 0;
+    
+    // Check required questions
+    if (question.required && !question.allowNa) {
+      if (!isAnswered && !isArrayAnswered) {
+        errors.push({
+          questionId: question.id,
+          message: `Required question ${question.id} must have a valid response.`
+        });
+        continue;
+      }
+    }
+    
+    // Check required questions that allow N/A
+    if (question.required && question.allowNa) {
+      const hasNa = Array.isArray(answer) ? answer.includes("NA") : answer === "NA";
+      if (!isAnswered && !isArrayAnswered && !hasNa) {
+        errors.push({
+          questionId: question.id,
+          message: `Required question ${question.id} must have a valid response or N/A.`
+        });
+        continue;
+      }
+    }
+    
+    // Validate multi-select questions (required ones must have at least one selection)
+    if (REQUIRED_MULTI_SELECT_QUESTIONS.includes(question.id)) {
+      if (!Array.isArray(answer) || answer.length === 0) {
+        errors.push({
+          questionId: question.id,
+          message: `Required multi-select question ${question.id} must have at least one option selected.`
+        });
+        continue;
+      }
+      
+      // Check that NONE/N/A is mutually exclusive with other selections
+      const hasNoneOrNa = answer.includes("None of these") || answer.includes("NA") || answer.includes("No");
+      if (hasNoneOrNa && answer.length > 1) {
+        errors.push({
+          questionId: question.id,
+          message: `Question ${question.id}: NONE/N/A must be mutually exclusive with other selections.`
+        });
+      }
+    }
+    
+    // Q73 is optional free text and does not permit invented N/A
+    if (question.id === "Q73") {
+      if (answer === "NA" || answer === "N/A") {
+        errors.push({
+          questionId: question.id,
+          message: `Q73 is optional free text and does not permit N/A response.`
+        });
+      }
+    }
+  }
+  
+  return errors;
+}
