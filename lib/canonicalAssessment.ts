@@ -134,6 +134,15 @@ export function validateAnswers(answers: Record<string, unknown>): ValidationErr
     // Optional questions may remain unanswered.
     if (!question.required) continue;
 
+    // Required multi-select: an empty array is explicitly invalid (C-01).
+    if (isMulti && hasArray && array.length === 0) {
+      errors.push({
+        questionId: question.id,
+        message: `Required multi-select question ${question.id} must have at least one approved option selected.`,
+      });
+      continue;
+    }
+
     // Required questions.
     if (!hasSelection) {
       errors.push({
