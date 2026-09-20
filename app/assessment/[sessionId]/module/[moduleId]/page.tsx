@@ -35,11 +35,15 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
     return answers;
   }
 
-  async function persistAnswers(answers: Record<string, string | string[]>) {
+  async function persistAnswers(answers: Record<string, string | string[]>): Promise<boolean> {
     setSaveStatus("saving");
     const response = await fetch(`/api/assessment/sessions/${sessionId}/answers`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ moduleId: module.id, answers }) });
-    setSaveStatus(response.ok ? "saved" : "failed");
-    if (response.ok) setSavedAnswers((current) => ({ ...current, ...answers }));
+    const payload = await response.json().catch(() => null) as { validationErrors?: unknown[] } | null;
+    const hasErrors = Array.isArray(payload?.validationErrors) && payload.validationErrors.length > 0;
+    const ok = response.ok && !hasErrors;
+    setSaveStatus(ok ? "saved" : "failed");
+    if (ok) setSavedAnswers((current) => ({ ...current, ...answers }));
+    return ok;
   }
 
   function queueAutosave(form: HTMLFormElement) {
@@ -51,17 +55,26 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
   async function submitModule(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const answers = collectAnswers(event.currentTarget);
-    for (const question of module.questions.filter((item) => item.required && item.type === "multi_select")) {
-      const values = Array.isArray(answers[question.id]) ? answers[question.id] as string[] : answers[question.id] ? [answers[question.id] as string] : [];
-      if (!values.length || (values.includes("OPT_1") && values.length > 1)) {
-        setSaveStatus("failed");
-        return;
-      }
+    const saved = await persistAnswers(answers);
+    // The server validates every required response against C-01. Do not advance
+    // past a module whose required responses are incomplete or invalid.
+    if (!saved) {
+      setSaveStatus("failed");
+      return;
     }
-    await persistAnswers(answers);
     const moduleIndex = assessmentModules.findIndex((item) => item.id === module.id);
     const nextModule = assessmentModules[moduleIndex + 1];
-    window.location.assign(nextModule ? `/assessment/${sessionId}/module/${nextModule.id}` : `/report/${sessionId}`);
+    if (nextModule) {
+      window.location.assign(`/assessment/${sessionId}/module/${nextModule.id}`);
+      return;
+    }
+    // Final module: ask the server to produce the deterministic result.
+    const result = await fetch(`/api/assessment/sessions/${sessionId}/result`, { method: "POST" });
+    if (!result.ok) {
+      setSaveStatus("failed");
+      return;
+    }
+    window.location.assign(`/report/${sessionId}`);
   }
 
   return (

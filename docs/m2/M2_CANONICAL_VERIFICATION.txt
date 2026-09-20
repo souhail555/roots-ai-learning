@@ -1,0 +1,22 @@
+﻿
+> roots-ai-learning@0.1.0 test:canonical
+> tsx scripts/verify-canonical.ts
+
+=== Canonical Structure Verification ===
+
+Check    | Expected | Actual | Result | Description
+----------------------------------------------------------------------------------------------------
+C-01-A   | 73                           | 73                   | PASS | Total canonical questions
+C-01-B   | 13                           | 13                   | PASS | Ordered modules
+C-01-C   | 71                           | 71                   | PASS | Required questions
+C-01-D   | 2                            | 2                    | PASS | Optional questions
+C-01-E   | 40                           | 40                   | PASS | Scoring-eligible questions
+C-01-F   | [1,2,3,4,5,6,7,8,9,10,11,12, | [1,2,3,4,5,6,7,8,9,1 | PASS | Module order is 1..13
+C-01-G   | ["Q13","Q14","Q52","Q53","Q5 | ["Q13","Q14","Q52"," | PASS | Required multi-select set
+C-01-H   | ["Q1","Q2","Q3","Q4","Q5","Q | ["Q1","Q2","Q3","Q4" | PASS | Question ids are Q1..Q73
+C-01-I   | true                         | true                 | PASS | Module questions are contiguous and ordered
+C-01-J   | true                         | true                 | PASS | Scoring questions map to a canonical domain
+C-02-A   | "C-01 v1.0.1 CORRECTED"      | "C-01 v1.0.1 CORRECT | PASS | Questionnaire version
+C-02-B   | "C-02 v1.0.1 CORRECTED"      | "C-02 v1.0.1 CORRECT | PASS | Scoring version
+----------------------------------------------------------------------------------------------------
+Passed: 12  Failed: 0

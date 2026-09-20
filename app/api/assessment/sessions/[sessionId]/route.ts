@@ -15,5 +15,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ ses
     answers: session.answers,
     createdAt: session.createdAt,
     updatedAt: session.updatedAt,
+    canonicalVersions: session.canonicalVersions,
   });
 }

@@ -1,98 +1,80 @@
 import { calculateScores } from "@/lib/scoring";
-import { validateAnswers } from "@/lib/canonicalAssessment";
+import { goldenTests, compare } from "@/lib/canonical/goldenTests";
+import { CANONICAL_VERSIONS } from "@/lib/canonical/source";
 
-// Golden Tests from C-02 Canonical Scoring Rules & Golden Tests v1.0.1 CORRECTED
-interface GoldenTest {
+interface Row {
   id: string;
   name: string;
-  input: Record<string, unknown>;
-  expected: Partial<ReturnType<typeof calculateScores>>;
+  input: string;
+  expected: string;
+  actual: string;
+  passed: boolean;
+  errors: string[];
 }
 
-const goldenTests: GoldenTest[] = [
-  {
-    id: "GT01",
-    name: "Perfect health - all optimal responses",
-    input: {
-      // Add the golden test input data here
-      Q1: "30",
-      // This will populate all 40 scoring-eligible questions with optimal values
-    },
-    expected: {
-      biologicalState: 10,
-      // Expected outputs to be populated with canonical values from C-02
-    }
-  },
-  // We'll add all 30 golden tests here based on C-02 v1.0.1
-];
+function summarize(value: unknown): string {
+  return JSON.stringify(value);
+}
 
-async function runGoldenTests() {
-  console.log("Running C-02 Golden Tests...\n");
+function run() {
+  console.log("ROOTS-AI(TM) M2 - C-02 Canonical Golden Tests");
+  console.log(`Questionnaire: ${CANONICAL_VERSIONS.questionnaire}`);
+  console.log(`Scoring:       ${CANONICAL_VERSIONS.scoring}`);
+  console.log(`Total tests:   ${goldenTests.length}\n`);
+
+  const rows: Row[] = [];
   let passed = 0;
   let failed = 0;
-  const results: Array<{
-    testId: string; name: string; passed: boolean; actual: unknown; expected: unknown; errors: string[] }> = [];
 
   for (const test of goldenTests) {
-    console.log(`Test ${test.id}: ${test.name}`);
-    
-    // First run validation
-    const validationErrors = validateAnswers(test.input);
-    
-    // Then calculate scores
-    const actual = calculateScores(test.input);
-    
-    // Compare actual vs expected
-    const testErrors: string[] = [];
-    let testPassed = true;
-    
-    for (const [key, expectedValue] of Object.entries(test.expected)) {
-      const actualValue = (actual as unknown as Record<string, unknown>)[key];
-      if (JSON.stringify(actualValue) !== JSON.stringify(expectedValue)) {
-        testErrors.push(`${key}: expected ${JSON.stringify(expectedValue)}, got ${JSON.stringify(actualValue)}`);
-        testPassed = false;
-      }
-    }
-    
-    if (testPassed && validationErrors.length === 0) {
-      passed++;
-      console.log(`✅ PASS`);
-    } else {
-      failed++;
-      console.log(`❌ FAIL`);
-      if (validationErrors.length > 0) {
-        console.log("  Validation errors:", validationErrors);
-      }
-      testErrors.forEach(err => console.log(`  ${err}`));
-    }
-    
-    results.push({
-      testId: test.id,
+    const actual = calculateScores(test.answers);
+    const errors = compare(actual, test.expected);
+    const ok = errors.length === 0;
+    if (ok) passed++;
+    else failed++;
+
+    const actualSummary = {
+      domains: actual.domains,
+      biologicalState: actual.biologicalState,
+      band: actual.band,
+      opportunity: actual.opportunity,
+      recoveryPotential: actual.recoveryPotential,
+      drivers: actual.drivers,
+      coPrimary: actual.coPrimary,
+      scoredDomainCount: actual.scoredDomainCount,
+    };
+
+    rows.push({
+      id: test.id,
       name: test.name,
-      passed: testPassed && validationErrors.length === 0,
-      actual,
-      expected: test.expected,
-      errors: [...testErrors, ...validationErrors.map(e => e.message)]
+      input: summarize(test.answers),
+      expected: summarize(test.expected),
+      actual: summarize(actualSummary),
+      passed: ok,
+      errors,
     });
-    
-    console.log("---\n");
   }
 
-  console.log("\n=== Final Results ===");
-  console.log(`Total: ${goldenTests.length}`);
+  // Evidence table required by M2 section 8.
+  console.log("=== Golden Test Evidence (Test ID -> Input -> Expected -> Actual -> PASS/FAIL) ===\n");
+  for (const row of rows) {
+    console.log(`[${row.id}] ${row.name}`);
+    console.log(`  INPUT    : ${row.input}`);
+    console.log(`  EXPECTED : ${row.expected}`);
+    console.log(`  ACTUAL   : ${row.actual}`);
+    console.log(`  RESULT   : ${row.passed ? "PASS" : "FAIL"}`);
+    if (!row.passed) row.errors.forEach((e) => console.log(`    - ${e}`));
+    console.log("");
+  }
+
+  console.log("=== Summary ===");
+  console.log(`Total : ${rows.length}`);
   console.log(`Passed: ${passed}`);
   console.log(`Failed: ${failed}`);
-  console.log(`Success rate: ${((passed / goldenTests.length * 100).toFixed(1))}%\n`);
-  
-  // Print detailed report
-  console.log("=== Detailed Test Report ===");
-  results.forEach(r => {
-    console.log(`${r.testId} | ${r.name} | ${r.passed ? "PASS" : "FAIL"}`);
-    if (!r.passed) {
-      r.errors.forEach(e => console.log(`  - ${e}`));
-    }
-  });
+  const met = failed === 0 && passed >= 30;
+  console.log(`Acceptance (all tests PASS, >= 30 canonical): ${met ? "MET" : "NOT MET"}`);
+
+  if (!met) process.exitCode = 1;
 }
 
-// Run the tests
-runGoldenTests().catch(console.error);
+run();

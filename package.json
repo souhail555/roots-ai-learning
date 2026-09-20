@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:golden": "tsx scripts/run-golden-tests.ts",
+    "test:canonical": "tsx scripts/verify-canonical.ts",
+    "test:security": "node scripts/security-tests.mjs",
+    "test:e2e": "node scripts/e2e-flow.mjs"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.9.0",
@@ -24,11 +28,13 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.4",
     "tailwindcss": "^4",
+    "tsx": "^4.20.3",
     "typescript": "^5"
   },
   "allowScripts": {
     "puppeteer@25.10.0": true,
     "sqlite3@6.0.1": true,
-    "unrs-resolver@1.12.2": true
+    "unrs-resolver@1.12.2": true,
+    "esbuild@0.28.2": true
   }
 }

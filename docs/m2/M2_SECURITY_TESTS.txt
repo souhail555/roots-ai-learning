@@ -1,0 +1,20 @@
+﻿ROOTS-AI(TM) M2 Security / Negative Tests against http://localhost:3000
+
+SEC-01     | PASS | User A session created -> 9576f6d1-93a4-4e72-90de-ebed9d50480c
+SEC-02     | PASS | User B session created -> 684b757e-6d78-4199-a0a9-070ff1da18e0
+SEC-03     | PASS | No cookie cannot read a session -> status 403
+SEC-04     | PASS | Cross-user session read is rejected -> status 403
+SEC-05     | PASS | Cross-user answer write is rejected -> status 403
+SEC-06     | PASS | Cross-user progress read is rejected -> status 403
+SEC-07     | PASS | Cross-user result read is rejected -> status 403
+SEC-08     | PASS | Unknown module rejected -> status 400
+SEC-09     | PASS | Cross-module question injection rejected -> status 400
+SEC-10     | PASS | Unknown option value rejected -> status 400
+SEC-11     | PASS | Empty required multi-select is flagged -> status 200
+SEC-12     | PASS | NONE combined with another option is flagged -> status 400
+SEC-13     | PASS | Incomplete assessment cannot produce a result -> status 400
+SEC-14     | PASS | Unauthenticated result creation rejected -> status 403
+SEC-15     | PASS | Invalid email rejected at session creation -> status 400
+
+=== Summary ===
+Passed: 15  Failed: 0
