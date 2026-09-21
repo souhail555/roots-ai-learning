@@ -1,3 +1,5 @@
+import { CANONICAL_VERSIONS } from "@/lib/canonical/source";
+
 export interface SessionRecord {
   id: string;
   createdAt: string;
@@ -23,10 +25,17 @@ export interface ReportRecord {
   };
 }
 
+export interface ResultRecord {
+  sessionId: string;
+  result: unknown;
+  questionnaireVersion: string;
+  scoringVersion: string;
+  createdAt: string;
+}
+
 const sessions = new Map<string, SessionRecord>();
 const reports = new Map<string, ReportRecord>();
-
-import { CANONICAL_VERSIONS } from "@/lib/canonical/source";
+const results = new Map<string, ResultRecord>();
 
 export async function createSession(id: string): Promise<SessionRecord> {
   const timestamp = new Date().toISOString();
@@ -140,17 +149,6 @@ export async function getProgress(
     isComplete: answeredRequired === totalRequired,
   };
 }
-
-/** Persist a deterministic scoring result against its canonical source version. */
-export interface ResultRecord {
-  sessionId: string;
-  result: unknown;
-  questionnaireVersion: string;
-  scoringVersion: string;
-  createdAt: string;
-}
-
-const results = new Map<string, ResultRecord>();
 
 export async function saveResult(
   sessionId: string,
