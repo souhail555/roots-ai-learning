@@ -1,3 +1,15 @@
+/**
+ * ROOTS-AI™ - In-Memory Database Layer
+ * 
+ * NOTE: This uses in-memory Map storage. Sessions are lost on server restart/deploy.
+ * For production persistence, consider migrating to Supabase or similar in M3/M4.
+ * 
+ * Current behavior:
+ * - Sessions persist during server uptime
+ * - Sessions are lost on redeploy or server restart
+ * - This is acceptable for M2 development phase
+ */
+
 import { CANONICAL_VERSIONS } from "@/lib/canonical/source";
 
 export interface SessionRecord {
@@ -33,10 +45,14 @@ export interface ResultRecord {
   createdAt: string;
 }
 
+// In-memory storage
 const sessions = new Map<string, SessionRecord>();
 const reports = new Map<string, ReportRecord>();
 const results = new Map<string, ResultRecord>();
 
+/**
+ * Create a new assessment session with canonical version tracking
+ */
 export async function createSession(id: string): Promise<SessionRecord> {
   const timestamp = new Date().toISOString();
   const session: SessionRecord = {
@@ -51,10 +67,16 @@ export async function createSession(id: string): Promise<SessionRecord> {
   return session;
 }
 
+/**
+ * Retrieve a session by ID. Returns null if not found.
+ */
 export async function getSession(id: string): Promise<SessionRecord | null> {
   return sessions.get(id) ?? null;
 }
 
+/**
+ * Update session email for contact/resume purposes
+ */
 export async function setSessionEmail(sessionId: string, email: string): Promise<void> {
   const session = sessions.get(sessionId);
   if (!session) throw new Error(`Session ${sessionId} not found`);
@@ -62,6 +84,10 @@ export async function setSessionEmail(sessionId: string, email: string): Promise
   session.updatedAt = new Date().toISOString();
 }
 
+/**
+ * Save module answers and track module completion
+ * Merges new answers with existing ones
+ */
 export async function saveModuleAnswers(
   sessionId: string,
   moduleId: string,
@@ -81,6 +107,9 @@ export async function saveModuleAnswers(
   return updated;
 }
 
+/**
+ * Create a report record linking to session and canonical versions
+ */
 export async function createReport(
   id: string,
   sessionId: string,
@@ -102,13 +131,16 @@ export async function createReport(
   return report;
 }
 
+/**
+ * Retrieve a report by ID. Returns null if not found.
+ */
 export async function getReport(id: string): Promise<ReportRecord | null> {
   return reports.get(id) ?? null;
 }
 
 /**
- * Progress is computed deterministically from stored answers and completed
- * modules, so refresh / sign-out / resume cannot corrupt position or state.
+ * Assessment progress interface
+ * Computed deterministically from stored answers
  */
 export interface AssessmentProgress {
   answeredCount: number;
@@ -123,6 +155,10 @@ export interface AssessmentProgress {
   isComplete: boolean;
 }
 
+/**
+ * Compute assessment progress from stored answers
+ * Progress is deterministic - refresh cannot corrupt state
+ */
 export async function getProgress(
   id: string,
   totalQuestions: number,
@@ -133,9 +169,11 @@ export async function getProgress(
 ): Promise<AssessmentProgress | null> {
   const session = sessions.get(id);
   if (!session) return null;
+  
   const answeredIds = Object.keys(session.answers);
   const answeredRequired = requiredQuestionIds.filter((qid) => isValidAnswer(qid, session.answers[qid])).length;
   const firstIncomplete = moduleOrder.find((m) => !session.completedModules.includes(m));
+  
   return {
     answeredCount: answeredIds.filter((qid) => isValidAnswer(qid, session.answers[qid])).length,
     totalQuestions,
@@ -150,6 +188,9 @@ export async function getProgress(
   };
 }
 
+/**
+ * Save scoring result with canonical version tracking
+ */
 export async function saveResult(
   sessionId: string,
   result: unknown,
@@ -166,6 +207,25 @@ export async function saveResult(
   return record;
 }
 
+/**
+ * Retrieve scoring result by session ID. Returns null if not found.
+ */
 export async function getResult(sessionId: string): Promise<ResultRecord | null> {
   return results.get(sessionId) ?? null;
+}
+
+/**
+ * Utility: Get active session count (for monitoring)
+ */
+export function getActiveSessionCount(): number {
+  return sessions.size;
+}
+
+/**
+ * Utility: Clear all sessions (for testing only)
+ */
+export function clearAllSessions(): void {
+  sessions.clear();
+  reports.clear();
+  results.clear();
 }
