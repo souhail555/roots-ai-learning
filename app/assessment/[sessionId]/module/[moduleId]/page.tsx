@@ -47,11 +47,15 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
   async function persistAnswers(answers: Record<string, string | string[]>): Promise<boolean> {
     setSaveStatus("saving");
     const response = await fetch(`/api/assessment/sessions/${sessionId}/answers`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ moduleId: module.id, answers }) });
-    const payload = await response.json().catch(() => null) as { validationErrors?: unknown[] } | null;
+    const payload = await response.json().catch(() => null) as { validationErrors?: unknown[]; error?: string } | null;
     const hasErrors = Array.isArray(payload?.validationErrors) && payload.validationErrors.length > 0;
     const ok = response.ok && !hasErrors;
     setSaveStatus(ok ? "saved" : "failed");
     if (ok) setSavedAnswers((current) => ({ ...current, ...answers }));
+    // If session expired, redirect to start
+    if (response.status === 400 && payload?.error?.includes("expired")) {
+      window.location.href = "/assessment";
+    }
     return ok;
   }
 
@@ -107,7 +111,7 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
       <p className="route-lede">{module.purpose}. Use your usual experience during the last four weeks unless a question says otherwise.</p>
       <ProgressBar current={module.order} total={assessmentModules.length} className="route-progress" />
       <form className="question-form" onSubmit={submitModule} onChange={onChange}>
-        <div className={`save-status save-status-${saveStatus}`} role="status" aria-live="polite">{saveStatus === "saving" ? "Saving…" : saveStatus === "failed" ? "Save failed. Try again." : "Saved"}</div>
+        <div className={`save-status save-status-${saveStatus}`} role="status" aria-live="polite">{saveStatus === "saving" ? "Saving…" : saveStatus === "failed" ? "Save failed. Your session may have expired. Please refresh or start a new assessment." : "Saved"}</div>
         {module.questions.map((question) => <QuestionCard key={question.id} question={question} defaultValue={savedAnswers[question.id] as string | undefined} />)}
         <button className="continue-button" type="submit">{module.order === assessmentModules.length ? "Review and Submit" : "Save and Continue"}</button>
       </form>

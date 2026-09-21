@@ -36,7 +36,15 @@ export type CanonicalVersions = typeof CANONICAL_VERSIONS;
  * value and its classification. BS remains exclusively Biological Safety
  * Signals(TM) and is an ordinary scored domain.
  */
-export const DOMAIN_TIE_ORDER = ["MR", "HS", "SR", "CH", "SL", "IB", "BS"] as const;
+export const DOMAIN_TIE_ORDER = [
+  "MR",
+  "HS",
+  "SR",
+  "CH",
+  "SL",
+  "IB",
+  "BS",
+] as const;
 export type DomainId = (typeof DOMAIN_TIE_ORDER)[number];
 
 /** Derived Biological State identifier (never a tie-order domain). */

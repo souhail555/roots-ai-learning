@@ -15,13 +15,21 @@ import { CANONICAL_VERSIONS } from "@/lib/canonical/source";
  * A result can only be produced from a complete, valid assessment. Incomplete
  * or invalid required responses cannot be submitted as a completed assessment.
  */
-export async function POST(_request: Request, { params }: { params: Promise<{ sessionId: string }> }) {
+export async function POST(
+  _request: Request,
+  { params }: { params: Promise<{ sessionId: string }> },
+) {
   const { sessionId } = await params;
   const sessionCookie = (await cookies()).get("roots_session_id")?.value;
-  if (sessionCookie !== sessionId) return NextResponse.json({ error: "Session unavailable." }, { status: 403 });
+  if (sessionCookie !== sessionId)
+    return NextResponse.json(
+      { error: "Session unavailable." },
+      { status: 403 },
+    );
 
   const session = await getSession(sessionId);
-  if (!session) return NextResponse.json({ error: "Session not found." }, { status: 404 });
+  if (!session)
+    return NextResponse.json({ error: "Session not found." }, { status: 404 });
 
   const validationErrors = validateAnswers(session.answers);
   if (validationErrors.length > 0) {
@@ -43,12 +51,20 @@ export async function POST(_request: Request, { params }: { params: Promise<{ se
   );
 }
 
-export async function GET(_request: Request, { params }: { params: Promise<{ sessionId: string }> }) {
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ sessionId: string }> },
+) {
   const { sessionId } = await params;
   const sessionCookie = (await cookies()).get("roots_session_id")?.value;
-  if (sessionCookie !== sessionId) return NextResponse.json({ error: "Session unavailable." }, { status: 403 });
+  if (sessionCookie !== sessionId)
+    return NextResponse.json(
+      { error: "Session unavailable." },
+      { status: 403 },
+    );
 
   const record = await getResult(sessionId);
-  if (!record) return NextResponse.json({ error: "No result yet." }, { status: 404 });
+  if (!record)
+    return NextResponse.json({ error: "No result yet." }, { status: 404 });
   return NextResponse.json(record);
 }

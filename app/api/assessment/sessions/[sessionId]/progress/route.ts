@@ -10,13 +10,22 @@ import { allQuestions, assessmentModules } from "@/lib/canonicalAssessment";
  * assessment, signing back in and resuming cannot corrupt completed answers,
  * progress or question state.
  */
-export async function GET(_request: Request, { params }: { params: Promise<{ sessionId: string }> }) {
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ sessionId: string }> },
+) {
   const { sessionId } = await params;
   const sessionCookie = (await cookies()).get("roots_session_id")?.value;
-  if (sessionCookie !== sessionId) return NextResponse.json({ error: "Session unavailable." }, { status: 403 });
+  if (sessionCookie !== sessionId)
+    return NextResponse.json(
+      { error: "Session unavailable." },
+      { status: 403 },
+    );
 
   const moduleOrder = assessmentModules.map((m) => m.id);
-  const requiredQuestionIds = allQuestions.filter((q) => q.required).map((q) => q.id);
+  const requiredQuestionIds = allQuestions
+    .filter((q) => q.required)
+    .map((q) => q.id);
 
   const isValidAnswer = (questionId: string, value: unknown): boolean => {
     const question = allQuestions.find((q) => q.id === questionId);
@@ -34,6 +43,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ ses
     isValidAnswer,
   );
 
-  if (!progress) return NextResponse.json({ error: "Session not found." }, { status: 404 });
+  if (!progress)
+    return NextResponse.json({ error: "Session not found." }, { status: 404 });
   return NextResponse.json(progress);
 }

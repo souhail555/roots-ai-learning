@@ -64,7 +64,8 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ se
       updatedAt: session.updatedAt,
       ...(validationErrors.length > 0 ? { validationErrors } : {}),
     });
-  } catch {
-    return NextResponse.json({ error: "We could not save this answer. Try again." }, { status: 404 });
+  } catch (error) {
+    console.error('Save error:', error);
+    return NextResponse.json({ error: "We could not save this answer. The session may have expired. Please refresh and start a new assessment." }, { status: 400 });
   }
 }
