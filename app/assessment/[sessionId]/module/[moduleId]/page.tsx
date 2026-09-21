@@ -14,7 +14,12 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
 
   useEffect(() => {
     fetch(`/api/assessment/sessions/${sessionId}`).then(async (response) => {
-      if (response.ok) setSavedAnswers((await response.json()).answers ?? {});
+      if (response.ok) {
+        setSavedAnswers((await response.json()).answers ?? {});
+      } else if (response.status === 403 || response.status === 404) {
+        // Session expired or not found, redirect to start
+        window.location.href = "/assessment";
+      }
     });
     return () => { if (saveTimer.current) clearTimeout(saveTimer.current); };
   }, [sessionId]);
@@ -111,7 +116,13 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
       <p className="route-lede">{module.purpose}. Use your usual experience during the last four weeks unless a question says otherwise.</p>
       <ProgressBar current={module.order} total={assessmentModules.length} className="route-progress" />
       <form className="question-form" onSubmit={submitModule} onChange={onChange}>
-        <div className={`save-status save-status-${saveStatus}`} role="status" aria-live="polite">{saveStatus === "saving" ? "Saving…" : saveStatus === "failed" ? "Save failed. Your session may have expired. Please refresh or start a new assessment." : "Saved"}</div>
+        <div className={`save-status save-status-${saveStatus}`} role="status" aria-live="polite">
+          {saveStatus === "saving" ? "Saving…" : saveStatus === "failed" ? (
+            <>
+              Save failed. Your session may have expired. <a href="/assessment" className="text-blue-600 hover:underline">Start a new assessment</a>.
+            </>
+          ) : "Saved"}
+        </div>
         {module.questions.map((question) => <QuestionCard key={question.id} question={question} defaultValue={savedAnswers[question.id] as string | undefined} />)}
         <button className="continue-button" type="submit">{module.order === assessmentModules.length ? "Review and Submit" : "Save and Continue"}</button>
       </form>
