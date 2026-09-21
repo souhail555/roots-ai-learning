@@ -11,6 +11,18 @@
  */
 
 import { CANONICAL_VERSIONS } from "@/lib/canonical/source";
+import type { CanonicalReport } from "@/lib/canonical/report";
+
+/**
+ * Stored canonical report record. Wraps the immutable CanonicalReport with the
+ * storage-level identity needed for retrieval and authorization.
+ */
+export interface CanonicalReportRecord {
+  id: string;
+  assessmentId: string;
+  report: CanonicalReport;
+  createdAt: string;
+}
 
 export interface SessionRecord {
   id: string;
@@ -49,6 +61,7 @@ export interface ResultRecord {
 const sessions = new Map<string, SessionRecord>();
 const reports = new Map<string, ReportRecord>();
 const results = new Map<string, ResultRecord>();
+const canonicalReports = new Map<string, CanonicalReportRecord>();
 
 /**
  * Create a new assessment session with canonical version tracking
@@ -118,12 +131,12 @@ export async function createReport(
 ): Promise<ReportRecord> {
   const session = sessions.get(sessionId);
   if (!session) throw new Error(`Session ${sessionId} not found`);
-  
-  const report = { 
-    id, 
-    sessionId, 
-    scores, 
-    band, 
+
+  const report = {
+    id,
+    sessionId,
+    scores,
+    band,
     createdAt: new Date().toISOString(),
     canonicalVersions: { ...session.canonicalVersions }
   };
@@ -169,11 +182,11 @@ export async function getProgress(
 ): Promise<AssessmentProgress | null> {
   const session = sessions.get(id);
   if (!session) return null;
-  
+
   const answeredIds = Object.keys(session.answers);
   const answeredRequired = requiredQuestionIds.filter((qid) => isValidAnswer(qid, session.answers[qid])).length;
   const firstIncomplete = moduleOrder.find((m) => !session.completedModules.includes(m));
-  
+
   return {
     answeredCount: answeredIds.filter((qid) => isValidAnswer(qid, session.answers[qid])).length,
     totalQuestions,
@@ -215,6 +228,44 @@ export async function getResult(sessionId: string): Promise<ResultRecord | null>
 }
 
 /**
+ * Canonical immutable report storage (M3).
+ *
+ * Stores the full CanonicalReport object produced by lib/report/pipeline.ts.
+ * This is the authoritative source for BOTH the web report and the PDF: neither
+ * renderer recalculates anything.
+ *
+ * NOTE: like the rest of this module the store is in-memory, so canonical
+ * reports are lost on restart/redeploy. Persisting to Supabase is the M3/M4
+ * data-layer migration and is tracked separately.
+ */
+export async function saveCanonicalReport(
+  report: CanonicalReportRecord,
+): Promise<CanonicalReportRecord> {
+  canonicalReports.set(report.id, report);
+  return report;
+}
+
+/** Retrieve a stored canonical report by its report id. */
+export async function getCanonicalReport(
+  id: string,
+): Promise<CanonicalReportRecord | null> {
+  return canonicalReports.get(id) ?? null;
+}
+
+/**
+ * Retrieve a stored canonical report by the assessment it was produced from.
+ * Used by the report route, which is addressed by session id.
+ */
+export async function getCanonicalReportByAssessment(
+  assessmentId: string,
+): Promise<CanonicalReportRecord | null> {
+  for (const report of canonicalReports.values()) {
+    if (report.assessmentId === assessmentId) return report;
+  }
+  return null;
+}
+
+/**
  * Utility: Get active session count (for monitoring)
  */
 export function getActiveSessionCount(): number {
@@ -228,4 +279,5 @@ export function clearAllSessions(): void {
   sessions.clear();
   reports.clear();
   results.clear();
+  canonicalReports.clear();
 }

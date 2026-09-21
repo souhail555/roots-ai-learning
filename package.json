@@ -10,7 +10,9 @@
     "test:golden": "tsx scripts/run-golden-tests.ts",
     "test:canonical": "tsx scripts/verify-canonical.ts",
     "test:security": "node scripts/security-tests.mjs",
-    "test:e2e": "node scripts/e2e-flow.mjs"
+    "test:e2e": "node scripts/e2e-flow.mjs",
+    "test:ai": "tsx scripts/run-ai-boundary-tests.ts",
+    "test:report": "tsx scripts/run-report-integrity-tests.ts"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.9.0",

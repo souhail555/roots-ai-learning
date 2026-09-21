@@ -10,7 +10,7 @@
       <stop offset="100%" style="stop-color:#29B6F6"/>
     </linearGradient>
     <filter id="glow">
-      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
       <feMerge>
         <feMergeNode in="coloredBlur"/>
         <feMergeNode in="SourceGraphic"/>
@@ -22,80 +22,90 @@
   <rect width="300" height="400" fill="url(#bgGradient)"/>
   
   <!-- Brain hemisphere with circuit pattern -->
-  <g stroke="url(#circuitGradient)" stroke-width="2" fill="none" filter="url(#glow)">
-    <!-- Left hemisphere outline -->
-    <path d="M70 80 C50 70 50 60 70 50 C90 40 110 40 130 50 C150 40 170 40 190 50 C210 60 210 70 190 80 C170 90 150 90 130 90 C110 90 90 90 70 80"/>
+  <g stroke="url(#circuitGradient)" stroke-width="3" fill="none" filter="url(#glow)">
+    <!-- Left hemisphere outline - more rounded -->
+    <path d="M70 75 C50 65 50 55 70 45 C90 35 110 35 130 45 C150 35 170 35 190 45 C210 55 210 65 190 75 C170 85 150 85 130 85 C110 85 90 85 70 75"/>
     
-    <!-- Circuit traces -->
-    <path d="M75 65 L95 55 L115 65"/>
-    <path d="M95 75 L115 65 L135 75"/>
-    <path d="M115 85 L135 75 L155 85"/>
+    <!-- Circuit traces - more defined -->
+    <path d="M75 60 L95 50 L115 60"/>
+    <path d="M95 70 L115 60 L135 70"/>
+    <path d="M115 80 L135 70 L155 80"/>
+    <path d="M85 65 L105 75 L125 65"/>
+    <path d="M105 55 L125 45 L145 55"/>
+    <path d="M95 50 L115 40 L135 50"/>
     <path d="M85 70 L105 80 L125 70"/>
-    <path d="M105 60 L125 50 L145 60"/>
-    <path d="M95 55 L115 45 L135 55"/>
-    <path d="M85 75 L105 85 L125 75"/>
-    <path d="M105 70 L125 60 L145 70"/>
-    <path d="M125 65 L145 55 L165 65"/>
+    <path d="M105 65 L125 55 L145 65"/>
+    <path d="M125 60 L145 50 L165 60"/>
+    
+    <!-- Additional circuit details -->
+    <path d="M115 68 L125 78 L135 68"/>
+    <path d="M105 58 L115 68 L125 58"/>
     
     <!-- Circuit nodes -->
-    <circle cx="85" cy="70" r="3" fill="#4FC3F7"/>
-    <circle cx="125" cy="70" r="3" fill="#4FC3F7"/>
-    <circle cx="105" cy="85" r="3" fill="#4FC3F7"/>
-    <circle cx="115" cy="45" r="3" fill="#4FC3F7"/>
-    <circle cx="95" cy="60" r="2.5" fill="#4FC3F7"/>
-    <circle cx="135" cy="60" r="3" fill="#4FC3F7"/>
-    <circle cx="145" cy="65" r="2.5" fill="#4FC3F7"/>
-    <circle cx="125" cy="55" r="2" fill="#4FC3F7"/>
+    <circle cx="85" cy="65" r="3" fill="#4FC3F7"/>
+    <circle cx="125" cy="65" r="3" fill="#4FC3F7"/>
+    <circle cx="105" cy="80" r="3" fill="#4FC3F7"/>
+    <circle cx="115" cy="40" r="3" fill="#4FC3F7"/>
+    <circle cx="95" cy="51" r="2.5" fill="#4FC3F7"/>
+    <circle cx="135" cy="51" r="3" fill="#4FC3F7"/>
+    <circle cx="145" cy="60" r="2.5" fill="#4FC3F7"/>
+    <circle cx="125" cy="48" r="2.5" fill="#4FC3F7"/>
+    <circle cx="115" cy="68" r="2" fill="#4FC3F7"/>
+    <circle cx="125" cy="78" r="2" fill="#4FC3F7"/>
   </g>
   
-  <!-- Z shape connecting brain to roots -->
-  <g stroke="url(#circuitGradient)" stroke-width="3" fill="none" filter="url(#glow)">
+  <!-- Z shape connecting brain to roots - more pronounced -->
+  <g stroke="url(#circuitGradient)" stroke-width="4" fill="none" filter="url(#glow)">
     <!-- Top horizontal of Z -->
-    <path d="M60 90 L150 90"/>
+    <path d="M55 85 L150 85"/>
     <!-- Diagonal of Z -->
-    <path d="M150 90 L100 130"/>
+    <path d="M150 85 L100 125"/>
     <!-- Bottom horizontal of Z -->
-    <path d="M100 130 L200 130"/>
+    <path d="M100 125 L200 125"/>
     
     <!-- Connection to roots -->
-    <path d="M200 130 L200 160"/>
+    <path d="M200 125 L200 155"/>
   </g>
   
-  <!-- Root system -->
-  <g stroke="url(#circuitGradient)" stroke-width="2" fill="none" filter="url(#glow)">
+  <!-- Root system - more organic branching -->
+  <g stroke="url(#circuitGradient)" stroke-width="2.5" fill="none" filter="url(#glow)">
     <!-- Main roots extending from Z -->
-    <path d="M60 160 L50 200 L40 220"/>
-    <path d="M100 160 L100 200 L100 220"/>
-    <path d="M140 160 L150 200 L160 220"/>
-    <path d="M180 160 L200 200 L220 220"/>
+    <path d="M55 155 L45 195 L35 215"/>
+    <path d="M100 155 L100 195 L100 215"/>
+    <path d="M145 155 L155 195 L165 215"/>
+    <path d="M190 155 L205 195 L220 215"/>
     
-    <!-- Secondary branches -->
-    <path d="M50 200 L30 210"/>
-    <path d="M100 200 L80 210"/>
-    <path d="M100 200 L120 210"/>
-    <path d="M150 200 L170 210"/>
-    <path d="M200 200 L230 210"/>
+    <!-- Secondary branches - more spread -->
+    <path d="M45 195 L25 205"/>
+    <path d="M45 195 L55 205"/>
+    <path d="M100 195 L80 205"/>
+    <path d="M100 195 L120 205"/>
+    <path d="M155 195 L175 205"/>
+    <path d="M205 195 L245 205"/>
+    <path d="M205 195 L215 205"/>
     
     <!-- Root terminals -->
-    <circle cx="40" cy="220" r="3" fill="#4FC3F7"/>
-    <circle cx="100" cy="220" r="3" fill="#4FC3F7"/>
-    <circle cx="160" cy="220" r="3" fill="#4FC3F7"/>
-    <circle cx="220" cy="220" r="3" fill="#4FC3F7"/>
-    <circle cx="30" cy="210" r="2" fill="#4FC3F7"/>
-    <circle cx="80" cy="210" r="2" fill="#4FC3F7"/>
-    <circle cx="120" cy="210" r="2" fill="#4FC3F7"/>
-    <circle cx="170" cy="210" r="2" fill="#4FC3F7"/>
-    <circle cx="230" cy="210" r="2" fill="#4FC3F7"/>
+    <circle cx="35" cy="215" r="3" fill="#4FC3F7"/>
+    <circle cx="100" cy="215" r="3" fill="#4FC3F7"/>
+    <circle cx="165" cy="215" r="3" fill="#4FC3F7"/>
+    <circle cx="220" cy="215" r="3" fill="#4FC3F7"/>
+    <circle cx="25" cy="205" r="2.5" fill="#4FC3F7"/>
+    <circle cx="55" cy="205" r="2.5" fill="#4FC3F7"/>
+    <circle cx="80" cy="205" r="2.5" fill="#4FC3F7"/>
+    <circle cx="120" cy="205" r="2.5" fill="#4FC3F7"/>
+    <circle cx="175" cy="205" r="2.5" fill="#4FC3F7"/>
+    <circle cx="215" cy="205" r="2.5" fill="#4FC3F7"/>
+    <circle cx="245" cy="205" r="2.5" fill="#4FC3F7"/>
   </g>
   
-  <!-- Horizontal connectors -->
-  <g stroke="url(#circuitGradient)" stroke-width="1.5" fill="none" opacity="0.5">
-    <path d="M40 220 L70 220"/>
-    <path d="M80 220 L90 220"/>
-    <path d="M110 220 L130 220"/>
-    <path d="M140 220 L150 220"/>
-    <path d="M170 220 L190 220"/>
-    <path d="M200 220 L220 220"/>
+  <!-- Horizontal connectors - more defined -->
+  <g stroke="url(#circuitGradient)" stroke-width="2" fill="none" opacity="0.6">
+    <path d="M35 215 L75 215"/>
+    <path d="M80 215 L90 215"/>
+    <path d="M110 215 L145 215"/>
+    <path d="M150 215 L160 215"/>
+    <path d="M175 215 L195 215"/>
+    <path d="M200 215 L220 215"/>
   </g>
   
   <!-- Text: ROOTS-AI™ -->

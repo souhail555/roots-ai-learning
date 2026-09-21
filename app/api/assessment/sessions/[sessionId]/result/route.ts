@@ -1,9 +1,15 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { getSession, saveResult, getResult } from "@/lib/db";
+import {
+  getSession,
+  saveResult,
+  getResult,
+  saveCanonicalReport,
+} from "@/lib/db";
 import { validateAnswers } from "@/lib/canonicalAssessment";
 import { calculateScores } from "@/lib/scoring";
 import { CANONICAL_VERSIONS } from "@/lib/canonical/source";
+import { assertReportIntegrity, generateReport } from "@/lib/report/pipeline";
 
 /**
  * Server-controlled deterministic result.
@@ -41,11 +47,29 @@ export async function POST(
 
   const result = calculateScores(session.answers);
   await saveResult(sessionId, result, CANONICAL_VERSIONS);
+
+  // Build and store the canonical immutable report object from the frozen
+  // deterministic result. The report route and the PDF route both read this
+  // stored record; neither recalculates. Narrative generation is attempted only
+  // against the read-only projection and falls back deterministically.
+  const generated = await generateReport(sessionId, session.answers, {
+    scoringOverride: result,
+  });
+  assertReportIntegrity(generated.report);
+  await saveCanonicalReport({
+    id: sessionId,
+    assessmentId: sessionId,
+    report: generated.report,
+    createdAt: new Date().toISOString(),
+  });
+
   return NextResponse.json(
     {
       result,
       questionnaireVersion: CANONICAL_VERSIONS.questionnaire,
       scoringVersion: CANONICAL_VERSIONS.scoring,
+      contentHash: generated.report.contentHash,
+      narrativeUsedFallback: generated.report.provenance.ai?.usedFallback ?? true,
     },
     { status: 201 },
   );

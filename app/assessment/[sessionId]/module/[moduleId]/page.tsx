@@ -1,12 +1,14 @@
 "use client";
 
 import { FormEvent, use, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { assessmentModules } from "@/lib/canonicalAssessment";
 import QuestionCard from "@/components/ui/QuestionCard";
 import ProgressBar from "@/components/ui/ProgressBar";
 
 export default function ModulePage({ params }: { params: Promise<{ sessionId: string; moduleId: string }> }) {
   const { sessionId, moduleId } = use(params);
+  const router = useRouter();
   const [savedAnswers, setSavedAnswers] = useState<Record<string, string | string[]>>({});
   const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "failed">("saved");
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -18,16 +20,16 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
         setSavedAnswers((await response.json()).answers ?? {});
       } else if (response.status === 403 || response.status === 404) {
         // Session expired or not found, redirect to start
-        window.location.href = "/assessment";
+        router.replace("/assessment");
       }
     });
     return () => { if (saveTimer.current) clearTimeout(saveTimer.current); };
-  }, [sessionId]);
+  }, [sessionId, router]);
 
   if (!selectedModule) {
     return <main className="route-shell"><h1>Module not found</h1><p className="route-lede">This learning branch does not exist.</p></main>;
   }
-  const module = selectedModule;
+  const activeModule = selectedModule;
 
   function collectAnswers(form: HTMLFormElement) {
     const formData = new FormData(form);
@@ -94,10 +96,10 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
       setSaveStatus("failed");
       return;
     }
-    const moduleIndex = assessmentModules.findIndex((item) => item.id === module.id);
+    const moduleIndex = assessmentModules.findIndex((item) => item.id === activeModule.id);
     const nextModule = assessmentModules[moduleIndex + 1];
     if (nextModule) {
-      window.location.assign(`/assessment/${sessionId}/module/${nextModule.id}`);
+      router.push(`/assessment/${sessionId}/module/${nextModule.id}`);
       return;
     }
     // Final module: ask the server to produce the deterministic result.
@@ -106,15 +108,15 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
       setSaveStatus("failed");
       return;
     }
-    window.location.assign(`/report/${sessionId}`);
+    router.push(`/report/${sessionId}`);
   }
 
   return (
     <main className="route-shell route-shell-wide">
-      <p className="eyebrow">MODULE {module.order} OF 13</p>
-      <h1>{module.title}</h1>
-      <p className="route-lede">{module.purpose}. Use your usual experience during the last four weeks unless a question says otherwise.</p>
-      <ProgressBar current={module.order} total={assessmentModules.length} className="route-progress" />
+      <p className="eyebrow">MODULE {activeModule.order} OF 13</p>
+      <h1>{activeModule.title}</h1>
+      <p className="route-lede">{activeModule.purpose}. Use your usual experience during the last four weeks unless a question says otherwise.</p>
+      <ProgressBar current={activeModule.order} total={assessmentModules.length} className="route-progress" />
       <form className="question-form" onSubmit={submitModule} onChange={onChange}>
         <div className={`save-status save-status-${saveStatus}`} role="status" aria-live="polite">
           {saveStatus === "saving" ? "Saving…" : saveStatus === "failed" ? (
@@ -123,7 +125,7 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
             </>
           ) : "Saved"}
         </div>
-        {module.questions.map((question) => <QuestionCard key={question.id} question={question} defaultValue={savedAnswers[question.id] as string | undefined} />)}
+        {activeModule.questions.map((question) => <QuestionCard key={question.id} question={question} defaultValue={savedAnswers[question.id] as string | undefined} />)}
         <button className="continue-button" type="submit">{module.order === assessmentModules.length ? "Review and Submit" : "Save and Continue"}</button>
       </form>
     </main>

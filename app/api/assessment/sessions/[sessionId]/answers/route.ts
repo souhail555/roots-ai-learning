@@ -13,11 +13,11 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ se
     return NextResponse.json({ error: "moduleId and answers are required." }, { status: 400 });
   }
 
-  const module = assessmentModules.find((m) => m.id === body.moduleId);
-  if (!module) return NextResponse.json({ error: "Unknown module." }, { status: 400 });
+  const assessmentModule = assessmentModules.find((m) => m.id === body.moduleId);
+  if (!assessmentModule) return NextResponse.json({ error: "Unknown module." }, { status: 400 });
 
   // Only accept answers for questions that belong to this module (no cross-module injection).
-  const allowed = new Set(module.questions.map((q) => q.id));
+  const allowed = new Set(assessmentModule.questions.map((q) => q.id));
   const submitted = Object.keys(body.answers);
   const foreign = submitted.filter((id) => !allowed.has(id));
   if (foreign.length > 0) {
@@ -51,8 +51,8 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ se
   }
 
   // Required questions of this module must be complete when the module is submitted.
-  const moduleRequiredIds = module.questions.filter((q) => q.required).map((q) => q.id);
-  const validationErrors = module.questions.length > 0
+  const moduleRequiredIds = assessmentModule.questions.filter((q) => q.required).map((q) => q.id);
+  const validationErrors = assessmentModule.questions.length > 0
     ? validateAnswers(merged).filter((e) => moduleRequiredIds.includes(e.questionId))
     : [];
 
