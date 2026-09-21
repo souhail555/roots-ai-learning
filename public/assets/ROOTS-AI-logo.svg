@@ -1,19 +1,49 @@
-<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Brain with circuit patterns -->
-  <g transform="translate(5, 5)">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="#0A1628"/>
+  
+  <!-- Brain circuit pattern -->
+  <g stroke="#4FC3F7" stroke-width="2" fill="none">
     <!-- Brain outline -->
-    <path d="M15 5C10 5 5 10 5 15C5 20 10 25 15 25C20 25 25 20 25 15C25 10 20 5 15 5Z" stroke="#ADD8E6" stroke-width="1.5" fill="none"/>
+    <path d="M30 25 C25 20 25 15 30 10 C35 5 45 5 50 10 C55 5 65 5 70 10 C75 15 75 20 70 25 C75 30 75 35 70 40 C65 45 55 45 50 40 C45 45 35 45 30 40 C25 35 25 30 30 25"/>
     
-    <!-- Circuit patterns -->
-    <path d="M13 7L10 10M13 9L9 12M13 11L8 14M13 13L7 16" stroke="#ADD8E6" stroke-width="0.8"/>
-    <path d="M17 7L20 10M17 9L21 12M17 11L22 14M17 13L23 16" stroke="#ADD8E6" stroke-width="0.8"/>
+    <!-- Circuit lines inside brain -->
+    <path d="M35 20 L40 15 L45 20"/>
+    <path d="M55 20 L60 15 L65 20"/>
+    <path d="M35 25 L40 30 L45 25"/>
+    <path d="M55 25 L60 30 L65 25"/>
+    <path d="M35 30 L40 35 L45 30"/>
+    <path d="M55 30 L60 35 L65 30"/>
+    <path d="M40 35 L50 40 L60 35"/>
+    <path d="M40 20 L50 15 L60 20"/>
     
-    <!-- Z letter -->
-    <path d="M7 19L23 19L7 31L23 31" stroke="#ADD8E6" stroke-width="1.5" fill="none"/>
+    <!-- Connection dots -->
+    <circle cx="40" cy="15" r="2" fill="#4FC3F7"/>
+    <circle cx="60" cy="15" r="2" fill="#4FC3F7"/>
+    <circle cx="40" cy="30" r="2" fill="#4FC3F7"/>
+    <circle cx="60" cy="30" r="2" fill="#4FC3F7"/>
+    <circle cx="50" cy="40" r="2" fill="#4FC3F7"/>
+  </g>
+  
+  <!-- Z shape from roots -->
+  <g stroke="#4FC3F7" stroke-width="2" fill="none">
+    <!-- Left root going down -->
+    <path d="M35 45 L30 55 L25 65"/>
+    <!-- Middle root going down-right -->
+    <path d="M50 45 L50 55 L50 65"/>
+    <!-- Right root going down -->
+    <path d="M65 45 L70 55 L75 65"/>
     
-    <!-- Roots -->
-    <path d="M15 31C13 33 10 35 7 37C5 39 3 41 3 43" stroke="#ADD8E6" stroke-width="1" fill="none"/>
-    <path d="M15 31C17 33 20 35 23 37C25 39 27 41 27 43" stroke="#ADD8E6" stroke-width="1" fill="none"/>
-    <path d="M15 31C15 33 15 35 15 37C15 39 15 41 15 43" stroke="#ADD8E6" stroke-width="1" fill="none"/>
+    <!-- Root tips -->
+    <circle cx="25" cy="65" r="2" fill="#4FC3F7"/>
+    <circle cx="50" cy="65" r="2" fill="#4FC3F7"/>
+    <circle cx="75" cy="65" r="2" fill="#4FC3F7"/>
+  </g>
+  
+  <!-- Small connecting lines between brain and roots -->
+  <g stroke="#4FC3F7" stroke-width="1" fill="none" opacity="0.6">
+    <line x1="35" y1="45" x2="35" y2="45"/>
+    <line x1="50" y1="45" x2="50" y2="45"/>
+    <line x1="65" y1="45" x2="65" y2="45"/>
   </g>
 </svg>
