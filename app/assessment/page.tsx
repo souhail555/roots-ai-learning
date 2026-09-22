@@ -1,16 +1,19 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function AssessmentStartPage() {
   const [email, setEmail] = useState("");
+  const router = useRouter();
 
   async function startAssessment(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const response = await fetch("/api/assessment/sessions", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email }) });
     if (!response.ok) return;
     const { sessionId } = await response.json();
-    window.location.assign(`/assessment/${sessionId}/module/M01`);
+    // Client-side navigation to the first module of the new session.
+    router.push(`/assessment/${sessionId}/module/M01`);
   }
 
   return (

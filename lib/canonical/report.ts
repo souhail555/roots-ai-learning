@@ -1,7 +1,6 @@
 import { createHash } from "node:crypto";
 import {
   BIO_STATE_LABEL,
-  CANONICAL_VERSIONS,
   DOMAIN_LABELS,
   DOMAIN_TIE_ORDER,
   canonicalVersionIdentity,

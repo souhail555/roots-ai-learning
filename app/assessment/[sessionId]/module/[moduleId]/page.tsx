@@ -2,6 +2,7 @@
 
 import { FormEvent, use, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { assessmentModules } from "@/lib/canonicalAssessment";
 import QuestionCard from "@/components/ui/QuestionCard";
 import ProgressBar from "@/components/ui/ProgressBar";
@@ -59,9 +60,11 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
     const ok = response.ok && !hasErrors;
     setSaveStatus(ok ? "saved" : "failed");
     if (ok) setSavedAnswers((current) => ({ ...current, ...answers }));
-    // If session expired, redirect to start
+    // If the session expired, redirect to the start page. Use the router (a
+    // client-side navigation) rather than assigning window.location.href, which
+    // is both a full page reload and flagged by the Next.js lint rules.
     if (response.status === 400 && payload?.error?.includes("expired")) {
-      window.location.href = "/assessment";
+      router.replace("/assessment");
     }
     return ok;
   }
@@ -121,7 +124,7 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
         <div className={`save-status save-status-${saveStatus}`} role="status" aria-live="polite">
           {saveStatus === "saving" ? "Saving…" : saveStatus === "failed" ? (
             <>
-              Save failed. Your session may have expired. <a href="/assessment" className="text-blue-600 hover:underline">Start a new assessment</a>.
+              Save failed. Your session may have expired. <Link href="/assessment" className="text-blue-600 hover:underline">Start a new assessment</Link>.
             </>
           ) : "Saved"}
         </div>

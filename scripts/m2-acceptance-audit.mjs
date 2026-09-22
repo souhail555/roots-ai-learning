@@ -48,12 +48,10 @@ async function main() {
   });
 
   const emptyMulti = await patch({ moduleId: "M02", answers: { Q13: [] } });
-  const em = await jsonOf(emptyMulti);
   rec("A2-a", "Empty required multi-select (Q13) hard-rejected (400)",
   emptyMulti.status === 400, `status ${emptyMulti.status}`);
 
   const exclusive = await patch({ moduleId: "M02", answers: { Q13: ["NONE", "T2D"] } });
-  const ex = await jsonOf(exclusive);
   rec("A2-b", "NONE/N-A mutually exclusive hard-rejected (400)",
   exclusive.status === 400, `status ${exclusive.status}`);
 
@@ -61,7 +59,6 @@ async function main() {
   rec("A2-c", "Unknown option value rejected", badOption.status === 400, `status ${badOption.status}`);
 
   const q73 = await patch({ moduleId: "M13", answers: { Q73: "N/A" } });
-  const q73b = await jsonOf(q73);
   rec("A2-d", "Q73 invented N/A is rejected",
   q73.status === 400, `status ${q73.status}`);
 
