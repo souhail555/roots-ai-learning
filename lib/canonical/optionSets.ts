@@ -123,7 +123,6 @@ const MEDICATION_CONTEXT: AssessmentOption[] = [
   { id: "PREFER_NOT", label: "Prefer not to say" },
   na(),
 ];
-
 const SLEEP_HOURS: AssessmentOption[] = [
   { id: "LT5", label: "Less than 5 hours", points: 4 },
   { id: "H5_6", label: "5 to less than 6 hours", points: 3 },
@@ -285,7 +284,6 @@ const ANSWER_CONFIDENCE: AssessmentOption[] = [
   { id: "HIGH", label: "Confident", points: 75 },
   { id: "VERY_HIGH", label: "Very confident", points: 100 },
 ];
-
 export const optionSets: Record<string, CanonicalOptionSet> = {
   FREQ: { id: "FREQ", options: FREQ },
   YES_NO_UNSURE: { id: "YES_NO_UNSURE", options: YES_NO_UNSURE },

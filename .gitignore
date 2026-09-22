@@ -44,3 +44,6 @@ next-env.d.ts
 
 # database
 /data
+
+# local dev server log
+dev.log

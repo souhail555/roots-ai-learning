@@ -118,8 +118,10 @@ export const goldenTests: GoldenTest[] = [
       domains: { MR: 0, HS: 0, SR: 0, CH: 0, SL: 0, IB: 0, BS: 0 },
       biologicalState: 0,
       scoredDomainCount: 7,
-      coPrimary: true,
-      drivers: ["MR+HS", "SR", "CH"],
+      coPrimary: false,
+      // DRV-001 floors drivers at 25, so a burden-0 profile has no eligible
+      // driver and no co-primary pair to merge. No domain is a driver.
+      drivers: [],
       band: "Optimized",
     },
   },
@@ -184,7 +186,7 @@ export const goldenTests: GoldenTest[] = [
     name: "Biological State null at 4 of 7 domains",
     rule: "Fewer than 5 available domains -> Biological State null; drivers still ranked from eligible domains",
     answers: onlyDomains(["HS", "SR", "CH", "SL"], 2),
-    expected: { domains: { MR: null, HS: 50, SR: 50, CH: 50, SL: 50, IB: null, BS: null }, biologicalState: null, opportunity: null, recoveryPotential: null, scoredDomainCount: 4, coPrimary: true, drivers: ["HS+SR", "CH", "SL"] },
+    expected: { domains: { MR: null, HS: 50, SR: 50, CH: 50, SL: 50, IB: null, BS: null }, biologicalState: null, opportunity: null, recoveryPotential: null, scoredDomainCount: 4, coPrimary: true, drivers: ["HS+SR", "CH"] },
   },
   {
     id: "GT09",
@@ -268,21 +270,21 @@ export const goldenTests: GoldenTest[] = [
       }
       return answers;
     })(),
-    expected: { drivers: ["MR", "SL", "HS"], coPrimary: false },
+    expected: { drivers: ["MR", "SL"], coPrimary: false },
   },
   {
     id: "GT15",
     name: "Fixed tie order applied when scores equal",
     rule: "Equal scores rank by MR -> HS -> SR -> CH -> SL -> IB -> BS (MR is 43 below the others at 50, so HS/SR lead)",
     answers: uniform(2),
-    expected: { coPrimary: true, drivers: ["HS+SR", "CH", "SL"] },
+    expected: { coPrimary: true, drivers: ["HS+SR", "CH"] },
   },
   {
     id: "GT15B",
     name: "Fixed tie order with all seven domains equal",
     rule: "All domains equal -> co-primary pair is MR+HS by tie order",
     answers: uniform(3),
-    expected: { coPrimary: true, drivers: ["MR+HS", "SR", "CH"] },
+    expected: { coPrimary: true, drivers: ["MR+HS", "SR"] },
   },
   {
     id: "GT16",
@@ -294,7 +296,7 @@ export const goldenTests: GoldenTest[] = [
       // verified precisely in GT16B with an explicit 3-point gap.
       return answers;
     })(),
-    expected: { coPrimary: true, drivers: ["MR+HS", "SR", "CH"] },
+    expected: { coPrimary: true, drivers: ["MR+HS", "SR"] },
   },
   {
     id: "GT16B",
@@ -347,14 +349,14 @@ export const goldenTests: GoldenTest[] = [
       }
       return answers;
     })(),
-    expected: { coPrimary: false, drivers: ["MR", "HS", "SR"] },
+    expected: { coPrimary: false, drivers: ["MR"] },
   },
   {
     id: "GT18",
     name: "Co-primary rendered once, no duplication",
     rule: "Co-primary pair appears as one entry and is not repeated",
     answers: uniform(3),
-    expected: { coPrimary: true, drivers: ["MR+HS", "SR", "CH"] },
+    expected: { coPrimary: true, drivers: ["MR+HS", "SR"] },
   },
   {
     id: "GT19",

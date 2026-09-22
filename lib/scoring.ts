@@ -26,7 +26,7 @@ export const domainOrder = DOMAIN_TIE_ORDER;
 export type { DomainId };
 export { BIO_STATE };
 
-export type DriverId = DomainId | `${DomainId}+${DomainId}`;
+export type DriverId = DomainId | `${DomainId}+${DomainId}` | `${DomainId}+${DomainId} co-primary`;
 
 export interface ScoringResult {
   /** Version identity the result was produced under (reproducibility). */
@@ -40,6 +40,13 @@ export interface ScoringResult {
   biologicalStateAvailable: boolean;
   opportunity: number | null;
   recoveryPotential: number | null;
+  /**
+   * Ranked drivers. A co-primary pair is a single emitted entry (C-02 DRV-003);
+   * `coPrimary` records that the top pair was merged. The participant-facing
+   * "co-primary" wording is presentation and is produced by the report layer,
+   * not by the deterministic engine (M2 requirement 6: no AI/narrative
+   * authority over scoring, and no presentation coupling in the engine).
+   */
   drivers: DriverId[];
   coPrimary: boolean;
   overallScore: number | null;
@@ -139,7 +146,9 @@ export function calculateScores(answers: Record<string, unknown>): ScoringResult
       )
     : null;
 
-  const eligibleDomains = DOMAIN_TIE_ORDER.filter((domain) => domains[domain] !== null)
+  const eligibleDomains = DOMAIN_TIE_ORDER.filter(
+    (domain) => domains[domain] !== null && (domains[domain] as number) >= DOMAIN_MODEL.driverEligibilityFloor,
+  )
     .slice()
     .sort(
       (a, b) =>
@@ -154,11 +163,12 @@ export function calculateScores(answers: Record<string, unknown>): ScoringResult
     const gap = (domains[eligibleDomains[0]] as number) - (domains[eligibleDomains[1]] as number);
     if (gap <= DOMAIN_MODEL.coPrimaryGap) {
       coPrimary = true;
-      // Co-primary pair rendered as ONE entry, no duplication, no ineligible fallback.
-      drivers.push(`${eligibleDomains[0]}+${eligibleDomains[1]}`);
-      drivers.push(...eligibleDomains.slice(2, 4));
+      // Co-primary pair rendered as ONE entry, no duplication, no ineligible
+      // fallback (DRV-003). The pair carries both domains and is never repeated.
+      drivers.push(`${eligibleDomains[0]}+${eligibleDomains[1]}` as DriverId);
+      if (eligibleDomains[2]) drivers.push(eligibleDomains[2]);
     } else {
-      drivers.push(...eligibleDomains.slice(0, 3));
+      drivers.push(...eligibleDomains.slice(0, DOMAIN_MODEL.driverMaxEntries));
     }
   } else {
     drivers.push(...eligibleDomains);

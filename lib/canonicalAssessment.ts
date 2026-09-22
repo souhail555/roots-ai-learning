@@ -5,7 +5,7 @@ export type QuestionType = "integer" | "decimal" | "decimal_with_unit" | "single
 
 export interface AssessmentOption { id: string; label: string; points?: number; isNa?: boolean; exclusive?: boolean; }
 export interface CanonicalQuestion { id: string; text: string; type: QuestionType; required: boolean; allowNa: boolean; scoringEligible: boolean; domain?: string; reverseScored?: boolean; helpText?: string; options?: AssessmentOption[]; optionSetId?: string; min?: number; max?: number; }
-export interface AssessmentModule { id: string; order: number; title: string; purpose: string; questions: CanonicalQuestion[]; }
+export interface AssessmentModule { id: string; order: number; title: string; purpose: string; firstQuestionOrder: number; lastQuestionOrder: number; questions: CanonicalQuestion[]; }
 
 /**
  * Option sets are sourced from lib/canonical/optionSets.ts, which reproduces the
@@ -16,7 +16,46 @@ export interface AssessmentModule { id: string; order: number; title: string; pu
 const freq = optionSets.FREQ.options;
 const yesNo = optionSets.YES_NO_UNSURE.options;
 const set = (optionSetId: string): AssessmentOption[] => optionSets[optionSetId].options;
-const q = (id: number, text: string, type: QuestionType = "likert", options?: AssessmentOption[], extra: Partial<CanonicalQuestion> = {}): CanonicalQuestion => ({ id: `Q${id}`, text, type, required: true, allowNa: type !== "integer" && type !== "decimal" && type !== "decimal_with_unit", scoringEligible: false, options: type === "likert" ? freq : options, ...extra });
+
+/**
+ * Canonical option_set_id for a question. C-01 records the option_set_id on
+ * every option-backed question; the descriptor is derived here by matching the
+ * option array by identity so the two can never drift.
+ */
+function optionSetIdFor(options?: AssessmentOption[]): string | undefined {
+  if (!options) return undefined;
+  return Object.keys(optionSets).find((id) => optionSets[id].options === options);
+}
+
+/**
+ * Canonical min/max parsed from the C-01 `validation` string. Numeric and
+ * numeric-with-unit questions are range-validated; option-backed questions
+ * carry the canonical 0-4 burden range.
+ */
+function boundsFor(optionSetId: string | undefined, explicit: { min?: number; max?: number }): { min?: number; max?: number } {
+  if (optionSetId === "FREQ") return { min: 0, max: 4 };
+  return explicit;
+}
+
+const q = (id: number, text: string, type: QuestionType = "likert", options?: AssessmentOption[], extra: Partial<CanonicalQuestion> = {}): CanonicalQuestion => {
+  // `likert` questions use the shared FREQ set; every other option-backed
+  // question carries the set supplied by the caller.
+  const effectiveOptions = type === "likert" ? freq : options;
+  const optionSetId = optionSetIdFor(effectiveOptions);
+  const { min, max, ...rest } = extra;
+  return {
+    id: `Q${id}`,
+    text,
+    type,
+    required: true,
+    allowNa: type !== "integer" && type !== "decimal" && type !== "decimal_with_unit",
+    scoringEligible: false,
+    options: effectiveOptions,
+    optionSetId,
+    ...boundsFor(optionSetId, { min, max }),
+    ...rest,
+  };
+};
 const scored = (question: CanonicalQuestion, domain: string, reverseScored = false): CanonicalQuestion => ({ ...question, domain, scoringEligible: true, reverseScored });
 
 const moduleData: Array<[string, string, string, number, number]> = [
@@ -68,10 +107,10 @@ const questions: CanonicalQuestion[] = [
   q(56, "Which hormonal or reproductive stage best describes your current situation?", "single_select", set("HORMONAL_STAGE")),
   q(57, "How often have hormonal or reproductive changes affected sleep, appetite, energy or weight?"), q(58, "Are you currently using hormonal medication, contraception or hormone therapy?", "single_select", yesNo), q(59, "How often do appetite or weight patterns change alongside hormonal or reproductive symptoms?"), q(60, "Have you been told by a clinician that you have a thyroid, reproductive or other hormonal concern?", "single_select", yesNo),
   q(61, "How often do you smoke, vape or use nicotine?", "single_select", set("TOBACCO")), q(62, "How often do you consume alcohol?", "single_select", set("ALCOHOL")), q(63, "Which description best matches your usual eating pattern?", "single_select", set("EATING_PATTERN")), q(64, "How often are your meals reasonably consistent in timing from day to day?"), q(65, "How supportive is your home food environment of the choices you want to make?", "single_select", set("SUPPORT_LEVEL")), q(66, "How much practical or emotional support do you have for making health-related changes?", "single_select", set("SUPPORT_LEVEL")),
-  q(67, "What is your primary goal for completing this assessment?", "single_select", set("PRIMARY_GOAL"), { allowNa: false }), q(68, "Which area would you most like to understand first?", "single_select", set("PRIORITY_AREA"), { allowNa: false }), q(69, "How ready do you feel to try one small, realistic change during the next two weeks?", "integer_scale", undefined, { allowNa: false, min: 0, max: 10 }), q(70, "How confident are you that you can maintain one small change for two weeks?", "integer_scale", undefined, { allowNa: false, min: 0, max: 10 }), q(71, "What pace of change feels most realistic for you?", "single_select", set("CHANGE_PACE"), { allowNa: false }), q(72, "How confident are you that your answers reflect your usual experience during the last four weeks?", "single_select", set("ANSWER_CONFIDENCE"), { allowNa: false }), q(73, "Is there anything else you would like the report to acknowledge?", "free_text", undefined, { required: false, allowNa: false, max: 1000, helpText: "Optional. Do not enter urgent or emergency information here." }),
+  q(67, "What is your primary goal for completing this assessment?", "single_select", set("PRIMARY_GOAL"), { allowNa: false }), q(68, "Which area would you most like to understand first?", "single_select", set("PRIORITY_AREA"), { allowNa: false }), q(69, "How ready do you feel to try one small, realistic change during the next two weeks?", "integer_scale", undefined, { allowNa: false, min: 0, max: 10 }), q(70, "How confident are you that you can maintain one small change for two weeks?", "integer_scale", undefined, { allowNa: false, min: 0, max: 10 }), q(71, "What pace of change feels most realistic for you?", "single_select", set("CHANGE_PACE"), { allowNa: false }), q(72, "How confident are you that your answers reflect your usual experience during the last four weeks?", "single_select", set("ANSWER_CONFIDENCE"), { allowNa: false }), q(73, "Is there anything else you would like the report to acknowledge?", "free_text", undefined, { required: false, allowNa: false, min: 0, max: 1000, helpText: "Optional. Do not enter urgent or emergency information here." }),
 ];
 
-export const assessmentModules: AssessmentModule[] = moduleData.map(([id, title, purpose, start, end], index) => ({ id, order: index + 1, title, purpose, questions: questions.filter((item) => { const number = Number(item.id.slice(1)); return number >= start && number <= end; }) }));
+export const assessmentModules: AssessmentModule[] = moduleData.map(([id, title, purpose, start, end], index) => ({ id, order: index + 1, title, purpose, firstQuestionOrder: start, lastQuestionOrder: end, questions: questions.filter((item) => { const number = Number(item.id.slice(1)); return number >= start && number <= end; }) }));
 export const allQuestions = questions;
 export const questionCount = 73;
 export const moduleCount = 13;

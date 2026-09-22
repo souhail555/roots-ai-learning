@@ -1,6 +1,6 @@
 ﻿ROOTS-AI(TM) M2 End-to-End Flow against http://localhost:3000
 
-E2E-01   | PASS | Session created -> b29b701f-9271-401d-80b6-49c0ce6b078a
+E2E-01   | PASS | Session created -> a089bf3a-e11e-4861-b76e-a8fc58371175
 E2E-02   | PASS | Module M01 saved -> status 200
 E2E-03   | PASS | Module M02 saved -> status 200
 E2E-04   | PASS | Module M03 saved -> status 200
@@ -18,7 +18,7 @@ E2E-15   | PASS | Progress reports complete -> answered 71/71, 100%
 E2E-16   | PASS | Result produced -> status 201
 E2E-17   | PASS | Result carries scoring version -> C-02 v1.0.1 CORRECTED
 E2E-18   | PASS | Biological State computed -> BS 52
-E2E-19   | PASS | Drivers present and eligible -> ["SL+CH","BS","IB"]
+E2E-19   | PASS | Drivers present and eligible -> ["SL+CH","BS"]
 E2E-20   | PASS | Version identity recorded -> C-01 v1.0.1 CORRECTED | C-02 v1.0.1 CORRECTED
 
 === Summary ===

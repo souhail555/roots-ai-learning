@@ -38,12 +38,23 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ se
     // Only consider errors for questions in the module being saved. Missing
     // required questions in other modules are expected during progressive entry.
     if (!allowed.has(error.questionId)) return false;
+    // A value that is not a well-formed canonical response for the question's
+    // C-01 response type is a hard failure: it must never enter storage. This
+    // covers non-approved option ids, forbidden N/A, NONE/N-A combined with
+    // another option, an empty required multi-select, a non-numeric value where
+    // C-01 defines a number, and a number outside the C-01 range. The remaining
+    // "must have a valid response" messages are intentionally NOT hard failures
+    // here, because an incomplete-but-valid autosave is permitted.
     return (
       error.message.includes("not approved by C-01") ||
       error.message.includes("must use an approved C-01 option") ||
       error.message.includes("does not permit an N/A") ||
       error.message.includes("must be mutually exclusive") ||
-      error.message.includes("must have at least one approved option")
+      error.message.includes("must have at least one approved option") ||
+      error.message.includes("must be a number") ||
+      error.message.includes("below the minimum allowed value") ||
+      error.message.includes("above the maximum allowed value") ||
+      error.message.includes("must include an approved unit")
     );
   });
   if (submitErrors.length > 0) {

@@ -1,0 +1,52 @@
+M2 closure: items 9 and 10 (RLS/security + controlled XLSX reproduction)
+
+Item 10 - controlled XLSX reproduction
+- Finalize scripts/ingest-canonical.ts: mechanically maps C-01 v1.0.1
+  CORRECTED + C-02 v1.0.1 CORRECTED into lib/canonical/generated/
+  canonical-source.json in the shape of lib/canonical/{source,modules,
+  optionSets}.ts. No authored values; every field read from a cell.
+- Verified counts reproduce the workbooks exactly: 73 questions, 13
+  modules, 71 required / 2 optional, 40 scoring-eligible, 29 option sets,
+  30 golden tests. Cross-sheet integrity asserted (C-01 scoring flag vs
+  C-02 Question_Mapping; reverse-scored points must invert).
+- Extend scripts/verify-canonical.ts with a provenance layer (GEN-*,
+  PROV-*): asserts lib/canonical/*.ts reproduces the generated JSON,
+  comparing 171 option definitions, 73 questions and 13 modules. Wired
+  into npm run test:canonical -> 30/30 PASS.
+- Reconcile against the XLSX and correct the code to the canonical
+  source (canonical wins, expectations never hand-edited):
+  * DRV-001: driver eligibility floor 25 (a domain at 0 is not a driver)
+  * DRV-002: at most 3 driver entries; a co-primary pair consumes two
+  * DRV-003: co-primary pair emitted once, no duplication
+  * optionSetId derived and asserted for all 73 questions
+  * canonical min/max declared from the C-01 validation cells
+  * contextual stored values applied (YES_NO_UNSURE, ANSWER_CONFIDENCE)
+- Regenerate Golden Test expectations: 34/34 PASS.
+- Report the unresolved SC-003 / SC-005 arithmetic inconsistency in the
+  C-02 workbook rather than editing expectations (package section 8.3).
+
+Item 9 - security / negative tests incl. controlled RLS
+- Add executable RLS artifacts derived from the M1 policy design:
+  migrations/001_initial_schema.sql, migrations/002_add_rls_policies.sql
+  (ENABLE + FORCE RLS, ownership, report/audit immutability, admin path)
+  and migrations/tests/rls_negative_suite.sql (25 negative isolation
+  cases with in-SQL PASS/FAIL and non-zero exit on failure), plus
+  scripts/run-rls-suite.mjs (live runner, gated on ROOTS credentials).
+- Correct two defects in the M1 design as written: the unusable
+  sessions.id = auth.uid()::text comparison, and the absence of
+  FORCE ROW LEVEL SECURITY.
+- Expand scripts/security-tests.mjs from 15 to 31 cases. SEC-18/19/20
+  exposed a real gap: out-of-range numbers, non-numeric text and a
+  forbidden N/A were silently stored. Extended the canonical
+  hard-failure guard list in the answers route; the cases now fail
+  closed.
+
+Evidence regenerated: M2_CANONICAL_VERIFICATION.txt,
+M2_GOLDEN_TEST_EVIDENCE.txt, M2_SECURITY_TESTS.txt, M2_E2E_FLOW.txt,
+M2_RLS_NEGATIVE_SUITE.txt. M2_COMPLETION_PACKAGE.md updated: the
+"XLSX not present on the authoring machine" provenance caveat is removed
+and items 9 and 10 now record the reproduced/tested state.
+
+Suites: canonical 30/30, golden 34/34, security 31/31, e2e 20/20,
+acceptance audit 18/18. RLS live run pending ROOTS credentials.
+Out of scope and untouched: ADM-01, SHA-256 fingerprints, all M3 scope.

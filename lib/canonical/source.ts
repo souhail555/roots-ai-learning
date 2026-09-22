@@ -81,6 +81,14 @@ export interface DomainModel {
   coPrimaryGap: 3;
   /** Decimal places retained for Opportunity / Recovery Potential. */
   secondaryScoreDecimals: 1;
+  /**
+   * Minimum domain score for driver eligibility (C-02 DRV-001: "Available
+   * domain score >= 25"). A null domain, or a domain below this floor, is never
+   * a driver and never a co-primary partner.
+   */
+  driverEligibilityFloor: 25;
+  /** Maximum number of driver entries emitted (C-02 DRV-002 primary/secondary/tertiary). */
+  driverMaxEntries: 3;
 }
 
 export const DOMAIN_MODEL: DomainModel = {
@@ -93,6 +101,8 @@ export const DOMAIN_MODEL: DomainModel = {
   biologicalStateRequiredDomains: 5,
   coPrimaryGap: 3,
   secondaryScoreDecimals: 1,
+  driverEligibilityFloor: 25,
+  driverMaxEntries: 3,
 };
 
 /** Versioned identity string persisted with every stored answer set / result. */
