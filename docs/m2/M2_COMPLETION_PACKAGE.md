@@ -399,13 +399,14 @@ identity.
 
 ## 11. Deployment and GitHub
 - **Repository:** `https://github.com/souhail555/roots-ai-learning` (branch `master`).
-- **M2 commit:** `afd5ab4`.
+- **Pre-closure M2 commit:** `afd5ab4`.
+- **M2 items 9 + 10 closure commit:** `fae01c3` (follow-up cleanup `7bc9d4b`).
 - **Vercel production deployment:** `dpl_Cvmbd6QMYoN5KW43Yx2mdoSMfpg9`
   (readyState `READY`, promoted to production).
 - **Production alias:** `https://roots-ai-learning.vercel.app`
 - **Git auto-deploy:** the Vercel project is linked to the GitHub repo
-  (`link.type = github`, production branch `master`), so subsequent pushes deploy
-  automatically.
+  (`link.type = github`, production branch `master`), so the closure push
+  deploys automatically.
 
 Verified directly against the production deployment:
 
