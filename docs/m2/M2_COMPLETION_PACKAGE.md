@@ -195,7 +195,7 @@ the workbooks' own declared counts exactly:
 | Required | 71 | 71 | 71 |
 | Optional | 2 | 2 | 2 |
 | Scoring-eligible | 40 | 40 | 40 |
-| Option sets | — | 29 | 29 |
+| Option sets | — | 27 | 27 |
 | Golden tests | 30 | 30 | 30 |
 
 All controlled `QA_Checks` rows in both workbooks return `PASS`, and the C-01

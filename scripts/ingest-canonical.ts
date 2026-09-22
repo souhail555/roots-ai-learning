@@ -27,7 +27,11 @@ type Sheet = Record<string, Cell>[];
 interface XlsxModule {
   readFile: (p: string) => { SheetNames: string[]; Sheets: Record<string, unknown> };
   utils: {
-    sheet_to_json: ((s: unknown, o: unknown) => Record<string, Cell>[]) & ((s: unknown, o: unknown) => Cell[][]);
+    // SheetJS's sheet_to_json is overloaded: with `header: 1` it returns an
+    // array of arrays, otherwise an array of objects. The overloads are
+    // declared explicitly here so the AoA call site is typed as Cell[][].
+    sheet_to_json(sheet: unknown, opts: { header: 1 }): Cell[][];
+    sheet_to_json(sheet: unknown, opts?: unknown): Array<Record<string, Cell>>;
   };
 }
 
@@ -58,10 +62,10 @@ function readTable(
 ): Sheet {
   const sheet = workbook.Sheets[sheetName];
   if (!sheet) throw new Error(`Controlled sheet '${sheetName}' is missing.`);
-  const aoa = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: null, blankrows: false });
+  const aoa = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-  const headerIndex = aoa.findIndex(
-    (row) => Array.isArray(row) && row.some((cell) => String(cell ?? "").trim() === keyColumn),
+  const headerIndex = aoa.findIndex((row) =>
+    row.some((cell) => String(cell ?? "").trim() === keyColumn),
   );
   if (headerIndex < 0) {
     throw new Error(`Sheet '${sheetName}' has no header row containing '${keyColumn}'.`);

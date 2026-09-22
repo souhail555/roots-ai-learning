@@ -1,7 +1,7 @@
 ﻿ROOTS-AI(TM) M2 Security / Negative Tests against http://localhost:3000
 
-SEC-01     | PASS | User A session created -> 1cb439b5-ec42-40ec-9309-53e53754ea19
-SEC-02     | PASS | User B session created -> 2ed78d26-2db7-41d4-b1a8-c5d0090a9ca5
+SEC-01     | PASS | User A session created -> fce43452-94a6-45ea-a967-b70bacd318d0
+SEC-02     | PASS | User B session created -> 08ccba34-d46e-4b31-b570-1ea0de2a37f2
 SEC-03     | PASS | No cookie cannot read a session -> status 403
 SEC-04     | PASS | Cross-user session read is rejected -> status 403
 SEC-05     | PASS | Cross-user answer write is rejected -> status 403
