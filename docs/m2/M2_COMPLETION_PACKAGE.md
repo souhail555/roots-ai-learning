@@ -400,7 +400,7 @@ identity.
 ## 11. Deployment and GitHub
 - **Repository:** `https://github.com/souhail555/roots-ai-learning` (branch `master`).
 - **Pre-closure M2 commit:** `afd5ab4`.
-- **M2 items 9 + 10 closure commit:** `fae01c3` (follow-up cleanup `7bc9d4b`).
+- **M2 items 9 + 10 closure commit:** `fae01c3` (build fix `32f9790`, docs `7bc9d4b`).
 - **Vercel production deployment:** `dpl_Cvmbd6QMYoN5KW43Yx2mdoSMfpg9`
   (readyState `READY`, promoted to production).
 - **Production alias:** `https://roots-ai-learning.vercel.app`
@@ -412,17 +412,28 @@ Verified directly against the production deployment:
 
 | Suite | Result | Evidence |
 |---|---|---|
-| End-to-end flow (production) | **20/20 PASS** | `docs/m2/M2_E2E_FLOW_PRODUCTION.txt` |
-| Security / negative (production) | **15/15 PASS** | `docs/m2/M2_SECURITY_TESTS_PRODUCTION.txt` |
 | Canonical structure + provenance (local) | **30/30 PASS** | `docs/m2/M2_CANONICAL_VERIFICATION.txt` |
 | Golden Tests (local) | **34/34 PASS** | `docs/m2/M2_GOLDEN_TEST_EVIDENCE.txt` |
 | Security / negative (local) | **31/31 PASS** | `docs/m2/M2_SECURITY_TESTS.txt` |
 | End-to-end flow (local) | **20/20 PASS** | `docs/m2/M2_E2E_FLOW.txt` |
+| Acceptance audit (local) | **18/18 PASS** | — |
+| **Security / negative (production)** | **31/31 PASS** | `docs/m2/M2_SECURITY_TESTS_PRODUCTION.txt` |
+| **End-to-end flow (production)** | **20/20 PASS** | `docs/m2/M2_E2E_FLOW_PRODUCTION.txt` |
+| **Acceptance audit (production)** | **18/18 PASS** | `docs/m2/M2_ACCEPTANCE_AUDIT_PRODUCTION.txt` |
 | Controlled RLS isolation suite | **PENDING ROOTS credentials** (25 cases ready) | `docs/m2/M2_RLS_NEGATIVE_SUITE.txt` |
 
-The production rows were captured against the pre-M2-closure commit. The M2
-closure commit below re-deploys automatically through the Vercel link; the local
-rows are the authoritative post-closure results for items 9 and 10.
+The production rows were re-verified **after** the closure commit deployed, so
+the deployed build carries items 9 and 10 — including the SEC-18/19/20
+hard-rejection fix, which is the change that distinguishes the post-closure
+build from the earlier one.
+
+> **Build note.** The first closure push (`fae01c3`) **failed Vercel type check**,
+> so production stayed on the pre-closure build until `32f9790` repaired two
+> unrelated type errors: a pre-existing bare `module` reference in
+> `app/assessment/[sessionId]/module/[moduleId]/page.tsx` (resolving to the DOM
+> `Module` type) and an incorrect `sheet_to_json` overload declaration in
+> `scripts/ingest-canonical.ts`. `npm run build` now succeeds, which is the exact
+> command the deployment runs.
 
 ---
 

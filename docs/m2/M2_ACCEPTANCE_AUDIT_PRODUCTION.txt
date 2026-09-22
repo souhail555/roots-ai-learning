@@ -13,7 +13,7 @@ A3-b     | PASS   | Progress endpoint reflects completion  [complete=true module
 A3-c     | PASS   | Progress denominator = 71 required (item 1)  [totalRequired=71 totalQuestions=73]
 A4-a     | PASS   | Deterministic result produced by server  [status 201 BS=52]
 A4-b     | PASS   | Seven domains present  [["MR","HS","SR","CH","SL","IB","BS"]]
-A5-a     | PASS   | Drivers use fixed tie-order vocabulary  [["SL+CH","BS","IB"]]
+A5-a     | PASS   | Drivers use fixed tie-order vocabulary  [["SL+CH","BS"]]
 A6-a     | PASS   | Result is deterministic (re-POST identical)  [identical on repeat]
 A7-b     | PASS   | Result carries C-01 & C-02 v1.0.1  [C-01 v1.0.1 CORRECTED | C-02 v1.0.1 CORRECTED]
 A7-c     | PASS   | Result exposes version identity string  [C-01 v1.0.1 CORRECTED | C-02 v1.0.1 CORRECTED]
