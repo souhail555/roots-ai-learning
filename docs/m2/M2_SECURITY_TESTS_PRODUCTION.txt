@@ -1,7 +1,7 @@
 ﻿ROOTS-AI(TM) M2 Security / Negative Tests against https://roots-ai-learning.vercel.app
 
-SEC-01     | PASS | User A session created -> f798fed4-6dfc-4208-8241-4564d161531f
-SEC-02     | PASS | User B session created -> 10c3b93d-96cc-4176-a60f-55db93959d7e
+SEC-01     | PASS | User A session created -> c5854f20-de0c-4c38-8b19-8e4726d904ea
+SEC-02     | PASS | User B session created -> 1d6304ae-cd41-4895-ba20-b33f54edc8c5
 SEC-03     | PASS | No cookie cannot read a session -> status 403
 SEC-04     | PASS | Cross-user session read is rejected -> status 403
 SEC-05     | PASS | Cross-user answer write is rejected -> status 403
