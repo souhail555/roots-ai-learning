@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { createElement } from "react";
+import { renderToBuffer } from "@react-pdf/renderer";
 import { getCanonicalReportByAssessment } from "@/lib/db";
 import { assertReportIntegrity } from "@/lib/report/pipeline";
+import { ReportPdf } from "@/lib/report/pdf";
 
 /**
  * Canonical report PDF endpoint.
@@ -24,9 +27,6 @@ import { assertReportIntegrity } from "@/lib/report/pipeline";
  * an unapproved visual layout. Swapping in a real PDF renderer does not change
  * this route's data source: it still reads the stored canonical record.
  */
-
-const BOUNDARY_STATEMENT =
-  "Educational — Not a Diagnosis. This document summarises self-reported questionnaire answers using deterministic rules. It is not a medical device, diagnosis, prognosis or treatment advice.";
 
 export async function GET(
   _request: Request,
@@ -52,58 +52,25 @@ export async function GET(
   // Same-source guarantee is enforced, not assumed.
   assertReportIntegrity(stored.report);
 
-  const { report } = stored;
-  const generatedAt = report.provenance.constructedAt;
-
-  const header = [
-    "ROOTS-AI(TM) Biological Intelligence Report",
-    `Report ID: ${report.id}`,
-    `Assessment ID: ${report.assessmentId}`,
-    `Generated: ${generatedAt}`,
-    `Questionnaire: ${report.provenance.questionnaireVersion}`,
-    `Scoring: ${report.provenance.scoringVersion}`,
-    `Report: ${report.provenance.reportVersion}`,
-    `Content hash (deterministic spine): ${report.contentHash}`,
-    `AI narrative: ${
-      report.provenance.ai
-        ? report.provenance.ai.usedFallback
-          ? `governed fallback (${report.provenance.ai.fallbackVersion}) — ${report.provenance.ai.fallbackReason}`
-          : `${report.provenance.ai.provider} / ${report.provenance.ai.model} (prompt ${report.provenance.ai.promptVersion}, schema ${report.provenance.ai.schemaVersion})`
-        : "disabled"
-    }`,
-    "",
-    BOUNDARY_STATEMENT,
-    "",
-    "=== Deterministic scores (text equivalents) ===",
-  ];
-
-  const equivalents = Object.values(report.numericEquivalents);
-  const body = report.sections.flatMap((section) => [
-    `${section.index}. ${section.title}`,
-    section.narrative ??
-      "(explicit reduced state — no governed content available)",
-    section.reduced ? `[reduced] ${section.reducedReason ?? ""}` : "",
-    "",
-  ]);
-
-  const document = [
-    ...header,
-    ...equivalents,
-    "",
-    "=== Governed sections ===",
-    "",
-    ...body,
-  ]
-    .filter((line) => line !== undefined)
-    .join("\n");
-
-  return new NextResponse(document, {
-    status: 200,
-    headers: {
-      "Content-Type": "text/plain; charset=utf-8",
-      "X-Report-Id": report.id,
-      "X-Report-Content-Hash": report.contentHash,
-      "X-Report-Same-Source": "canonical",
-    },
-  });
+  try {
+    const { report } = stored;
+    const document = createElement(ReportPdf, { report }) as unknown as Parameters<typeof renderToBuffer>[0];
+    const buffer = await renderToBuffer(document);
+    const body = new Uint8Array(buffer).buffer as ArrayBuffer;
+    return new NextResponse(body, {
+      status: 200,
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename="roots-report-${report.report_id}.pdf"`,
+        "Cache-Control": "private, no-store",
+        "X-Report-Id": report.report_id,
+        "X-Report-Content-Hash": report.contentHash,
+        "X-Report-Same-Source": "canonical",
+        "X-Report-Version": report.report_template_version,
+      },
+    });
+  } catch (error) {
+    console.error("Canonical PDF generation failed", error);
+    return NextResponse.json({ error: "The report document could not be prepared." }, { status: 500 });
+  }
 }

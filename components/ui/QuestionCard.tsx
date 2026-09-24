@@ -2,12 +2,21 @@ import type { CanonicalQuestion } from "@/lib/canonicalAssessment";
 
 export interface QuestionCardProps {
   question: CanonicalQuestion;
-  defaultValue?: string | number;
+  defaultValue?: string | number | string[];
+}
+
+function selectedValues(defaultValue: QuestionCardProps["defaultValue"]): string[] {
+  if (Array.isArray(defaultValue)) return defaultValue.map(String);
+  if (defaultValue === undefined || defaultValue === null) return [];
+  return [String(defaultValue)];
 }
 
 export default function QuestionCard({ question, defaultValue }: QuestionCardProps) {
+  const selected = selectedValues(defaultValue);
+  const scalarDefault = Array.isArray(defaultValue) ? undefined : defaultValue;
+
   if (question.type === "free_text") {
-    return <label className="canonical-question"><span>{question.text}</span><textarea name={question.id} maxLength={question.max ?? 1000} defaultValue={defaultValue?.toString()} required={question.required} placeholder="Optional context" /></label>;
+    return <label className="canonical-question"><span>{question.text}</span><textarea name={question.id} maxLength={question.max ?? 1000} defaultValue={scalarDefault?.toString()} required={question.required} placeholder="Optional context" /></label>;
   }
 
   // decimal_with_unit: a numeric value plus the canonical unit option set.
@@ -34,7 +43,7 @@ export default function QuestionCard({ question, defaultValue }: QuestionCardPro
 
   const options = question.options ?? [];
   if (question.type === "multi_select") {
-    return <fieldset className="canonical-question"><legend>{question.text}</legend>{question.helpText && <small>{question.helpText}</small>}<div className="canonical-options">{options.map((option) => <label key={option.id}><input type="checkbox" name={question.id} value={option.id} data-exclusive={option.exclusive || option.isNa ? "true" : undefined} /><span>{option.label}</span></label>)}</div></fieldset>;
+    return <fieldset className="canonical-question"><legend>{question.text}</legend>{question.helpText && <small>{question.helpText}</small>}<div className="canonical-options">{options.map((option) => <label key={option.id}><input type="checkbox" name={question.id} value={option.id} defaultChecked={selected.includes(option.id)} data-exclusive={option.exclusive || option.isNa ? "true" : undefined} /><span>{option.label}</span></label>)}</div></fieldset>;
   }
-  return <fieldset className="canonical-question"><legend>{question.text}</legend>{question.helpText && <small>{question.helpText}</small>}<div className="canonical-options">{options.map((option) => <label key={option.id}><input type="radio" name={question.id} value={option.id} required={question.required} /><span>{option.label}</span></label>)}</div></fieldset>;
+  return <fieldset className="canonical-question"><legend>{question.text}</legend>{question.helpText && <small>{question.helpText}</small>}<div className="canonical-options">{options.map((option) => <label key={option.id}><input type="radio" name={question.id} value={option.id} defaultChecked={selected.includes(option.id)} required={question.required} /><span>{option.label}</span></label>)}</div></fieldset>;
 }

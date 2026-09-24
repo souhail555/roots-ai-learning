@@ -54,6 +54,7 @@ export async function generateReport(
   const baseReport = buildCanonicalReport({
     assessmentId,
     scoring,
+    answers,
     narrative: null,
     now: options.now,
   });
@@ -96,6 +97,7 @@ export async function generateReport(
   const withNarrative = buildCanonicalReport({
     assessmentId,
     scoring,
+    answers,
     narrative: { sections: outcome.sections, provenance: outcome.provenance },
     now: options.now,
   });

@@ -1,5 +1,5 @@
-import { calculateScores } from "@/lib/scoring";
-import { goldenTests, compare } from "@/lib/canonical/goldenTests";
+import { calculateScoresFromNormalizedInput } from "@/lib/scoring";
+import { goldenTests, compare, toGoldenOutput } from "@/lib/canonical/goldenTests";
 import { CANONICAL_VERSIONS } from "@/lib/canonical/source";
 
 interface Row {
@@ -27,22 +27,13 @@ function run() {
   let failed = 0;
 
   for (const test of goldenTests) {
-    const actual = calculateScores(test.answers);
+    const actual = calculateScoresFromNormalizedInput(test.normalizedInput, test.context);
     const errors = compare(actual, test.expected);
     const ok = errors.length === 0;
     if (ok) passed++;
     else failed++;
 
-    const actualSummary = {
-      domains: actual.domains,
-      biologicalState: actual.biologicalState,
-      band: actual.band,
-      opportunity: actual.opportunity,
-      recoveryPotential: actual.recoveryPotential,
-      drivers: actual.drivers,
-      coPrimary: actual.coPrimary,
-      scoredDomainCount: actual.scoredDomainCount,
-    };
+    const actualSummary = toGoldenOutput(actual);
 
     rows.push({
       id: test.id,

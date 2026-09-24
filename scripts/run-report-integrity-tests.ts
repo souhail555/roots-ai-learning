@@ -13,7 +13,7 @@
  *
  * Run: npm run test:report
  */
-import { calculateScores } from "@/lib/scoring";
+import { calculateScores, calculateScoresFromNormalizedInput } from "@/lib/scoring";
 import {
   REPORT_SECTION_COUNT,
   buildCanonicalReport,
@@ -165,7 +165,12 @@ const scoring = calculateScores(uniform0);
 
 // RP-08: co-primary is preserved as one governed entry
 {
-  const report = buildCanonicalReport({ assessmentId: "rp-08", scoring });
+  const fixture = goldenTests.find((test) => test.id === "GT-003")!;
+  const coPrimaryScoring = calculateScoresFromNormalizedInput(
+    fixture.normalizedInput,
+    fixture.context,
+  );
+  const report = buildCanonicalReport({ assessmentId: "rp-08", scoring: coPrimaryScoring });
   const pair = report.scoring.drivers.filter((d) => d.includes("+"));
   const coPrimaryFlag = report.scoring.coPrimary;
   rec(
@@ -214,21 +219,24 @@ const scoring = calculateScores(uniform0);
   );
 }
 
-// RP-11: reduced / Not Available states are explicit, not substituted
+// RP-11: corrected C-03 content is present; reduced states are explicit
 {
-  const report = buildCanonicalReport({ assessmentId: "rp-11", scoring });
-  // C-03 is not ingested in this workspace, so every governed section must be
-  // in an explicit reduced state rather than carrying invented copy.
-  const allReduced = report.sections.every((s) => s.reduced === true);
-  const allHaveReason = report.sections.every(
-    (s) => typeof s.reducedReason === "string" && s.reducedReason.length > 0,
-  );
-  const noneInvented = report.sections.every((s) => !s.narrative);
+  const report = buildCanonicalReport({ assessmentId: "rp-11", scoring, answers: uniform0 });
+  const titles = report.sections.map((s) => s.title);
+  const expectedTitles = [
+    "Cover Page", "Executive Summary", "ROOTS Biological State™", "ROOTS Opportunity Score™",
+    "ROOTS Confidence™", "Key Drivers", "Seven-Domain Score Breakdown", "Biological Triad™",
+    "Future Projection", "90-Day Roadmap", "Nutrition Priorities", "Action Priorities",
+    "What Is Going Well", "Specific Concerns", "Suggested Laboratory Discussion", "Participant Answers",
+    "Biological Card", "Final Word", "Medical and AI Disclaimer",
+  ];
+  const allPresent = report.sections.every((s) => typeof s.narrative === "string" && s.narrative.length > 0);
+  const allExplicit = report.limitations.every((l) => typeof l.message === "string" && l.message.length > 0);
   rec(
     "RP-11",
-    "Unavailable governed content produces an explicit reduced state",
-    allReduced && allHaveReason && noneInvented,
-    `all reduced=${allReduced}; all carry an explicit reason=${allHaveReason}; no invented narrative present=${noneInvented}`,
+    "C-03 corrected 19-section content and explicit limitations are present",
+    JSON.stringify(titles) === JSON.stringify(expectedTitles) && allPresent && allExplicit,
+    `titles=${titles.length}; content-backed=${allPresent}; limitations=${report.limitations.length}; null-state copy remains explicit=${report.sections.filter((s) => s.reduced).every((s) => Boolean(s.reducedReason))}`,
   );
 }
 

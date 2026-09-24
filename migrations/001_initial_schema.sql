@@ -40,40 +40,55 @@ ALTER TABLE sessions ADD COLUMN IF NOT EXISTS owner_id uuid;
 -- reports : the canonical, immutable per-assessment report
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS reports (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  session_id UUID NOT NULL REFERENCES sessions(id) ON DELETE CASCADE,
-  scores JSONB NOT NULL DEFAULT '{}',
-  band TEXT NOT NULL,
-  content_hash TEXT,
-  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-  completed_at TIMESTAMP WITH TIME ZONE
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
+    session_id UUID NOT NULL REFERENCES sessions (id) ON DELETE CASCADE,
+    scores JSONB NOT NULL DEFAULT '{}',
+    band TEXT NOT NULL,
+    content_hash TEXT,
+    created_at TIMESTAMP
+    WITH
+        TIME ZONE NOT NULL DEFAULT NOW(),
+        completed_at TIMESTAMP
+    WITH
+        TIME ZONE
 );
 
 -- ---------------------------------------------------------------------------
 -- audit_logs : append-only trail, server-written
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS audit_logs (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  session_id UUID REFERENCES sessions(id) ON DELETE SET NULL,
-  action TEXT NOT NULL,
-  details JSONB,
-  ip_address TEXT,
-  user_agent TEXT,
-  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
+    session_id UUID REFERENCES sessions (id) ON DELETE SET NULL,
+    action TEXT NOT NULL,
+    details JSONB,
+    ip_address TEXT,
+    user_agent TEXT,
+    created_at TIMESTAMP
+    WITH
+        TIME ZONE NOT NULL DEFAULT NOW()
 );
 
 -- ---------------------------------------------------------------------------
 -- Indexes
 -- ---------------------------------------------------------------------------
-CREATE INDEX IF NOT EXISTS idx_sessions_email      ON sessions(email);
-CREATE INDEX IF NOT EXISTS idx_sessions_owner_id   ON sessions(owner_id);
-CREATE INDEX IF NOT EXISTS idx_sessions_created_at ON sessions(created_at);
-CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at);
-CREATE INDEX IF NOT EXISTS idx_reports_session_id  ON reports(session_id);
-CREATE INDEX IF NOT EXISTS idx_reports_created_at  ON reports(created_at);
-CREATE INDEX IF NOT EXISTS idx_reports_band        ON reports(band);
-CREATE INDEX IF NOT EXISTS idx_audit_logs_session_id ON audit_logs(session_id);
-CREATE INDEX IF NOT EXISTS idx_audit_logs_action     ON audit_logs(action);
-CREATE INDEX IF NOT EXISTS idx_audit_logs_created_at ON audit_logs(created_at);
+CREATE INDEX IF NOT EXISTS idx_sessions_email ON sessions (email);
+
+CREATE INDEX IF NOT EXISTS idx_sessions_owner_id ON sessions (owner_id);
+
+CREATE INDEX IF NOT EXISTS idx_sessions_created_at ON sessions (created_at);
+
+CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions (expires_at);
+
+CREATE INDEX IF NOT EXISTS idx_reports_session_id ON reports (session_id);
+
+CREATE INDEX IF NOT EXISTS idx_reports_created_at ON reports (created_at);
+
+CREATE INDEX IF NOT EXISTS idx_reports_band ON reports (band);
+
+CREATE INDEX IF NOT EXISTS idx_audit_logs_session_id ON audit_logs (session_id);
+
+CREATE INDEX IF NOT EXISTS idx_audit_logs_action ON audit_logs (action);
+
+CREATE INDEX IF NOT EXISTS idx_audit_logs_created_at ON audit_logs (created_at);
 
 COMMIT;

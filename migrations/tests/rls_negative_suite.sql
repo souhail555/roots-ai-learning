@@ -49,14 +49,17 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 -- ---------------------------------------------------------------------------
 -- Result collection
 -- ---------------------------------------------------------------------------
-CREATE TEMP TABLE rls_results (
-  test_id      text,
-  category     text,
-  description  text,
-  expected     text,
-  actual       text,
-  result       text
-) ON COMMIT DROP;
+CREATE TEMP
+TABLE rls_results (
+    test_id text,
+    category text,
+    description text,
+    expected text,
+    actual text,
+    result text
+) ON
+COMMIT
+DROP;
 
 -- ---------------------------------------------------------------------------
 -- Fixture: two independent participants plus an admin.
@@ -215,237 +218,165 @@ END $$ LANGUAGE plpgsql;
 -- Impersonate User A for the isolation cases.
 -- ===========================================================================
 SET LOCAL role = authenticated;
-SET LOCAL request.jwt.claims = '{"sub":"11111111-1111-4111-8111-111111111111","email":"user-a@roots.test","role":"authenticated"}';
+
+SET
+    LOCAL request.jwt.claims = '{"sub":"11111111-1111-4111-8111-111111111111","email":"user-a@roots.test","role":"authenticated"}';
 
 -- --- Positive control: A must still see their own data. --------------------
-SELECT rls_assert_allowed_rows(
-  'RLS-00', 'positive-control',
-  'User A can read their own session (proves RLS is not a blanket deny)',
-  '>0 rows',
-  'SELECT id FROM sessions WHERE id = (SELECT session_a FROM rls_fixture)'
-);
+SELECT rls_assert_allowed_rows (
+        'RLS-00', 'positive-control', 'User A can read their own session (proves RLS is not a blanket deny)', '>0 rows', 'SELECT id FROM sessions WHERE id = (SELECT session_a FROM rls_fixture)'
+    );
 
-SELECT rls_assert_allowed_rows(
-  'RLS-00b', 'positive-control',
-  'User A can read their own report',
-  '>0 rows',
-  'SELECT id FROM reports WHERE id = (SELECT report_a FROM rls_fixture)'
-);
+SELECT rls_assert_allowed_rows (
+        'RLS-00b', 'positive-control', 'User A can read their own report', '>0 rows', 'SELECT id FROM reports WHERE id = (SELECT report_a FROM rls_fixture)'
+    );
 
 -- --- 1. Cross-user session read -------------------------------------------
-SELECT rls_assert_denied_rows(
-  'RLS-01', 'cross-user',
-  'User A cannot read User B''s session',
-  '0 rows',
-  'SELECT id, email, answers FROM sessions WHERE id = (SELECT session_b FROM rls_fixture)'
-);
+SELECT rls_assert_denied_rows (
+        'RLS-01', 'cross-user', 'User A cannot read User B''s session', '0 rows', 'SELECT id, email, answers FROM sessions WHERE id = (SELECT session_b FROM rls_fixture)'
+    );
 
 -- --- 2. Cross-user session enumeration (cannot even see the row) ----------
-SELECT rls_assert_denied_rows(
-  'RLS-02', 'cross-user',
-  'User A cannot enumerate other participants'' sessions',
-  'only own rows',
-  'SELECT id FROM sessions WHERE owner_id <> (
+SELECT rls_assert_denied_rows (
+        'RLS-02', 'cross-user', 'User A cannot enumerate other participants'' sessions', 'only own rows', 'SELECT id FROM sessions WHERE owner_id <> (
      ''11111111-1111-4111-8111-111111111111''::uuid)'
-);
+    );
 
 -- --- 3. Cross-user report read (protected scoring data) ------------------
-SELECT rls_assert_denied_rows(
-  'RLS-03', 'cross-user',
-  'User A cannot read User B''s report / scores',
-  '0 rows',
-  'SELECT id, scores, band FROM reports WHERE id = (SELECT report_b FROM rls_fixture)'
-);
+SELECT rls_assert_denied_rows (
+        'RLS-03', 'cross-user', 'User A cannot read User B''s report / scores', '0 rows', 'SELECT id, scores, band FROM reports WHERE id = (SELECT report_b FROM rls_fixture)'
+    );
 
 -- --- 4. Cross-user answer write -------------------------------------------
-SELECT rls_assert_write_denied(
-  'RLS-04', 'cross-user',
-  'User A cannot write answers into User B''s session',
-  'rejected',
-  'UPDATE sessions SET answers = ''{"Q1":99}''::jsonb
+SELECT rls_assert_write_denied (
+        'RLS-04', 'cross-user', 'User A cannot write answers into User B''s session', 'rejected', 'UPDATE sessions SET answers = ''{"Q1":99}''::jsonb
      WHERE id = (SELECT session_b FROM rls_fixture)'
-);
+    );
 
 -- --- 5. Cross-user session ownership hijack ------------------------------
-SELECT rls_assert_write_denied(
-  'RLS-05', 'cross-user',
-  'User A cannot reassign User B''s session to themselves',
-  'rejected',
-  'UPDATE sessions SET owner_id = ''11111111-1111-4111-8111-111111111111''::uuid
+SELECT rls_assert_write_denied (
+        'RLS-05', 'cross-user', 'User A cannot reassign User B''s session to themselves', 'rejected', 'UPDATE sessions SET owner_id = ''11111111-1111-4111-8111-111111111111''::uuid
      WHERE id = (SELECT session_b FROM rls_fixture)'
-);
+    );
 
 -- --- 6. Cross-user report tampering --------------------------------------
-SELECT rls_assert_write_denied(
-  'RLS-06', 'integrity',
-  'Stored report is immutable - no participant may rewrite scores',
-  'rejected',
-  'UPDATE reports SET scores = ''{"biologicalState":0}''::jsonb
+SELECT rls_assert_write_denied (
+        'RLS-06', 'integrity', 'Stored report is immutable - no participant may rewrite scores', 'rejected', 'UPDATE reports SET scores = ''{"biologicalState":0}''::jsonb
      WHERE id = (SELECT report_b FROM rls_fixture)'
-);
+    );
 
 -- --- 7. Session deletion by participant ----------------------------------
-SELECT rls_assert_write_denied(
-  'RLS-07', 'integrity',
-  'Participants cannot delete their own sessions (retention is server-side)',
-  'rejected',
-  'DELETE FROM sessions WHERE id = (SELECT session_a FROM rls_fixture)'
-);
+SELECT rls_assert_write_denied (
+        'RLS-07', 'integrity', 'Participants cannot delete their own sessions (retention is server-side)', 'rejected', 'DELETE FROM sessions WHERE id = (SELECT session_a FROM rls_fixture)'
+    );
 
 -- --- 8. Report deletion --------------------------------------------------
-SELECT rls_assert_write_denied(
-  'RLS-08', 'integrity',
-  'Participants cannot delete stored reports',
-  'rejected',
-  'DELETE FROM reports WHERE id = (SELECT report_a FROM rls_fixture)'
-);
+SELECT rls_assert_write_denied (
+        'RLS-08', 'integrity', 'Participants cannot delete stored reports', 'rejected', 'DELETE FROM reports WHERE id = (SELECT report_a FROM rls_fixture)'
+    );
 
 -- --- 9. Audit log forgery ------------------------------------------------
-SELECT rls_assert_write_denied(
-  'RLS-09', 'integrity',
-  'Participants cannot insert forged audit-log entries',
-  'rejected',
-  'INSERT INTO audit_logs (session_id, action, details)
+SELECT rls_assert_write_denied (
+        'RLS-09', 'integrity', 'Participants cannot insert forged audit-log entries', 'rejected', 'INSERT INTO audit_logs (session_id, action, details)
      VALUES ((SELECT session_a FROM rls_fixture), ''FORGED'', ''{}''::jsonb)'
-);
+    );
 
 -- --- 10. Audit log tampering ---------------------------------------------
-SELECT rls_assert_write_denied(
-  'RLS-10', 'integrity',
-  'Audit log is append-only - no participant may modify it',
-  'rejected',
-  'UPDATE audit_logs SET action = ''TAMPERED''
+SELECT rls_assert_write_denied (
+        'RLS-10', 'integrity', 'Audit log is append-only - no participant may modify it', 'rejected', 'UPDATE audit_logs SET action = ''TAMPERED''
      WHERE session_id = (SELECT session_a FROM rls_fixture)'
-);
+    );
 
 -- --- 11. Cross-user audit log read ---------------------------------------
-SELECT rls_assert_denied_rows(
-  'RLS-11', 'cross-user',
-  'User A cannot read User B''s audit trail',
-  '0 rows',
-  'SELECT id FROM audit_logs WHERE session_id = (SELECT session_b FROM rls_fixture)'
-);
+SELECT rls_assert_denied_rows (
+        'RLS-11', 'cross-user', 'User A cannot read User B''s audit trail', '0 rows', 'SELECT id FROM audit_logs WHERE session_id = (SELECT session_b FROM rls_fixture)'
+    );
 
 -- --- 12. Impersonation: forging another owner on insert ------------------
-SELECT rls_assert_write_denied(
-  'RLS-12', 'cross-user',
-  'User A cannot create a session owned by User B (identity is not user-supplied)',
-  'rejected',
-  'INSERT INTO sessions (id, email, owner_id)
+SELECT rls_assert_write_denied (
+        'RLS-12', 'cross-user', 'User A cannot create a session owned by User B (identity is not user-supplied)', 'rejected', 'INSERT INTO sessions (id, email, owner_id)
      VALUES (gen_random_uuid(), ''user-b@roots.test'',
              ''22222222-2222-4222-8222-222222222222''::uuid)'
-);
+    );
 
 -- --- 13. Cross-user report creation onto a foreign session ---------------
-SELECT rls_assert_write_denied(
-  'RLS-13', 'cross-user',
-  'User A cannot attach a report to User B''s session',
-  'rejected',
-  'INSERT INTO reports (id, session_id, scores, band)
+SELECT rls_assert_write_denied (
+        'RLS-13', 'cross-user', 'User A cannot attach a report to User B''s session', 'rejected', 'INSERT INTO reports (id, session_id, scores, band)
      VALUES (gen_random_uuid(), (SELECT session_b FROM rls_fixture), ''{}''::jsonb, ''Optimized'')'
-);
+    );
 
 -- ===========================================================================
 -- Anonymous (no JWT) - must see and change nothing.
 -- ===========================================================================
 SET LOCAL request.jwt.claims = '';
 
-SELECT rls_assert_denied_rows(
-  'RLS-14', 'anonymous',
-  'Anonymous caller cannot read any session',
-  '0 rows',
-  'SELECT id FROM sessions'
-);
+SELECT rls_assert_denied_rows (
+        'RLS-14', 'anonymous', 'Anonymous caller cannot read any session', '0 rows', 'SELECT id FROM sessions'
+    );
 
-SELECT rls_assert_denied_rows(
-  'RLS-15', 'anonymous',
-  'Anonymous caller cannot read any report / scoring data',
-  '0 rows',
-  'SELECT id, scores FROM reports'
-);
+SELECT rls_assert_denied_rows (
+        'RLS-15', 'anonymous', 'Anonymous caller cannot read any report / scoring data', '0 rows', 'SELECT id, scores FROM reports'
+    );
 
-SELECT rls_assert_denied_rows(
-  'RLS-16', 'anonymous',
-  'Anonymous caller cannot read any audit trail',
-  '0 rows',
-  'SELECT id FROM audit_logs'
-);
+SELECT rls_assert_denied_rows (
+        'RLS-16', 'anonymous', 'Anonymous caller cannot read any audit trail', '0 rows', 'SELECT id FROM audit_logs'
+    );
 
-SELECT rls_assert_write_denied(
-  'RLS-17', 'anonymous',
-  'Anonymous caller cannot create a session',
-  'rejected',
-  'INSERT INTO sessions (id, email) VALUES (gen_random_uuid(), ''anon@roots.test'')'
-);
+SELECT rls_assert_write_denied (
+        'RLS-17', 'anonymous', 'Anonymous caller cannot create a session', 'rejected', 'INSERT INTO sessions (id, email) VALUES (gen_random_uuid(), ''anon@roots.test'')'
+    );
 
-SELECT rls_assert_write_denied(
-  'RLS-18', 'anonymous',
-  'Anonymous caller cannot write an answer set',
-  'rejected',
-  'UPDATE sessions SET answers = ''{}''::jsonb WHERE true'
-);
+SELECT rls_assert_write_denied (
+        'RLS-18', 'anonymous', 'Anonymous caller cannot write an answer set', 'rejected', 'UPDATE sessions SET answers = ''{}''::jsonb WHERE true'
+    );
 
 -- ===========================================================================
 -- Admin role - permitted, and deliberately bounded.
 -- ===========================================================================
-SET LOCAL request.jwt.claims = '{"sub":"33333333-3333-4333-8333-333333333333","email":"admin@roots.test","role":"admin"}';
+SET
+    LOCAL request.jwt.claims = '{"sub":"33333333-3333-4333-8333-333333333333","email":"admin@roots.test","role":"admin"}';
 
-SELECT rls_assert_allowed_rows(
-  'RLS-19', 'cross-role',
-  'Admin can read all sessions (administrative access path)',
-  '>0 rows',
-  'SELECT id FROM sessions'
-);
+SELECT rls_assert_allowed_rows (
+        'RLS-19', 'cross-role', 'Admin can read all sessions (administrative access path)', '>0 rows', 'SELECT id FROM sessions'
+    );
 
-SELECT rls_assert_allowed_rows(
-  'RLS-20', 'cross-role',
-  'Admin can read all reports',
-  '>0 rows',
-  'SELECT id FROM reports'
-);
+SELECT rls_assert_allowed_rows (
+        'RLS-20', 'cross-role', 'Admin can read all reports', '>0 rows', 'SELECT id FROM reports'
+    );
 
 -- A non-admin must not inherit the admin branch by claiming a different email.
-SET LOCAL request.jwt.claims = '{"sub":"11111111-1111-4111-8111-111111111111","email":"user-a@roots.test","role":"authenticated"}';
+SET
+    LOCAL request.jwt.claims = '{"sub":"11111111-1111-4111-8111-111111111111","email":"user-a@roots.test","role":"authenticated"}';
 
-SELECT rls_assert_denied_rows(
-  'RLS-21', 'cross-role',
-  'A participant with role=authenticated gets no admin reach',
-  '0 rows',
-  'SELECT id FROM sessions WHERE owner_id = ''22222222-2222-4222-8222-222222222222''::uuid'
-);
+SELECT rls_assert_denied_rows (
+        'RLS-21', 'cross-role', 'A participant with role=authenticated gets no admin reach', '0 rows', 'SELECT id FROM sessions WHERE owner_id = ''22222222-2222-4222-8222-222222222222''::uuid'
+    );
 
 -- ===========================================================================
 -- Report / scoring integrity across the API and DB boundary.
 -- ===========================================================================
-SET LOCAL request.jwt.claims = '{"sub":"11111111-1111-4111-8111-111111111111","email":"user-a@roots.test","role":"authenticated"}';
+SET
+    LOCAL request.jwt.claims = '{"sub":"11111111-1111-4111-8111-111111111111","email":"user-a@roots.test","role":"authenticated"}';
 
-SELECT rls_assert_write_denied(
-  'RLS-22', 'privacy',
-  'User A cannot read User B''s scoring JSON by joining through reports',
-  '0 rows',
-  'SELECT r.id, r.scores FROM reports r
+SELECT rls_assert_write_denied (
+        'RLS-22', 'privacy', 'User A cannot read User B''s scoring JSON by joining through reports', '0 rows', 'SELECT r.id, r.scores FROM reports r
      JOIN sessions s ON s.id = r.session_id
     WHERE s.owner_id = ''22222222-2222-4222-8222-222222222222''::uuid'
-);
+    );
 
-SELECT rls_assert_write_denied(
-  'RLS-23', 'privacy',
-  'User A cannot exfiltrate other participants'' answers via a self-join',
-  '0 rows',
-  'SELECT s1.answers FROM sessions s1
+SELECT rls_assert_write_denied (
+        'RLS-23', 'privacy', 'User A cannot exfiltrate other participants'' answers via a self-join', '0 rows', 'SELECT s1.answers FROM sessions s1
      JOIN sessions s2 ON s2.id <> s1.id
     WHERE s2.owner_id = ''22222222-2222-4222-8222-222222222222''::uuid'
-);
+    );
 
 -- --- Final negative control: switching identity is what changes the result.
-SELECT rls_assert_allowed_rows(
-  'RLS-24', 'positive-control',
-  'Switching to User B''s identity restores access to User B''s session',
-  '>0 rows',
-  'SELECT id FROM sessions WHERE id = (SELECT session_b FROM rls_fixture)'
-);
+SELECT rls_assert_allowed_rows (
+        'RLS-24', 'positive-control', 'Switching to User B''s identity restores access to User B''s session', '>0 rows', 'SELECT id FROM sessions WHERE id = (SELECT session_b FROM rls_fixture)'
+    );
 
 RESET role;
+
 RESET request.jwt.claims;
 
 -- ===========================================================================
@@ -457,10 +388,7 @@ RESET request.jwt.claims;
 \echo '============================================================================'
 
 SELECT
-  rpad(test_id, 9) || ' | ' ||
-  rpad(result, 6) || ' | ' ||
-  rpad(category, 16) || ' | ' ||
-  description || '  [' || actual || ']'
+    rpad(test_id, 9) || ' | ' || rpad(result, 6) || ' | ' || rpad(category, 16) || ' | ' || description || '  [' || actual || ']'
 FROM rls_results
 ORDER BY test_id;
 

@@ -6,6 +6,12 @@ import {
   canonicalVersionIdentity,
   type DomainId,
 } from "@/lib/canonical/source";
+import {
+  activeProtectiveFactorIds,
+  buildGovernedSections,
+  buildReportLimitations,
+  type ReportLimitation,
+} from "@/lib/canonical/reportContent";
 import type { ScoringResult } from "@/lib/scoring";
 
 /**
@@ -37,8 +43,8 @@ import type { ScoringResult } from "@/lib/scoring";
 export const REPORT_CONTENT_SOURCE = {
   /** Controlled source that governs the report content/structure. */
   report: "C-03 v1.0.1 CORRECTED",
-  /** True once the controlled C-03 content library has been ingested. */
-  governedSourceAvailable: false,
+  /** True because the controlled C-03 v1.0.1 CORRECTED content contract is ingested. */
+  governedSourceAvailable: true,
 } as const;
 
 /** The governed 19-section architecture required by C-03 (count is contractual). */
@@ -100,6 +106,23 @@ export interface ReportProvenance {
 export interface CanonicalReport {
   /** Stable report identity. */
   id: string;
+  report_id: string;
+  participant_display: string;
+  generated_at: string;
+  questionnaire_version: string;
+  scoring_version: string;
+  report_template_version: string;
+  narrative_template_version: string;
+  domain_scores: Record<DomainId, number | null>;
+  biological_state: number | null;
+  opportunity_score: number | null;
+  recovery_potential: number | null;
+  confidence: number;
+  drivers: string[];
+  protective_factors: string[];
+  limitations: ReportLimitation[];
+  disclaimer_version: string;
+  audit_trace_reference: string;
   /** Assessment/session this report was produced from. */
   assessmentId: string;
   /** Frozen authoritative scoring result. Never recomputed downstream. */
@@ -110,11 +133,6 @@ export interface CanonicalReport {
   numericEquivalents: Record<string, string>;
   /** Provenance of every versioned artefact used to build this report. */
   provenance: ReportProvenance;
-  /**
-   * SHA-256 over the canonical serialisation of the DETERMINISTIC spine only.
-   * The AI narrative is deliberately excluded: governance requires that a
-   * narrative retry cannot change the hash of the authoritative result.
-   */
   contentHash: string;
 }
 
@@ -191,28 +209,14 @@ export function buildAiProjection(
   };
 }
 
-/**
- * Build the governed sections skeleton.
- *
- * While C-03 is unavailable each section is explicitly `reduced` with an
- * `UNAVAILABLE:` reason. This is the required "no imputation, no invented
- * filler" behaviour: a missing governed content library produces an explicit
- * reduced state, never substitute copy.
- */
-function buildSectionsFromSource(): ReportSection[] {
-  return Array.from({ length: REPORT_SECTION_COUNT }, (_, i) => {
-    const index = i + 1;
-    return {
-      index,
-      contentId: `C03.SECTION.${String(index).padStart(2, "0")}`,
-      title: `UNAVAILABLE: governed C-03 title for section ${index}`,
-      narrative: null,
-      narrativeSource: "unavailable" as const,
-      reduced: true,
-      reducedReason:
-        "Governed C-03 v1.0.1 CORRECTED content library not available; section rendered in explicit reduced state rather than substituted.",
-    };
-  });
+/** Build the fixed C-03 v1.0.1 section architecture from the canonical result. */
+function buildSectionsFromSource(
+  scoring: ScoringResult,
+  assessmentId: string,
+  generatedAt: string,
+  answers?: Record<string, unknown>,
+): ReportSection[] {
+  return buildGovernedSections(scoring, assessmentId, generatedAt, answers);
 }
 
 /** Deterministic text/numeric equivalents for every visualised report value. */
@@ -252,6 +256,8 @@ function buildNumericEquivalents(
 export interface BuildReportInput {
   assessmentId: string;
   scoring: ScoringResult;
+  /** Immutable canonical response snapshot used for C-03 section 16. */
+  answers?: Record<string, unknown>;
   /** AI narrative result, or null when the governed fallback was used. */
   narrative?: {
     sections: Array<{ index: number; narrative: string }>;
@@ -270,9 +276,10 @@ export interface BuildReportInput {
  * cannot influence `scoring`, `contentHash` or `provenance`.
  */
 export function buildCanonicalReport(input: BuildReportInput): CanonicalReport {
-  const { assessmentId, scoring, narrative = null } = input;
-
-  const sections = buildSectionsFromSource();
+  const { assessmentId, scoring, answers, narrative = null } = input;
+  const generatedAt = (input.now ?? new Date()).toISOString();
+  const reportVersion = input.reportVersion ?? REPORT_CONTENT_SOURCE.report;
+  const sections = buildSectionsFromSource(scoring, assessmentId, generatedAt, answers);
   if (narrative) {
     for (const entry of narrative.sections) {
       const target = sections.find((s) => s.index === entry.index);
@@ -286,6 +293,23 @@ export function buildCanonicalReport(input: BuildReportInput): CanonicalReport {
 
   return {
     id: assessmentId,
+    report_id: assessmentId,
+    participant_display: "Participant",
+    generated_at: generatedAt,
+    questionnaire_version: scoring.versions.questionnaire,
+    scoring_version: scoring.versions.scoring,
+    report_template_version: reportVersion,
+    narrative_template_version: reportVersion,
+    domain_scores: { ...scoring.domains },
+    biological_state: scoring.biologicalState,
+    opportunity_score: scoring.opportunity,
+    recovery_potential: scoring.recoveryPotential,
+    confidence: scoring.confidence,
+    drivers: [...scoring.drivers],
+    protective_factors: activeProtectiveFactorIds(scoring),
+    limitations: buildReportLimitations(scoring, Boolean(answers && Object.keys(answers).length)),
+    disclaimer_version: "C-03-DISCLAIMER v1.0.1",
+    audit_trace_reference: `REPORT/${assessmentId}/${scoring.versionIdentity}`,
     assessmentId,
     scoring,
     sections,
@@ -293,9 +317,9 @@ export function buildCanonicalReport(input: BuildReportInput): CanonicalReport {
     provenance: {
       questionnaireVersion: scoring.versions.questionnaire,
       scoringVersion: scoring.versions.scoring,
-      reportVersion: input.reportVersion ?? REPORT_CONTENT_SOURCE.report,
+      reportVersion,
       ai: narrative ? narrative.provenance : null,
-      constructedAt: (input.now ?? new Date()).toISOString(),
+      constructedAt: generatedAt,
     },
     contentHash: computeContentHash(assessmentId, scoring),
   };

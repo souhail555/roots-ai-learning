@@ -81,7 +81,9 @@ function main() {
   console.log(`Suite    : ${SUITE}`);
   console.log(`Schema   : ${SCHEMA}`);
   console.log(`Policies : ${POLICIES}`);
-  console.log(`Target   : ${dbUrl ? (dbUrl === "libpq-env" ? "libpq environment (PGHOST etc.)" : "SUPABASE_DB_URL / DATABASE_URL") : "(none supplied)"}\n`);
+  console.log(
+    `Target   : ${dbUrl ? (dbUrl === "libpq-env" ? "libpq environment (PGHOST etc.)" : "SUPABASE_DB_URL / DATABASE_URL") : "(none supplied)"}\n`,
+  );
 
   for (const path of [SCHEMA, POLICIES, SUITE]) {
     if (!existsSync(path)) {
@@ -140,9 +142,7 @@ function main() {
   }
 
   // --------------------------------------------------------------- live run
-  const args = dbUrl === "libpq-env"
-    ? []
-    : [dbUrl];
+  const args = dbUrl === "libpq-env" ? [] : [dbUrl];
 
   const run = (file) =>
     execFileSync("psql", [...args, "-v", "ON_ERROR_STOP=1", "-f", file], {
@@ -188,7 +188,10 @@ function main() {
   }
 
   emit([
-    "STATUS: " + (failed ? "FAILED - isolation NOT proven." : "PASS - unauthorized and cross-user access rejected."),
+    "STATUS: " +
+      (failed
+        ? "FAILED - isolation NOT proven."
+        : "PASS - unauthorized and cross-user access rejected."),
     "",
     ...lines,
     "",
@@ -199,3 +202,5 @@ function main() {
 }
 
 main();
+
+

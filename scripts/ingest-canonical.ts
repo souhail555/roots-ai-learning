@@ -387,6 +387,10 @@ async function main() {
     return {
       id: String(row["test_id"]),
       name: String(row["purpose"]),
+      // Preserve the workbook's normalized input verbatim for the executable
+      // Golden Test path. The answers field below is a readable option-ID
+      // projection; it must not replace the normative normalized input.
+      normalizedInput: rawInput,
       answers,
       // Context carried by C-02 that is not a scored answer (factors/age/etc.).
       context: Object.fromEntries(

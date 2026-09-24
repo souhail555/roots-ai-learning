@@ -10,22 +10,32 @@ import ProgressBar from "@/components/ui/ProgressBar";
 export default function ModulePage({ params }: { params: Promise<{ sessionId: string; moduleId: string }> }) {
   const { sessionId, moduleId } = use(params);
   const router = useRouter();
-  const [savedAnswers, setSavedAnswers] = useState<Record<string, string | string[]>>({});
+  const [savedAnswers, setSavedAnswers] = useState<Record<string, string | number | string[]>>({});
+  const [isLoading, setIsLoading] = useState(true);
   const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "failed">("saved");
   const [submitErrors, setSubmitErrors] = useState<string[]>([]);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const selectedModule = assessmentModules.find((item) => item.id === moduleId);
 
   useEffect(() => {
-    fetch(`/api/assessment/sessions/${sessionId}`).then(async (response) => {
-      if (response.ok) {
-        setSavedAnswers((await response.json()).answers ?? {});
-      } else if (response.status === 403 || response.status === 404) {
-        // Session expired or not found, redirect to start
-        router.replace("/assessment");
-      }
-    });
-    return () => { if (saveTimer.current) clearTimeout(saveTimer.current); };
+    let cancelled = false;
+    fetch(`/api/assessment/sessions/${sessionId}`)
+      .then(async (response) => {
+        if (!response.ok) throw new Error("session unavailable");
+        const payload = await response.json();
+        if (cancelled) return;
+        setSavedAnswers(payload.answers ?? {});
+      })
+      .catch(() => {
+        if (!cancelled) router.replace("/assessment");
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+    };
   }, [sessionId, router]);
 
   if (!selectedModule) {
@@ -143,6 +153,14 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
     router.push(`/report/${sessionId}`);
   }
 
+  if (isLoading) {
+    return <main className="route-shell route-shell-wide" aria-busy="true">
+      <p className="eyebrow">MODULE {activeModule.order} OF 13</p>
+      <h1>{activeModule.title}</h1>
+      <p className="route-lede" role="status">Loading your saved answers before continuing…</p>
+    </main>;
+  }
+
   return (
     <main className="route-shell route-shell-wide">
       <p className="eyebrow">MODULE {activeModule.order} OF 13</p>
@@ -169,7 +187,7 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
             </ul>
           </div>
         )}
-        {activeModule.questions.map((question) => <QuestionCard key={question.id} question={question} defaultValue={savedAnswers[question.id] as string | undefined} />)}
+        {activeModule.questions.map((question) => <QuestionCard key={question.id} question={question} defaultValue={savedAnswers[question.id]} />)}
         <button className="continue-button" type="submit">{activeModule.order === assessmentModules.length ? "Review and Submit" : "Save and Continue"}</button>
       </form>
     </main>

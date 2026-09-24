@@ -145,8 +145,8 @@ export function governedFallbackSections(
     index: i + 1,
     narrative:
       `Narrative interpretation is not available for this section. ${reason} ` +
-      "Your calculated scores above are complete and unaffected: they are produced by deterministic rules and do not depend on narrative generation. " +
-      "This report is educational and is not a medical diagnosis.",
+      "The report uses the governed deterministic content and the calculated result is unaffected. " +
+      "This educational report does not provide a medical conclusion.",
   }));
 }
 
@@ -435,22 +435,14 @@ export function applyFallback(
   reason: string,
   config: AiNarrativeConfig = DEFAULT_AI_CONFIG,
 ): CanonicalReport {
-  const fallbackIndexes = new Set(
-    governedFallbackSections(report.sections.length, reason).map((s) => s.index),
-  );
+  // Preserve the deterministic, governed C-03 section copy. The AI fallback
+  // changes provenance only; it must not erase the canonical report content.
   return {
     ...report,
-    sections: report.sections.map((section) =>
-      fallbackIndexes.has(section.index)
-        ? {
-            ...section,
-            narrative: governedFallbackSections(report.sections.length, reason).find(
-              (s) => s.index === section.index,
-            )?.narrative ?? null,
-            narrativeSource: "fallback" as const,
-          }
-        : section,
-    ),
+    sections: report.sections.map((section) => ({
+      ...section,
+      narrativeSource: "fallback" as const,
+    })),
     provenance: {
       ...report.provenance,
       ai: {
@@ -465,7 +457,8 @@ export function applyFallback(
       },
     },
     // contentHash is intentionally untouched: a narrative failure must never
-    // change the hash of the authoritative deterministic result.
+    // change the hash of the authoritative deterministic result or its governed
+    // deterministic section copy.
   };
 }
 

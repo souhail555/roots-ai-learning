@@ -9,9 +9,9 @@ import type { CanonicalReportRecord } from "@/lib/db";
  *
  * M3 requirement 5: this page renders from the SAME stored canonical report
  * object as the PDF. It does NOT recalculate scores. The previous implementation
- * read answers from sessionStorage and re-ran calculateScores in the browser,
+ * read answers from client-side storage and re-ran calculateScores in the browser,
  * which meant the displayed values were not the authoritative stored result and
- * could be altered by editing browser storage. That path is removed.
+ * could be altered by editing browser state. That path is removed.
  */
 
 type ViewState =

@@ -383,18 +383,16 @@ async function main() {
   {
     const base = buildCanonicalReport({ assessmentId: "ai-18", scoring });
     const fallback = applyFallback(base, "Provider unavailable.");
-    const allFallback = fallback.sections.every((s) => s.narrativeSource === "fallback");
-    const numericFree = fallback.sections.every(
-      (s) => !/\b\d+\b/.test((s.narrative ?? "").replace("100", "")),
+    const preserved = base.sections.every((section, index) =>
+      fallback.sections[index]?.narrative === section.narrative,
     );
-    const prohibited = fallback.sections.some(
-      (s) => findProhibitedLanguage(s.narrative ?? "") !== null,
-    );
+    const provenanceOnly = fallback.sections.every((s) => s.narrativeSource === "fallback");
+    const fallbackReasonSafe = findProhibitedLanguage(fallback.provenance.ai?.fallbackReason ?? "") === null;
     rec(
       "AI-18",
-      "Governed fallback is neutral, numeric-free and non-diagnostic",
-      allFallback && numericFree && !prohibited,
-      `all fallback=${allFallback}; numeric-free=${numericFree}; no prohibited language=${!prohibited}`,
+      "Governed fallback preserves deterministic C-03 content and records a safe reason",
+      preserved && provenanceOnly && fallbackReasonSafe,
+      `deterministic content preserved=${preserved}; all marked fallback=${provenanceOnly}; fallback reason safe=${fallbackReasonSafe}`,
     );
   }
 
