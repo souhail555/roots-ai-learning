@@ -92,6 +92,15 @@ function get<T>(db: Database, sql: string, params: unknown[] = []): Promise<T | 
   return new Promise((resolve, reject) => db.get<T>(sql, params, (error, row) => error ? reject(error) : resolve(row ?? null)));
 }
 
+export async function deleteSession(id: string): Promise<void> {
+  await withDatabase(async (db) => {
+    await run(db, "DELETE FROM roots_results WHERE session_id = ?", [id]);
+    await run(db, "DELETE FROM roots_canonical_reports WHERE assessment_id = ?", [id]);
+    await run(db, "DELETE FROM roots_legacy_reports WHERE session_id = ?", [id]);
+    await run(db, "DELETE FROM roots_sessions WHERE id = ?", [id]);
+  });
+}
+
 export async function readSession(id: string): Promise<SqliteSessionRow | null> {
   return withDatabase((db) => get<SqliteSessionRow>(db, "SELECT id, created_at, email, answers, completed_modules, updated_at, questionnaire_version, scoring_version FROM roots_sessions WHERE id = ?", [id]));
 }

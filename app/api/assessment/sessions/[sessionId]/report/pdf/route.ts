@@ -1,11 +1,3 @@
-import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { createElement } from "react";
-import { renderToBuffer } from "@react-pdf/renderer";
-import { getCanonicalReportByAssessment } from "@/lib/db";
-import { assertReportIntegrity } from "@/lib/report/pipeline";
-import { ReportPdf } from "@/lib/report/pdf";
-
 /**
  * Canonical report PDF endpoint.
  *
@@ -16,17 +8,21 @@ import { ReportPdf } from "@/lib/report/pdf";
  * This route therefore:
  *   1. Reads the stored canonical report (never recomputes scores).
  *   2. Re-verifies the deterministic content hash before rendering.
- *   3. Emits the report as a text-faithful document carrying the required
+ *   3. Renders all governed sections from the stored record with the required
  *      metadata (report id, generated timestamp, versions, educational and
  *      non-diagnostic boundary).
  *
- * IMPLEMENTATION NOTE: PDF byte rendering is not enabled in this build because
- * the governed C-03 page composition and the approved visual system (File 14 /
- * PUB-01 Golden Screen) were not available in the workspace. The endpoint
- * deliberately serves the canonical content and metadata rather than producing
- * an unapproved visual layout. Swapping in a real PDF renderer does not change
- * this route's data source: it still reads the stored canonical record.
+ * The approved visual composition still requires a separate visual-regression
+ * review, but the route now produces a real PDF from the canonical record.
  */
+
+import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { createElement } from "react";
+import { renderToBuffer } from "@react-pdf/renderer";
+import { getCanonicalReportByAssessment, getSession } from "@/lib/db";
+import { assertReportIntegrity } from "@/lib/report/pipeline";
+import { ReportPdf } from "@/lib/report/pdf";
 
 export async function GET(
   _request: Request,
@@ -39,6 +35,11 @@ export async function GET(
       { error: "Session unavailable." },
       { status: 403 },
     );
+  }
+
+  const session = await getSession(sessionId);
+  if (!session) {
+    return NextResponse.json({ error: "Session not found." }, { status: 404 });
   }
 
   const stored = await getCanonicalReportByAssessment(sessionId);

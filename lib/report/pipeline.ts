@@ -1,4 +1,5 @@
 import { calculateScores, type ScoringResult } from "@/lib/scoring";
+import { createOpenAiTransport } from "@/lib/ai/openaiTransport";
 import {
   buildCanonicalReport,
   buildAiProjection,
@@ -45,7 +46,13 @@ export async function generateReport(
     now?: Date;
   } = {},
 ): Promise<GenerateReportResult> {
-  const config = options.config ?? DEFAULT_AI_CONFIG;
+  const config = options.config ?? {
+    ...DEFAULT_AI_CONFIG,
+    provider: process.env.AI_NARRATIVE_PROVIDER ??
+      (process.env.OPENAI_API_KEY ? "openai" : "unconfigured"),
+    model: process.env.AI_NARRATIVE_MODEL ?? "unconfigured",
+  };
+  const transport = options.transport ?? createOpenAiTransport();
 
   // 1. Deterministic scoring is finalised FIRST and is the sole authority.
   const scoring = options.scoringOverride ?? calculateScores(answers);
@@ -60,7 +67,7 @@ export async function generateReport(
   });
 
   // 3. Narrative is attempted against the read-only projection only.
-  if (!options.transport) {
+  if (!transport) {
     return {
       report: applyFallback(
         baseReport,
@@ -80,7 +87,7 @@ export async function generateReport(
       projection: buildAiProjection(scoring),
       sectionCount: baseReport.sections.length,
     },
-    options.transport,
+    transport,
     config,
   );
 

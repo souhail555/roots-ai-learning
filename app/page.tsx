@@ -4,16 +4,6 @@ import Link from "next/link";
 import { useState } from "react";
 import ReferenceHeroSvg from "@/components/layout/ReferenceHeroSvg";
 
-const domains = [
-  ["MR", "Metabolic Resistance™", "Self-reported resistance to expected weight change and activity-related metabolic context."],
-  ["HS", "Hunger & Satiety Signals™", "Hunger, craving, fullness and post-meal response patterns."],
-  ["SR", "Sleep Recovery Index™", "Sleep duration, continuity and perceived restoration."],
-  ["CH", "Circadian Health Score™", "Alignment of light, screen, meal and sleep timing."],
-  ["SL", "Stress Load™", "Perceived tension, cognitive activation and stress-linked eating."],
-  ["IB", "Inflammation Burden Index™", "Non-specific symptom burden; not a laboratory or clinical inflammation measure."],
-  ["BS", "Biological Safety Signals™", "Perceived energy, appetite drive and resistance signals."],
-];
-
 const features = [
   ["Beyond a number on the scale", "See the pattern behind the struggle."],
   ["Seven biological domains", "One connected view."],

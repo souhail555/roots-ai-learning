@@ -3,7 +3,7 @@
 import { FormEvent, use, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { assessmentModules } from "@/lib/canonicalAssessment";
+import { assessmentModules, type AssessmentModule } from "@/lib/canonicalAssessment";
 import QuestionCard from "@/components/ui/QuestionCard";
 import ProgressBar from "@/components/ui/ProgressBar";
 
@@ -15,7 +15,7 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
   const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "failed">("saved");
   const [submitErrors, setSubmitErrors] = useState<string[]>([]);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const selectedModule = assessmentModules.find((item) => item.id === moduleId);
+  const selectedModule: AssessmentModule | undefined = assessmentModules.find((item) => item.id === moduleId);
 
   useEffect(() => {
     let cancelled = false;
@@ -41,7 +41,7 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
   if (!selectedModule) {
     return <main className="route-shell"><h1>Module not found</h1><p className="route-lede">This learning branch does not exist.</p></main>;
   }
-  const activeModule = selectedModule;
+  const activeModule: AssessmentModule = selectedModule;
 
   function collectAnswers(form: HTMLFormElement) {
     const formData = new FormData(form);
@@ -77,11 +77,8 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
    *
    * The server accepts a partial autosave and returns HTTP 200 with a
    * `validationErrors` array describing required questions that are still
-   * unanswered elsewhere in the module. That is normal, expected progress, not a
-   * failure: the same request reports the module as completed. So the transport
-   * result determines the save status, and `validationErrors` is only surfaced
-   * when the caller is actually submitting (`requireComplete`), where an
-   * incomplete module must block advancement.
+   * unanswered elsewhere in the module. A partial autosave does not mark that
+   * module complete; only a complete module submission advances progress.
    */
   async function persistAnswers(
     answers: Record<string, string | string[]>,

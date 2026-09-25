@@ -188,7 +188,7 @@ let optIdDelta = 0,
   optExtraDelta = 0;
 for (const gs of gos) {
   const ts = (
-    optionSets as Record<string, { options: Array<Record<string, unknown>> }>
+    optionSets as unknown as Record<string, { options: Array<Record<string, unknown>> }>
   )[gs.id];
   if (!ts) continue;
   const gIds = gs.options.map((o) => String(o.id)).join(",");
@@ -288,12 +288,16 @@ for (const t of gen.goldenTests as Array<Record<string, unknown>>) {
   }
   const expDrivers = exp.drivers as string[];
   if (expDrivers.length) {
-    const norm = (s: string) => s.replace(/ co-primary$/, "");
-    const a = actual.drivers.map(norm).join("+");
-    const e = expDrivers.map(norm).join("|");
+    const norm = (value: string) => value.replace(/ co-primary$/, "");
+    const actualDrivers = actual.drivers.map(norm);
+    const expectedDrivers = expDrivers.map(norm);
     if (actual.drivers.length !== expDrivers.length)
       diffs.push(
         `drivers: expected ${JSON.stringify(expDrivers)} got ${JSON.stringify(actual.drivers)}`,
+      );
+    if (actualDrivers.join("+") !== expectedDrivers.join("+"))
+      diffs.push(
+        `driver order: expected ${JSON.stringify(expectedDrivers)} got ${JSON.stringify(actualDrivers)}`,
       );
   }
   if (diffs.length) {

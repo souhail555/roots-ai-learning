@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createSession, setSessionEmail } from "@/lib/db";
+import { createSession, setSessionEmail, SESSION_TTL_SECONDS } from "@/lib/db";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null) as { email?: string } | null;
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: 60 * 60,
+    maxAge: SESSION_TTL_SECONDS,
   });
   return response;
 }

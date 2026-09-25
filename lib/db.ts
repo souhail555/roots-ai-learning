@@ -15,11 +15,14 @@ import {
   readLegacyReport,
   readResult as readStoredResult,
   readSession as readStoredSession,
+  deleteSession as deleteStoredSession,
   writeCanonicalReport as writeStoredCanonicalReport,
   writeLegacyReport,
   writeResult as writeStoredResult,
   writeSession as writeStoredSession,
 } from "@/lib/sqliteStore";
+
+export const SESSION_TTL_SECONDS = 60 * 60;
 
 export interface CanonicalReportRecord {
   id: string;
@@ -35,6 +38,8 @@ export interface SessionRecord {
   answers: Record<string, unknown>;
   completedModules: string[];
   updatedAt?: string;
+  /** Absolute server-side expiry. The cookie is not the only expiry control. */
+  expiresAt?: string;
   canonicalVersions: { questionnaire: string; scoring: string };
 }
 
@@ -91,11 +96,24 @@ function persistSession(session: SessionRecord): Promise<void> {
   });
 }
 
+function isSessionExpired(session: SessionRecord): boolean {
+  const expiry = session.expiresAt ?? new Date(new Date(session.createdAt).getTime() + SESSION_TTL_SECONDS * 1000).toISOString();
+  return Date.parse(expiry) <= Date.now();
+}
+
 async function loadSession(id: string): Promise<SessionRecord | null> {
   const cached = sessions.get(id);
-  if (cached) return cached;
+  if (cached) {
+    if (isSessionExpired(cached)) {
+      sessions.delete(id);
+      return null;
+    }
+    return cached;
+  }
   const loaded = sessionFromRow(await readStoredSession(id));
-  if (loaded) sessions.set(id, loaded);
+  if (!loaded) return null;
+  if (isSessionExpired(loaded)) return null;
+  sessions.set(id, loaded);
   return loaded;
 }
 
@@ -146,6 +164,7 @@ export async function createSession(id: string): Promise<SessionRecord> {
     answers: {},
     completedModules: [],
     updatedAt: timestamp,
+    expiresAt: new Date(Date.now() + SESSION_TTL_SECONDS * 1000).toISOString(),
     canonicalVersions: { ...CANONICAL_VERSIONS },
   };
   await persistSession(session);
@@ -153,8 +172,15 @@ export async function createSession(id: string): Promise<SessionRecord> {
   return session;
 }
 
+export async function revokeSession(id: string): Promise<void> {
+  await deleteStoredSession(id);
+  sessions.delete(id);
+  results.delete(id);
+  canonicalReports.delete(id);
+}
+
 /**
- * Retrieve a session by ID. Returns null if not found.
+ * Retrieve a session by ID. Returns null if not found or expired.
  */
 export async function getSession(id: string): Promise<SessionRecord | null> {
   return loadSession(id);
@@ -179,6 +205,7 @@ export async function saveModuleAnswers(
   sessionId: string,
   moduleId: string,
   answers: Record<string, unknown>,
+  markComplete = true,
 ): Promise<SessionRecord> {
   const session = await loadSession(sessionId);
   if (!session) throw new Error(`Session ${sessionId} not found`);
@@ -187,7 +214,9 @@ export async function saveModuleAnswers(
   const updated: SessionRecord = {
     ...session,
     answers: { ...session.answers, ...answers },
-    completedModules: Array.from(new Set([...session.completedModules, moduleId])),
+    completedModules: markComplete
+      ? Array.from(new Set([...session.completedModules, moduleId]))
+      : session.completedModules,
     updatedAt,
   };
   await persistSession(updated);

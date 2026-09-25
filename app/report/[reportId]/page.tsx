@@ -20,28 +20,6 @@ type ViewState =
   | { status: "unauthorized" }
   | { status: "ready"; record: CanonicalReportRecord };
 
-const sectionCopy = [
-  ["Cover Page", "ROOTS Biological Intelligence Report™", "Educational — Not a Diagnosis"],
-  ["Executive Summary", "Your current pattern reflects a combination of reported biological signals. These results are educational and describe your answers; they do not diagnose a condition.", "Mention the strongest areas, one strength and any confidence limitation."],
-  ["ROOTS Biological State™", "Your ROOTS Biological State™ is {score}/100 — {label}.", "This summarizes the available seven-domain questionnaire pattern; it is not a medical risk probability."],
-  ["ROOTS Opportunity Score™", "Your ROOTS Opportunity Score™ is {opportunity}/100.", "This proprietary educational indicator is not a forecast or clinical outcome probability."],
-  ["ROOTS Confidence™", "Confidence in this interpretation is {confidenceLabel} ({confidence}/100).", "Coverage, answer confidence and consistency remain visible."],
-  ["Key Drivers", "Primary and secondary drivers are selected deterministically from available domain scores.", "AI may explain selected outputs but cannot choose or change them."],
-  ["Seven-Domain Score Breakdown", "Seven horizontal score summaries in fixed order: MR, HS, SR, CH, SL, IB, BS.", "Null domains display Not enough information."],
-  ["Biological Triad™", "The current triad connects the leading drivers and a protective factor.", "Relationships are presented as possible, not causal."],
-  ["Future Projection", "If the current pattern continues, the same signals may remain influential. Small consistent changes may alter the pattern over time.", "This is not a prognosis."],
-  ["90-Day Roadmap", "Month 1 — Stabilize signals. Month 2 — Build flexibility. Month 3 — Reinforce recovery.", "Select only eligible educational micro-actions."],
-  ["Nutrition Priorities", "Focus on meal structure, adequate protein and fibre, hydration, and timing patterns that match your circumstances.", "No calorie prescription, supplement dosage or therapeutic diet."],
-  ["Action Priorities", "Start with the smallest action you can repeat consistently.", "Each action includes a reason, frequency and safety note where applicable."],
-  ["What Is Going Well", "Your answers also show strengths that may support change.", "Display only protective factors actually present."],
-  ["Specific Concerns", "Some reported signals may deserve additional attention, especially if they are persistent, worsening or affecting daily function.", "Do not display alarming medical labels."],
-  ["Suggested Laboratory Discussion", "You may wish to discuss whether any tests are appropriate with a qualified healthcare professional.", "Tests are optional discussion prompts only; ROOTS-AI does not order or interpret tests."],
-  ["Participant Answers", "Your answers are shown exactly as submitted.", "Organize by 13 modules and show display labels, N/A, units and questionnaire version."],
-  ["Biological Card", "Biological State {score}; Opportunity {opportunity}; Recovery Potential {recovery}; Confidence {confidenceLabel}.", "Compact summary with drivers and rule versions."],
-  ["Final Word", "Your answers are a starting point, not a verdict. Choose one realistic action, observe how you respond, and seek professional support when symptoms are persistent or concerning.", ""],
-  ["Medical and AI Disclaimer", "ROOTS-AI™ provides educational wellness information based on self-reported answers. It is not a medical device, diagnostic service, clinical assessment, prognosis or substitute for a qualified healthcare professional.", "Scores are proprietary questionnaire indicators; deterministic rules calculate scores and classifications."],
-] as const;
-
 export default function ReportPage({ params }: { params: Promise<{ reportId: string }> }) {
   const { reportId } = use(params);
   const [state, setState] = useState<ViewState>({ status: "loading" });

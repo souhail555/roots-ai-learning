@@ -68,7 +68,11 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ se
     : [];
 
   try {
-    const session = await saveModuleAnswers(sessionId, body.moduleId, body.answers);
+    /**
+     * Save the current module answers. `markComplete` is false for debounced
+     * autosaves, so a partially answered module cannot inflate progress.
+     */
+    const session = await saveModuleAnswers(sessionId, body.moduleId, body.answers, validationErrors.length === 0);
     return NextResponse.json({
       saved: true,
       completedModules: session.completedModules,
