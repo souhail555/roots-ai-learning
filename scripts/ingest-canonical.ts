@@ -24,6 +24,10 @@ import { dirname, basename } from "node:path";
 type Cell = string | number | boolean | null | undefined;
 type Sheet = Record<string, Cell>[];
 
+function cellText(value: Cell): string {
+  return value === null || value === undefined ? "" : String(value).trim();
+}
+
 interface XlsxModule {
   readFile: (p: string) => { SheetNames: string[]; Sheets: Record<string, unknown> };
   utils: {
@@ -62,19 +66,24 @@ function readTable(
 ): Sheet {
   const sheet = workbook.Sheets[sheetName];
   if (!sheet) throw new Error(`Controlled sheet '${sheetName}' is missing.`);
-  const aoa = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+  const aoa = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as Cell[][];
 
   const headerIndex = aoa.findIndex((row) =>
-    row.some((cell) => String(cell ?? "").trim() === keyColumn),
+    row.some((cell) => cellText(cell) === keyColumn),
   );
   if (headerIndex < 0) {
     throw new Error(`Sheet '${sheetName}' has no header row containing '${keyColumn}'.`);
   }
 
-  const header = aoa[headerIndex].map((cell) => String(cell ?? "").trim());
+  const headerRow = aoa[headerIndex];
+  if (!headerRow) {
+    throw new Error(`Sheet '${sheetName}' header row could not be read.`);
+  }
+
+  const header = headerRow.map((cell) => cellText(cell));
   return aoa
     .slice(headerIndex + 1)
-    .filter((row) => row.some((cell) => cell !== null && cell !== undefined && cell !== ""))
+    .filter((row) => row.some((cell) => cellText(cell) !== ""))
     .map((row) => {
       const record: Record<string, Cell> = {};
       header.forEach((name, index) => {
@@ -99,7 +108,7 @@ function readDescriptor(
     const field = row["Field"];
     const value = row["Value"];
     if (field === null || field === undefined) continue;
-    descriptor[String(field).trim()] = value === null || value === undefined ? "" : String(value);
+    descriptor[cellText(field)] = value === null || value === undefined ? "" : String(value);
   }
   return descriptor;
 }
