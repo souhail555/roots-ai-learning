@@ -48,3 +48,7 @@ next-env.d.ts
 # local dev server log
 dev.log
 .git-commit-msg.txt
+# local dev server logs
+dev.log
+dev-preview.log
+.git-commit-msg.txt

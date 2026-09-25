@@ -140,14 +140,8 @@ export default function ModulePage({ params }: { params: Promise<{ sessionId: st
       router.push(`/assessment/${sessionId}/module/${nextModule.id}`);
       return;
     }
-    // Final module: ask the server to produce the deterministic result.
-    const result = await fetch(`/api/assessment/sessions/${sessionId}/result`, { method: "POST" });
-    if (!result.ok) {
-      const body = await result.json().catch(() => null) as { validationErrors?: Array<{ message?: string }> } | null;
-      setSubmitErrors((body?.validationErrors ?? []).map((e) => e?.message ?? "").filter(Boolean));
-      return;
-    }
-    router.push(`/report/${sessionId}`);
+    // Final module: require an explicit review step before producing the report.
+    router.push(`/assessment/${sessionId}/review`);
   }
 
   if (isLoading) {

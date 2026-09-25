@@ -177,10 +177,15 @@ vercel deploy
 
 ### Environment Variables
 
-No environment variables required for current implementation. Future Supabase integration will require:
-- `SUPABASE_URL`
-- `SUPABASE_ANON_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY`
+The assessment and deterministic report engine run without environment variables in the current self-hosted implementation.
+
+Optional production integrations:
+
+- `CONTACT_WEBHOOK_URL` — HTTPS endpoint for validated contact enquiries. If it is not configured, the Contact page shows a clear delivery error and does not claim that a message was received.
+- `OPENAI_API_KEY` and `AI_NARRATIVE_MODEL` — optional governed narrative transport. Without them, the deterministic governed fallback is used.
+- `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` — reserved for the approved production persistence/authentication integration.
+
+No credentials are stored in this repository.
 
 ## Contributing
 
