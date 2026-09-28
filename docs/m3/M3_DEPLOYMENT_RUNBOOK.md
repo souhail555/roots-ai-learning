@@ -1,15 +1,17 @@
-# M3 — Deployment & Release Runbook (RC to staging)
+# M3 — Deployment & Release Runbook
 
-**Written:** because the agent shell in the authoring environment returns no output, so `git`,
-`npm` and `vercel` could not be executed. **Every command below must be run manually.**
+**Delivered commit:** `21dc50c394387469ae275309bedece12b8b34da8` (branch `master`)
+**Verified in this cycle:** `npm run build` (23 routes), `npm run lint` (clean),
+`npm run test:canonical` 30/30, `npm run test:golden` 30/30, `npm run test:report` 20/20,
+`npm run test:ai` 20/20.
 
 ---
 
-## 0. Critical finding — two different deployments exist
+## 0. Two different deployments exist
 
 | URL | State | Meaning |
 |---|---|---|
-| `https://roots-ai-learning.vercel.app/` | **Live and working** | The currently published site. Referenced by `docs/m1/M1_COMPLETION_PACKAGE_v1.4.md`. |
+| `https://roots-ai-learning.vercel.app/` | **Live but outdated** | The published site still serves a pre-M3 build. |
 | `https://roots-ai-learning-git-master-roots-ai.vercel.app/` | **Vercel login wall** | Branch/preview deployment behind Deployment Protection. Not publicly reachable. |
 
 **The live site is materially out of date compared with this repository.** Evidence gathered by
@@ -27,7 +29,23 @@ Signals™, `SR` Sleep Recovery Index™, `CH` Circadian Health Score™, `SL` S
 `IB` Inflammation Burden Index™, `BS` Biological Safety Signals™.
 
 The noncanonical live content is exactly what M3 §6 required to be removed. It is still being served.
-**Publishing the current repository is what closes this.**
+**Publishing commit `21dc50c` is what closes this (blocker D-01).**
+
+### Why Git-triggered builds are not sufficient
+
+Inspecting the recent Vercel deployments shows the Git integration cloning
+`github.com/souhail555/roots-ai-learning` at **branch `master`, commit `7da256d`** — a commit older
+than the delivered one. Every Git-triggered production deployment therefore fails or publishes
+stale content. The `tsc` failures in those logs come from the stale tree, not from the current one.
+
+**Recommended publication path:** deploy directly from the verified working tree so the deployment
+is bound to the tested commit:
+
+```bash
+npx vercel deploy --prod --yes
+```
+
+Then record the resulting deployment URL against D-01 in `M3_DECISION_LOG.md`.
 
 ---
 
