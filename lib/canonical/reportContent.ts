@@ -13,6 +13,18 @@ export const REPORT_SECTION_TITLES = [
 
 export const REPORT_DISCLAIMER = "ROOTS-AI\u2122 provides educational wellness information based on self-reported answers. It is not a medical device, diagnostic service, clinical assessment, prognosis or substitute for a qualified healthcare professional. It does not provide medical treatment or medication instructions. Scores are proprietary questionnaire indicators and are not validated probabilities of disease or future outcomes. AI may assist with wording, but all scores and classifications are calculated by deterministic rules. If you have severe, sudden or worsening symptoms, or believe you may be in immediate danger, contact local emergency services or a qualified healthcare professional.";
 
+/**
+ * M3 AI-disclosure sentence, required wherever governed narrative touches a section.
+ *
+ * Controlling copy (ROOTS point 26):
+ *   "AI may assist with governed narrative wording from approved inputs; all authoritative
+ *    scores, classifications and drivers are produced by the deterministic engine."
+ *
+ * Kept in one place so the web report, the PDF and the canonical record cannot drift apart.
+ */
+export const AI_DISCLOSURE =
+  "AI may assist with governed narrative wording from approved inputs; all authoritative scores, classifications and drivers are produced by the deterministic engine.";
+
 export const MICRO_ACTIONS: Record<DomainId, { action: string; rationale: string; safety: string }> = {
   MR: { action: "Schedule three 10-minute walks after meals this week.", rationale: "Supports routine movement without promising weight loss.", safety: "If exercise is unsafe or painful, obtain professional guidance." },
   HS: { action: "Include a protein source and fibre-rich food in one regular meal daily.", rationale: "May support meal satisfaction.", safety: "Adapt for allergies, kidney disease or clinician-directed diets." },

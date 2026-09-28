@@ -50,13 +50,16 @@ const milestones: Milestone[] = [
     status: "Implemented · external gates open",
     tone: "open",
     summary: "The 19-section governed report object, same-source web/PDF paths, deterministic fallback and AI validation boundary are implemented in the current release candidate.",
-    implemented: ["Canonical 19-section report object with content integrity hash", "Authorized web report and PDF routes reading the same stored record", "Governed AI projection, validation, retry, timeout and fallback", "Legal-screen decisions and OPS-03 gap recorded in the M3 decision log"],
+    implemented: ["Canonical 19-section report object with content integrity hash", "Authorized web report and PDF routes reading the same stored record", "Governed AI projection, validation, retry, timeout and fallback", "Consolidated M3 decision log separating implemented / source-verified / approved / open items"],
     evidence: [
+      { label: "M3 decision log (consolidated)", href: "https://github.com/souhail555/roots-ai-learning/blob/master/docs/m3/M3_DECISION_LOG.md" },
       { label: "M3 implementation status", href: "https://github.com/souhail555/roots-ai-learning/blob/master/docs/m3/M3_IMPLEMENTATION_STATUS.md" },
-      { label: "M3 decision log", href: "https://github.com/souhail555/roots-ai-learning/blob/master/docs/m3/M3_DECISION_LOG.md" },
+      { label: "M3 six-item decision matrix", href: "https://github.com/souhail555/roots-ai-learning/blob/master/docs/m3/M3_SIX_ITEM_DECISION_MATRIX.md" },
+      { label: "M3 point-21 content matrix", href: "https://github.com/souhail555/roots-ai-learning/blob/master/docs/m3/M3_POINT21_CONTENT_MATRIX.md" },
+      { label: "M3 deployment runbook", href: "https://github.com/souhail555/roots-ai-learning/blob/master/docs/m3/M3_DEPLOYMENT_RUNBOOK.md" },
       { label: "M3 documentation folder", href: "https://github.com/souhail555/roots-ai-learning/tree/master/docs/m3" },
     ],
-    open: ["Production provider, RLS, visual acceptance, processor/privacy approval and OPS-03 consent evidence remain open."],
+    open: ["Production release-candidate reference (D-01), Google OAuth end-to-end test (D-02), PDF footer version ruling (D-03), OPS-03 consent record approval (D-04), PUB-01 Figma (D-05), C-03 deferred strings (D-06) and the contrast-token ruling (D-07) all remain open. See the decision log, Part E."],
   },
 ];
 

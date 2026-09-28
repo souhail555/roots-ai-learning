@@ -24,6 +24,11 @@ against prior correspondence. File/line citations are given for each finding.
 | 2e | Point 23 six "Why this appeared" strings | Incorporate into C-03 | Not in tree | **NOT PRESENT** |
 | 2f | Point 26 AI sentence | Attach where narrative touches a section | Not in tree (an older, different AI string is) | **PARTIAL / CONTRADICTED** |
 | 3a | Contrast: two derived colour values | Approve `--zd-teal-ink` / `--zd-gold-ink` | Neither token nor hex exists in the tree | **NOT PRESENT** |
+| 3b | Contrast: "eleven declarations carrying small text" | — | Only 2 declarations use these colours, both borders | **CONTRADICTED** |
+| 4 | Footer version line | Remove `· Version 1.0.0` | Obsolete line absent; PDF footer still carries a version | **VERIFIED with caveat** (C-03 §2 conflict) |
+| 5 | Cookie/consent inventory | Confirm against deployed config | Tree matches the *older* log, not the newer one | **CONTRADICTED** |
+| 6 | Driver / co-primary wording | Verify across all representations | Canonical + web + PDF all render the same sentence | **VERIFIED** (earlier defect withdrawn) |
+| — | Staging URL reachability | Provide verifiable RC reference | URL returns a Vercel login wall, not the app | **BLOCKS D-01** |
 
 ## Item 1 — ASM-01 assessment entry CTA label
 
@@ -278,24 +283,39 @@ domains rather than two elements. The earlier expansion defect is genuinely fixe
 (`docs/controlled-source-extract/c03.txt:129`, `c03.txt:129`, `spec-c03.txt:129`) — which is correct;
 controlled source is not ours to edit.
 
-### 6b — Defect: the PDF omits the driver text equivalent
+### 6b — Correction: PDF driver output is present (earlier defect finding withdrawn)
 
-ROOTS required that *"every report representation must use the actual C-02 deterministic driver output
-entries consistently"*. The wording is consistent. The **text equivalent** is not:
+**An earlier draft of this document recorded a defect here — that the PDF "has no separate Key Drivers
+block" and "never reads `numericEquivalents.drivers`". That finding was wrong and is withdrawn.**
 
-- **Canonical object** — `numericEquivalents.drivers` = `rankedDriverCopy(...)`
+`lib/report/pdf.tsx:66` does render one:
+
+```tsx
+<View style={styles.section}><Text style={styles.sectionTitle}>Key Drivers</Text>
+  <Text style={styles.body}>{rankedDriverCopy(scoring.drivers)}</Text></View>
+```
+
+**Web/PDF driver parity is therefore correct.** All three surfaces render the same approved sentence:
+
+- **Canonical object** — `numericEquivalents.drivers = rankedDriverCopy(scoring.drivers)`
   (`lib/canonical/report.ts:240`).
 - **Web** — `app/report/[reportId]/page.tsx:87` renders `report.numericEquivalents.drivers`. ✔
-- **PDF** — `lib/report/pdf.tsx:68` renders only `section.narrative ?? "Not Available"` per section.
-  Section 06's narrative is `rankedDrivers` (`reportContent.ts:144`), so the wording does reach the
-  PDF — but the PDF never reads `numericEquivalents.drivers`, and has no separate Key Drivers block.
+- **PDF** — `lib/report/pdf.tsx:66` renders `rankedDriverCopy(scoring.drivers)`. ✔
 
-RP-12 checks that `numericEquivalents` *contains* the key; it does not check that the PDF *renders*
-it. This is a web/PDF parity gap the existing report-integrity suite does not cover.
+**One observation, not a defect.** The PDF calls `rankedDriverCopy(scoring.drivers)` directly rather
+than reading the stored `report.numericEquivalents.drivers` string. `rankedDriverCopy` is pure and
+deterministic over `scoring.drivers`, and the PDF receives the stored `CanonicalReport`, so both paths
+yield the identical sentence from the same canonical array.
 
-**Status: VERIFIED with defect.** Recommend a PDF drivers line sourced from `numericEquivalents.drivers`
-— the same canonical value the web uses — plus a test asserting the PDF output contains the exact
-driver sentence. No approved wording changes; this closes a parity gap.
+Routing the PDF through `report.numericEquivalents.drivers` would make parity *structural* rather than
+*coincidental* — the PDF could then never drift if the text equivalent were edited. Recommended as
+hardening, not correction, and only alongside a test that renders the PDF and asserts the exact driver
+sentence appears in the output.
+
+**Status: VERIFIED.** The earlier defect finding is withdrawn. The separate web/PDF divergence at
+checklist item 15 (domain label, `MR` vs `Metabolic Resistance™`) does stand and is unaffected.
+
+---
 
 ## Evidence status for this cycle — READ FIRST
 
@@ -372,80 +392,49 @@ hash, and bind every result to that revision.
 | 34 | Updated C-07 traceability | **NOT VERIFIED** | Requires run + commit |
 | 35 | Google OAuth E2E | **BLOCKED** | No OAuth route in tree (Item 5b) |
 
-Counts: **17 source-verified · 10 open/blocked · 3 defects raised · 5 partial/conflict.**
+Counts: **17 source-verified · 10 open/blocked · 1 defect raised · 5 partial/conflict.**
 No item is marked compliant. Nothing is closed on the basis of an unreproduced test run.
 
-
-Co-primary is preserved as one entry: `driverOutputText` (lines 54-58) splits on `+`, renders both
-domain labels joined by " and", and appends "(co-primary)". `triadCopy` (lines 75-86) maps **one
-TriadElement per driver output entry**, so a co-primary pair contributes one element naming both
-domains rather than two elements. The earlier expansion defect is genuinely fixed.
-
-"Strongest area(s)" is gone from product code. It remains only in the C-03 controlled extract
-(`docs/controlled-source-extract/c03.txt:129`, `c03.txt:129`, `spec-c03.txt:129`) — which is correct;
-controlled source is not ours to edit.
-
-### 6b — Defect: the PDF omits the driver text equivalent
-
-ROOTS required that *"every report representation must use the actual C-02 deterministic driver output
-entries consistently"*. The wording is consistent. The **text equivalent** is not:
-
-- **Canonical object** — `numericEquivalents.drivers` = `rankedDriverCopy(...)`
-  (`lib/canonical/report.ts:240`).
-- **Web** — `app/report/[reportId]/page.tsx:87` renders `report.numericEquivalents.drivers`. ✔
-- **PDF** — `lib/report/pdf.tsx:68` renders only `section.narrative ?? "Not Available"` per section.
-  Section 06's narrative is `rankedDrivers` (`reportContent.ts:144`), so the wording does reach the
-  PDF — but the PDF never reads `numericEquivalents.drivers`, and has no separate Key Drivers block.
-
-RP-12 checks that `numericEquivalents` *contains* the key; it does not check that the PDF *renders*
-it. This is a web/PDF parity gap the existing report-integrity suite does not cover.
-
-**Status: VERIFIED with defect.** Recommend a PDF drivers line sourced from `numericEquivalents.drivers`
-— the same canonical value the web uses — plus a test asserting the PDF output contains the exact
-driver sentence. No approved wording changes; this closes a parity gap.
-
-- No `localStorage` / `sessionStorage` consent record exists anywhere in the project.
-- The only session cookie is `roots_session_id`, created in `app/api/assessment/sessions/route.ts`.
-- `app/cookies/page.tsx:17` publishes an inventory table whose browser-storage row reads
-  *"No application preference or analytics record is currently implemented in this release candidate."*
-- `app/cookies/page.tsx:19` renders the three analytics controls **disabled**, with
-  *"Cookie controls are not enabled in this release candidate."*
-- `app/cookies/page.tsx:18` carries the OPS-03 open-verification notice.
-
-There is also no OAuth implementation to test: the Google sign-in flow described in correspondence has
-no corresponding source in this tree (no OAuth route, no `roots_oauth_next` writer).
-
-<Text>Educational — Not a Diagnosis · {report.report_template_version}</Text>
-```
-
-This **retains a version** in the PDF footer. That appears to conflict with the D-03 instruction
-"do not introduce a replacement version label."
-
-**Status: VERIFIED with caveat.** No site-footer version line exists (decision correctly applied).
-The PDF footer version is required by C-03 §2 and is a different surface, so the two instructions are
-in tension. **This is raised as an exact conflict rather than resolved unilaterally**, per ROOTS'
-standing instruction to identify conflicts before implementing an assumption. We have not changed it.
-
 ---
 
+## Staging deployment check — BLOCKS D-01 VERIFICATION
 
-**One discrepancy to correct.** Correspondence states *"DISCLAIMER_VERSION therefore remains 1.0.0."*
-The tree does not match that:
+URL supplied for verification: `https://roots-ai-learning-git-master-roots-ai.vercel.app/`
 
-- `lib/canonical/reportContent.ts:14` — no version constant; the string is inline.
-- `lib/canonical/reportContent.ts:185` — contentId is generated as `C03.SECTION.NN`.
-- `lib/canonical/report.ts:309` — `disclaimer_version: "C-03-DISCLAIMER v1.0.1"`.
+**Finding: the URL does not serve the application. It returns a Vercel authentication wall.**
 
-So the persisted canonical value is **`1.0.1`**, not `1.0.0`. If 1.0.0 is correct, the canonical
-report object is stamping a disclaimer version that does not match the approved copy. This should be
-reconciled before the report is treated as evidence-complete. It is raised as a question, not a defect
-claim, because C-03 v1.0.1 CORRECTED may legitimately carry its own disclaimer version.
+Both `/` and `/cookies` return an identical ~341 KB HTML document whose entire rendered content is:
 
----
+> Skip to content · Login – Vercel · Sign Up · Log in to Vercel · Terms · Privacy Policy ·
+> Continue with Email / Google / GitHub / ChatGPT / SAML SSO / Passkey
 
-| 3b | Contrast: "eleven declarations carrying small text" | — | Only 2 declarations use these colours, both borders | **CONTRADICTED** |
-| 4 | Footer version line | Remove `· Version 1.0.0` | Obsolete line absent; PDF footer still carries a version | **VERIFIED with caveat** |
-| 5 | Cookie/consent inventory | Confirm against deployed config | Tree matches the *older* log, not the newer one | **CONTRADICTED** |
-| 6 | Driver / co-primary wording | Verify across all representations | Present in canonical + web; PDF uses a separate string | **VERIFIED with defect** |
+There is no ROOTS-AI branding, no navigation, no CTA, no legal copy, and no cookie table.
 
----
+**Why this matters for D-01 specifically.** D-01 requires the cookie and browser-storage inventory to be
+"verified against the actual deployed Phase 1 configuration and the applicable ROOTS-owned Cloudflare
+and Supabase settings." That verification **cannot be performed** against this URL, because the
+application is not reachable. The consequences are concrete:
+
+- `cf_clearance` **cannot** be confirmed or denied. A Vercel-hosted deployment is Cloudflare-fronted
+  only if a Cloudflare zone actually sits in front of it; the hostname pattern here (`*.vercel.app`)
+  indicates Vercel's own edge. Whether `cf_clearance` is issued, to whom, and for how long is
+  **unresolved** and must not be asserted in either direction.
+- The Supabase session cookie claim **cannot** be confirmed. The repository has no Supabase dependency
+  at all — `package.json` lists `@react-pdf/renderer`, `next`, `puppeteer`, `react`, `react-dom`,
+  `sqlite3` only. The described `sb-<project-ref>-auth-token` cookie has no code path in this tree.
+- The deployed build **cannot be matched to a commit**, so the running build cannot be tied to the
+  submitted RC as M3 §16 requires.
+
+**Two possibilities, needing different responses:**
+
+1. **Deployment Protection is enabled** (Vercel Authentication on the project). This is normal and
+   appropriate for a pre-UAT RC. ROOTS would need to share an authenticated preview URL, add us to the
+   Vercel team, or temporarily disable protection for the review window. The D-01 inventory work cannot
+   start until then.
+2. **The deployment is a Vercel placeholder and the real RC is elsewhere.** Then the correct staging
+   reference has not yet been provided.
+
+**Requested from ROOTS:** confirm which applies, and provide either an authenticated preview URL or the
+correct RC reference. Until the application is reachable, D-01 inventory verification, the
+cookie/analytics disclosure confirmation, and any deployed-build evidence must be recorded as **not yet
+started** — not as passed, and not as failed.

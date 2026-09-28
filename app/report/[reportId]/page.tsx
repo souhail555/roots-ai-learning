@@ -3,6 +3,8 @@
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import type { CanonicalReportRecord } from "@/lib/db";
+import { DOMAIN_LABELS, DOMAIN_TIE_ORDER } from "@/lib/canonical/source";
+import { AI_DISCLOSURE } from "@/lib/canonical/reportContent";
 
 /**
  * Authorized interactive web report.
@@ -82,14 +84,14 @@ export default function ReportPage({ params }: { params: Promise<{ reportId: str
 
     <section aria-label="Text equivalents for the report values"><h2>Report values in text</h2><ul>{Object.entries(report.numericEquivalents).map(([key, text]) => <li key={key}>{text}</li>)}</ul></section>
 
-    <section aria-label="Seven-domain breakdown"><h2>Seven-domain breakdown</h2><div className="report-domain-list">{Object.entries(scoring.domains).map(([domain, value]) => <div key={domain}><span>{domain}</span><strong>{value === null ? "Not enough information" : `${value}/100`}</strong></div>)}</div></section>
+    <section aria-label="Seven-domain breakdown"><h2>Seven-domain breakdown</h2><div className="report-domain-list">{DOMAIN_TIE_ORDER.map((id) => { const value = scoring.domains[id]; return <div key={id}><span>{DOMAIN_LABELS[id]}</span><strong>{value === null ? "Not enough information" : `${value}/100`}</strong></div>; })}</div></section>
 
     <section aria-label="Drivers"><h2>Key Drivers</h2><p className="report-detail">{report.numericEquivalents.drivers}</p></section>
 
     <div className="report-sections">{report.sections.map((section) => <article className="report-section-card" id={`report-section-${section.index}`} key={section.index}><span className="report-section-number">{String(section.index).padStart(2, "0")}</span><div><h2>{section.title}</h2>{section.narrative ? <p>{section.narrative}</p> : <p className="report-reduced">{section.reduced ? "This section is in an explicit reduced state. No substitute content has been inserted." : "No narrative is available for this section."}</p>}{section.reduced && section.reducedReason ? <small>{section.reducedReason}</small> : null}</div></article>)}</div>
 
     <footer className="report-boundary">
-      <p>{provenance.ai ? (provenance.ai.usedFallback ? "The narrative in this report was not AI-generated. Your calculated scores are complete and unaffected. Educational — Not a Diagnosis." : "Narrative is AI-assisted and explains the deterministically calculated scores. It does not determine them. Educational — Not a Diagnosis.") : "Narrative generation is disabled. Your calculated scores are produced by deterministic rules. Educational — Not a Diagnosis."}</p>
+      <p>{provenance.ai ? (provenance.ai.usedFallback ? `This report uses the approved deterministic narrative library rather than AI-generated text. ${AI_DISCLOSURE}` : AI_DISCLOSURE) : `Narrative generation is disabled for this report. ${AI_DISCLOSURE}`} Educational — Not a Diagnosis.</p>
       <p>Content hash (deterministic spine): <code>{report.contentHash}</code></p>
     </footer>
  </main>;

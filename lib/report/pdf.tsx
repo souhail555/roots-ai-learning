@@ -6,7 +6,7 @@ import {
   View,
 } from "@react-pdf/renderer";
 import { DOMAIN_LABELS, DOMAIN_TIE_ORDER } from "@/lib/canonical/source";
-import { rankedDriverCopy } from "@/lib/canonical/reportContent";
+import { AI_DISCLOSURE, rankedDriverCopy } from "@/lib/canonical/reportContent";
 import type { CanonicalReport } from "@/lib/canonical/report";
 
 const styles = StyleSheet.create({
@@ -55,6 +55,7 @@ export function ReportPdf({ report }: { report: CanonicalReport }) {
         <Text style={styles.metadataText}>Scoring: {report.scoring_version}</Text>
         <Text style={styles.metadataText}>Content hash: {report.contentHash}</Text>
         <Text style={styles.metadataText}>AI provenance: {report.provenance.ai ? (report.provenance.ai.usedFallback ? `governed fallback (${report.provenance.ai.fallbackVersion})` : `${report.provenance.ai.provider} / ${report.provenance.ai.model}`) : "disabled"}</Text>
+        <Text style={styles.metadataText}>{AI_DISCLOSURE}</Text>
       </View>
       <View style={styles.metrics}>
         <Metric label="Biological State" value={scoring.biologicalState === null ? "Not Available" : `${scoring.biologicalState}/100`} />
