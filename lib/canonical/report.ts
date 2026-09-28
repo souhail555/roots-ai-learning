@@ -10,6 +10,7 @@ import {
   activeProtectiveFactorIds,
   buildGovernedSections,
   buildReportLimitations,
+  rankedDriverCopy,
   type ReportLimitation,
 } from "@/lib/canonical/reportContent";
 import type { ScoringResult } from "@/lib/scoring";
@@ -236,10 +237,7 @@ function buildNumericEquivalents(
       scoring.recoveryPotential === null
         ? "Recovery potential: not available."
         : `Recovery potential: ${scoring.recoveryPotential.toFixed(1)} of 100.`,
-    drivers:
-      scoring.drivers.length === 0
-        ? "Drivers: none eligible."
-        : `Drivers in rank order: ${scoring.drivers.join(", ")}${scoring.coPrimary ? " (co-primary pair shown as a single entry)." : ""}.`,
+    drivers: rankedDriverCopy(scoring.drivers),
     domainCount: `Scored domains: ${scoring.scoredDomainCount} of 7.`,
   };
 

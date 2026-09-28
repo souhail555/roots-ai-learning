@@ -16,6 +16,7 @@ export default function Header() {
     ["Platform", "/platform"],
     ["Example Report", "/example-report"],
     ["Research", "/research"],
+    ["Project Status", "/project-status"],
     ["About", "/about"],
   ];
   const mobileLinks = [

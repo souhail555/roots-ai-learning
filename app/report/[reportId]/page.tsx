@@ -84,7 +84,7 @@ export default function ReportPage({ params }: { params: Promise<{ reportId: str
 
     <section aria-label="Seven-domain breakdown"><h2>Seven-domain breakdown</h2><div className="report-domain-list">{Object.entries(scoring.domains).map(([domain, value]) => <div key={domain}><span>{domain}</span><strong>{value === null ? "Not enough information" : `${value}/100`}</strong></div>)}</div></section>
 
-    <section aria-label="Drivers"><h2>Key Drivers</h2>{scoring.drivers.length === 0 ? <p>No eligible drivers were produced by the deterministic rules.</p> : <p className="report-detail">{scoring.drivers.join("; ")}{scoring.coPrimary ? " (co-primary pair shown as a single entry)" : ""}</p>}</section>
+    <section aria-label="Drivers"><h2>Key Drivers</h2><p className="report-detail">{report.numericEquivalents.drivers}</p></section>
 
     <div className="report-sections">{report.sections.map((section) => <article className="report-section-card" id={`report-section-${section.index}`} key={section.index}><span className="report-section-number">{String(section.index).padStart(2, "0")}</span><div><h2>{section.title}</h2>{section.narrative ? <p>{section.narrative}</p> : <p className="report-reduced">{section.reduced ? "This section is in an explicit reduced state. No substitute content has been inserted." : "No narrative is available for this section."}</p>}{section.reduced && section.reducedReason ? <small>{section.reducedReason}</small> : null}</div></article>)}</div>
 

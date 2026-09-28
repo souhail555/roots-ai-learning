@@ -461,3 +461,66 @@ button:disabled { cursor: not-allowed; opacity: .62; }
   .review-module-list, .example-section-list, .example-drivers { grid-template-columns: 1fr; }
   .example-report-cta { padding: 24px; }.example-report-cta .form-actions { align-items: stretch; flex-direction: column; }.example-report-cta .form-actions > * { width: 100%; }
 }
+
+/* Legal pages and controlled copy */
+.legal-page { width: min(100% - 32px, 1100px); margin: 0 auto; padding: 72px 0 112px; color: var(--pub-ink, #1a2a4a); font-family: var(--font-geist-sans), Arial, sans-serif; }
+.legal-heading { padding-bottom: 34px; border-bottom: 1px solid var(--pub-line, #d9e1eb); }
+.legal-heading .marketing-kicker { margin: 0 0 14px; }
+.legal-heading h1 { max-width: 760px; margin: 0; font-size: clamp(36px, 6vw, 58px); line-height: 1.02; letter-spacing: -.045em; }
+.legal-meta { margin: 16px 0 0; color: #64758a; font-size: 13px; line-height: 1.5; }
+.print-button { min-height: 44px; margin-top: 22px; padding: 10px 16px; border: 1px solid var(--pub-line, #d9e1eb); border-radius: 8px; background: #fff; color: var(--pub-ink, #1a2a4a); cursor: pointer; font: 700 13px/1 var(--font-geist-sans), Arial, sans-serif; }
+.print-button:hover { border-color: #2b8a86; color: #176c69; }
+.legal-layout { display: grid; grid-template-columns: 220px minmax(0, 780px); gap: clamp(32px, 7vw, 96px); align-items: start; padding-top: 42px; }
+.legal-layout-single { display: block; max-width: 980px; }
+.legal-contents { position: sticky; top: 100px; display: grid; gap: 9px; padding: 16px; border: 1px solid var(--pub-line, #d9e1eb); border-radius: 10px; background: #fff; }
+.legal-contents strong { margin-bottom: 4px; color: #1a2a4a; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+.legal-contents a { color: #52657d; font-size: 12px; line-height: 1.4; text-decoration: none; }
+.legal-contents a:hover, .legal-contents a:focus-visible { color: #176c69; text-decoration: underline; }
+.legal-article { min-width: 0; font-size: 16px; line-height: 1.7; }
+.legal-intro { margin: 0 0 34px; color: #415b7b; font-size: 18px; line-height: 1.6; }
+.legal-article section { margin: 0 0 30px; padding-bottom: 26px; border-bottom: 1px solid #e7edf2; }
+.legal-article section h2, .legal-table-wrap h2, .legal-open-item h2, .legal-cookie-actions h2, .legal-related h2 { margin: 0 0 10px; color: #1a2a4a; font-size: 22px; line-height: 1.2; letter-spacing: -.02em; }
+.legal-article section p, .legal-article > p { margin: 0; color: #334b6d; }
+.legal-table-wrap { margin: 36px 0; }
+.legal-table-wrap > p { margin: 0 0 16px; color: #64758a; font-size: 13px; line-height: 1.6; }
+.legal-table-wrap table { width: 100%; border-collapse: collapse; background: #fff; font-size: 13px; line-height: 1.5; }
+.legal-table-wrap th, .legal-table-wrap td { padding: 13px 12px; border: 1px solid var(--pub-line, #d9e1eb); text-align: left; vertical-align: top; }
+.legal-table-wrap thead th { background: #eef4f7; color: #1a2a4a; font-weight: 800; }
+.legal-table-wrap tbody th { color: #1a2a4a; font-weight: 800; }
+.legal-table-wrap td { color: #52657d; }
+.legal-table-wrap code { color: #176c69; font-size: .95em; }
+.legal-open-item { margin: 30px 0; padding: 20px; border-left: 4px solid #e1a72c; background: #fffaf0; }
+.legal-open-item p { margin: 0; color: #52657d; font-size: 14px; line-height: 1.65; }
+.legal-cookie-actions { margin: 30px 0; padding: 20px; border: 1px solid #d9e1eb; border-radius: 10px; background: #f7f9fb; }
+.legal-cookie-actions p { margin: 0 0 16px; color: #52657d; font-size: 14px; }
+.legal-cookie-actions > div { display: flex; flex-wrap: wrap; gap: 10px; }
+.legal-cookie-actions button { min-height: 44px; padding: 10px 14px; border: 1px solid #b9c5d0; border-radius: 7px; background: #e8edf1; color: #7a8793; cursor: not-allowed; font: 700 12px/1.2 var(--font-geist-sans), Arial, sans-serif; }
+.legal-related { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 38px; }
+.legal-related h2 { flex: 1 0 100%; }
+.legal-related a { min-height: 44px; display: inline-flex; align-items: center; color: #176c69; font-weight: 700; text-decoration: underline; }
+@media (max-width: 800px) { .legal-page { padding-top: 42px; }.legal-layout { grid-template-columns: 1fr; gap: 24px; }.legal-contents { position: static; }.legal-heading h1 { font-size: 42px; }.legal-intro { font-size: 16px; } }
+@media (max-width: 560px) { .legal-page { width: min(100% - 24px, 1100px); }.legal-heading h1 { font-size: 36px; }.legal-table-wrap { overflow-x: auto; }.legal-table-wrap table { min-width: 620px; }.legal-cookie-actions > div { flex-direction: column; }.legal-cookie-actions button { width: 100%; } }
+@media print { .site-header, .site-footer, .legal-contents, .print-button { display: none !important; }.legal-page { width: 100%; padding: 0; }.legal-layout { display: block; padding-top: 0; }.legal-article { font-size: 12pt; }.legal-table-wrap { break-inside: avoid; } }
+
+/* Project status view */
+.project-status-page { background: #fbfbfa; }
+.project-status-heading { padding-bottom: 26px; }
+.project-status-heading h1 { max-width: 760px; }
+.project-status-intro { width: min(1120px, calc(100% - 40px)); margin: 0 auto 28px; padding: 16px 18px; display: flex; flex-wrap: wrap; gap: 8px 18px; border-left: 4px solid #2b8a86; background: #eef8f6; color: #415b7b; font: 400 13px/1.55 var(--font-geist-sans), Arial, sans-serif; }
+.project-status-intro strong { color: #1a2a4a; }
+.milestone-grid { width: min(1120px, calc(100% - 40px)); margin: 0 auto; padding-bottom: 34px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.milestone-card { min-width: 0; padding: 22px; border: 1px solid #d9e1eb; border-top: 4px solid #2b8a86; border-radius: 10px; background: #fff; box-shadow: 0 8px 22px rgba(26,42,74,.05); }
+.milestone-partial { border-top-color: #e1a72c; }.milestone-open { border-top-color: #bd684e; }
+.milestone-card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.milestone-id { color: #2b8a86; font: 800 24px/1 var(--font-geist-sans), Arial, sans-serif; letter-spacing: .04em; }
+.milestone-status { padding: 6px 8px; border-radius: 999px; background: #eef8f6; color: #176c69; font: 800 9px/1.2 var(--font-geist-sans), Arial, sans-serif; text-align: right; }
+.milestone-status.partial { background: #fff7df; color: #8a6500; }.milestone-status.open { background: #fff0ed; color: #9b3d2f; }
+.milestone-card h2 { margin: 18px 0 9px; color: #1a2a4a; font: 800 20px/1.15 var(--font-geist-sans), Arial, sans-serif; letter-spacing: -.02em; }
+.milestone-summary { min-height: 76px; margin: 0; color: #52657d; font: 400 13px/1.55 var(--font-geist-sans), Arial, sans-serif; }
+.milestone-block, .milestone-open { margin-top: 20px; padding-top: 16px; border-top: 1px solid #e7edf2; }
+.milestone-block h3, .milestone-open h3 { margin: 0 0 9px; color: #1a2a4a; font: 800 11px/1.2 var(--font-geist-sans), Arial, sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+.milestone-block ul, .milestone-open ul { margin: 0; padding-left: 18px; color: #52657d; font: 400 12px/1.55 var(--font-geist-sans), Arial, sans-serif; }.milestone-block li, .milestone-open li { margin: 5px 0; }.milestone-open { border-top-color: #ead7d1; }.milestone-open ul { color: #7a5148; }
+.milestone-links { display: grid; gap: 7px; }.milestone-links a { color: #176c69; font: 700 12px/1.35 var(--font-geist-sans), Arial, sans-serif; text-decoration: underline; }
+.project-status-footer-note { width: min(1120px, calc(100% - 40px)); margin: 0 auto 70px; padding: 25px; border: 1px solid #d9e1eb; background: #fff; }.project-status-footer-note h2 { margin: 0 0 8px; color: #1a2a4a; font: 800 22px/1.2 var(--font-geist-sans), Arial, sans-serif; }.project-status-footer-note p { margin: 0; color: #52657d; font: 400 13px/1.6 var(--font-geist-sans), Arial, sans-serif; }.project-status-footer-note code { color: #176c69; }
+@media (max-width: 900px) { .milestone-grid { grid-template-columns: 1fr; }.milestone-summary { min-height: 0; } }
+@media (max-width: 560px) { .project-status-intro, .milestone-grid, .project-status-footer-note { width: calc(100% - 24px); }.milestone-card { padding: 18px; }.milestone-card-head { align-items: flex-start; flex-direction: column; }.milestone-status { text-align: left; } }

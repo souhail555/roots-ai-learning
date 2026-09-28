@@ -10,7 +10,7 @@ ROOTS-AI™ helps users understand patterns in metabolism, hunger, sleep, circad
 
 - **73 Canonical Questions**: Structured assessment across 13 biological modules
 - **Deterministic Scoring**: AI assists with explanation, not calculation
-- **Secure Session Management**: HTTPOnly cookies with 15-minute expiry
+- **Secure Session Management**: HTTPOnly cookies with 60-minute server/session expiry
 - **Autosave Functionality**: Automatic progress saving with status indicators
 - **Resume Capability**: Secure session restoration after leaving
 - **Access Isolation**: Cross-user data protection and session validation
@@ -131,6 +131,18 @@ roots-ai-learning/
 - `/assessment/[sessionId]/module/[moduleId]` - Assessment question pages
 - `/assessment/[sessionId]/resume` - Resume saved assessment
 
+## M1, M2 and M3 project view
+
+Open [`/project-status`](/project-status) in the running application to view the consolidated M1, M2 and M3 implementation status, evidence links and open production gates.
+
+The source packages remain available in:
+
+- `docs/m1/` — foundation, assessment shell and traceability evidence
+- `docs/m2/` — canonical assessment, deterministic scoring and Golden Tests
+- `docs/m3/` — governed report/PDF/AI boundary, decisions and open gates
+
+The project-status page is an implementation evidence view, not a formal medical, legal or regulatory acceptance certificate.
+
 ## M1 Compliance
 
 This project implements all M1 requirements according to the Vendor Package v1.4:
@@ -138,7 +150,7 @@ This project implements all M1 requirements according to the Vendor Package v1.4
 - ✅ **G0–G2 Closure**: Technical foundation established
 - ✅ **ROOTS-Owned Repository**: Code in controlled GitHub repository
 - ✅ **Architecture**: Next.js with proper API structure
-- ✅ **Authentication**: HTTPOnly session cookies with 15-minute expiry
+- ✅ **Authentication**: HTTPOnly session cookies with 60-minute server/session expiry
 - ✅ **Canonical Assessment Shell**: 73 questions across 13 modules
 - ✅ **Autosave**: Debounced autosave with status indicators
 - ✅ **Resume**: Secure session restoration

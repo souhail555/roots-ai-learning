@@ -51,9 +51,38 @@ function driverDomains(drivers: string[]): DomainId[] {
   return result;
 }
 
-function driverText(drivers: string[]): string {
+function driverOutputText(driver: string): string {
+  const ids = driver.replace(" co-primary", "").split("+") as DomainId[];
+  const labels = ids.map((id) => DOMAIN_LABELS[id]);
+  return driver.includes(" co-primary") ? `${labels.join(" and ")} (co-primary)` : labels.join(" and ");
+}
+
+/** Controlled-copy candidate: wording remains open for C-03 verification. */
+export function rankedDriverCopy(drivers: string[]): string {
   if (drivers.length === 0) return "No dominant burden signal was identified in the available answers.";
-  return drivers.map((driver) => driver.replace(" co-primary", "").split("+").map((id) => DOMAIN_LABELS[id as DomainId]).join(" and ")).join("; ");
+  const entries = drivers.map(driverOutputText);
+  return drivers.length === 1
+    ? `The highest-ranked driver in this assessment is ${entries[0]}.`
+    : `The highest-ranked drivers in this assessment are ${entries.join("; ")}.`;
+}
+
+type TriadElement = { text: string; kind: "driver output" | "protective context" };
+
+function triadElementText(element: TriadElement): string {
+  return `${element.kind} (${element.text})`;
+}
+
+function triadCopy(drivers: string[], protective: string[]): { text: string; reduced: boolean; reason: string | null } {
+  // Controlled-copy candidate: C-03 verification remains explicitly open.
+  const elements: TriadElement[] = [
+    ...drivers.map((driver): TriadElement => ({ text: driverOutputText(driver), kind: "driver output" })),
+    ...protective.map((label): TriadElement => ({ text: label, kind: "protective context" })),
+  ].slice(0, 3);
+  const relationshipNote = "The diagram shows possible relationships, not causes.";
+  if (elements.length === 0) return { text: `Not enough information is available to display this view. ${relationshipNote}`, reduced: true, reason: "No verified driver output or protective factor is available." };
+  if (elements.length === 1) return { text: `Only ${triadElementText(elements[0])} is available for this view. ${relationshipNote}`, reduced: true, reason: "Only one verified element is available for this view." };
+  if (elements.length === 2) return { text: `The available information brings together ${triadElementText(elements[0])} and ${triadElementText(elements[1])}. ${relationshipNote}`, reduced: true, reason: "Two verified elements are available for this view." };
+  return { text: `Your current triad connects ${elements.map(triadElementText).join(", ")}. ${relationshipNote}`, reduced: false, reason: null };
 }
 
 function protectiveLabels(scoring: ScoringResult): string[] {
@@ -94,8 +123,9 @@ function consistencyMean(scoring: ScoringResult): number | null {
 
 
 function sectionCopy(index: number, scoring: ScoringResult, reportId: string, generatedAt: string, answers?: Record<string, unknown>): { text: string; reduced: boolean; reason: string | null } {
-  const drivers = driverText(scoring.drivers);
+  const rankedDrivers = rankedDriverCopy(scoring.drivers);
   const protective = protectiveLabels(scoring);
+  const triad = triadCopy(scoring.drivers, protective);
   const meanConsistency = consistencyMean(scoring);
   const actionDomains = driverDomains(scoring.drivers).filter((id) => MICRO_ACTIONS[id]);
   const actionText = actionDomains.slice(0, 3).map((id) => MICRO_ACTIONS[id].action).join(" ");
@@ -103,7 +133,7 @@ function sectionCopy(index: number, scoring: ScoringResult, reportId: string, ge
     case 1:
       return { text: `ROOTS Biological Intelligence Report\u2122 \u00b7 Participant \u00b7 Report ${reportId} \u00b7 ${generatedAt} \u00b7 Educational \u2014 Not a Diagnosis`, reduced: false, reason: null };
     case 2:
-      return { text: `Your current pattern reflects a combination of reported biological signals. The strongest available output${scoring.drivers.length === 1 ? " is" : "s are"} ${drivers}. These results are educational and describe your answers; they do not diagnose a condition. Confidence is ${scoring.confidenceLabel.toLowerCase()} at ${scoring.confidence}/100.`, reduced: false, reason: null };
+      return { text: `Your current pattern reflects a combination of reported biological signals. ${rankedDrivers} These results are educational and describe your answers; they do not diagnose a condition. Confidence is ${scoring.confidenceLabel.toLowerCase()} at ${scoring.confidence}/100.`, reduced: false, reason: null };
     case 3:
       return { text: scoring.biologicalState === null ? "Your ROOTS Biological State\u2122 is Not Available. Not enough information was available to calculate this roll-up. No missing answer was replaced or guessed." : `Your ROOTS Biological State\u2122 is ${scoring.biologicalState}/100 \u2014 ${scoring.biologicalStateClassification}. This summarizes the available seven-domain questionnaire pattern; it is not a medical risk probability.`, reduced: scoring.biologicalState === null, reason: scoring.biologicalState === null ? "Fewer than five domains reached the coverage threshold." : null };
     case 4:
@@ -111,11 +141,11 @@ function sectionCopy(index: number, scoring: ScoringResult, reportId: string, ge
     case 5:
       return { text: `Confidence in this interpretation is ${scoring.confidenceLabel} (${scoring.confidence}/100). Overall scored-item coverage is ${scoring.overallCoverage}%; mean available-domain consistency is ${meanConsistency === null ? "Not Available" : `${Math.round(meanConsistency)}%`}. Missing or null domains remain visible.`, reduced: false, reason: null };
     case 6:
-      return { text: drivers, reduced: scoring.drivers.length === 0, reason: scoring.drivers.length === 0 ? "No available domain met the deterministic driver threshold." : null };
+      return { text: rankedDrivers, reduced: scoring.drivers.length === 0, reason: scoring.drivers.length === 0 ? "No available domain met the deterministic driver threshold." : null };
     case 7:
       return { text: DOMAIN_TIE_ORDER.map((id) => `${DOMAIN_LABELS[id]}: ${scoreText(scoring.domains[id])} \u2014 ${classification(scoring.domains[id]) ?? "Not Available"}`).join(" \u00b7 "), reduced: DOMAIN_TIE_ORDER.some((id) => scoring.domains[id] === null), reason: "One or more domains are Not Available because coverage was below 50%." };
     case 8:
-      return { text: scoring.drivers.length === 0 ? "Not Available: no dominant burden signal was identified in the available answers." : protective.length === 0 ? "Not Available: no protective factor was confirmed from the available answers; this may reflect missing data rather than absence." : `Your current triad connects ${drivers} and ${protective[0]}. Relationships are possible, not causal.`, reduced: scoring.drivers.length === 0 || protective.length === 0, reason: scoring.drivers.length === 0 ? "No driver output is available." : protective.length === 0 ? "No protective factor is confirmed." : null };
+      return triad;
     case 9:
       return { text: "If the current pattern continues, the same signals may remain influential. Small consistent changes may alter the pattern over time. This is not a prognosis.", reduced: false, reason: null };
     case 10:

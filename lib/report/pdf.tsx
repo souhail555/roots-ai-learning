@@ -6,6 +6,7 @@ import {
   View,
 } from "@react-pdf/renderer";
 import { DOMAIN_LABELS, DOMAIN_TIE_ORDER } from "@/lib/canonical/source";
+import { rankedDriverCopy } from "@/lib/canonical/reportContent";
 import type { CanonicalReport } from "@/lib/canonical/report";
 
 const styles = StyleSheet.create({
@@ -62,7 +63,7 @@ export function ReportPdf({ report }: { report: CanonicalReport }) {
         <Metric label="Confidence" value={`${scoring.confidence}/100 · ${scoring.confidenceLabel}`} />
       </View>
       <View style={styles.section}><Text style={styles.sectionTitle}>Deterministic seven-domain values</Text>{DOMAIN_TIE_ORDER.map((id) => <View style={styles.domain} key={id}><Text style={styles.domainLabel}>{DOMAIN_LABELS[id]}</Text><Text style={styles.domainValue}>{scoring.domains[id] === null ? "Not enough information" : `${scoring.domains[id]}/100`}</Text></View>)}</View>
-      <View style={styles.section}><Text style={styles.sectionTitle}>Key Drivers</Text><Text style={styles.body}>{scoring.drivers.length === 0 ? "No dominant burden signal was identified in the available answers." : `${scoring.drivers.join("; ")}${scoring.coPrimary ? " (co-primary pair shown as one output entry)" : ""}`}</Text></View>
+      <View style={styles.section}><Text style={styles.sectionTitle}>Key Drivers</Text><Text style={styles.body}>{rankedDriverCopy(scoring.drivers)}</Text></View>
       {report.limitations.length > 0 && <View style={styles.section}><Text style={styles.sectionTitle}>Limitations</Text>{report.limitations.map((limitation, index) => <Text style={styles.limitation} key={`${limitation.code}-${index}`}>• {limitation.message}</Text>)}</View>}
       {report.sections.map((section) => <View style={styles.section} key={section.index} break={section.index === 1 || section.index === 10}><Text style={styles.sectionNumber}>{String(section.index).padStart(2, "0")}</Text><Text style={styles.sectionTitle}>{section.title}</Text><Text style={styles.body}>{section.narrative ?? "Not Available"}</Text>{section.reduced && section.reducedReason ? <Text style={styles.reduced}>Reduced state: {section.reducedReason}</Text> : null}</View>)}
       <View style={styles.footer} fixed><Text>ROOTS-AI™ · Report {report.report_id}</Text><Text>Educational — Not a Diagnosis · {report.report_template_version}</Text></View>

@@ -51,4 +51,6 @@ dev.log
 # local dev server logs
 dev.log
 dev-preview.log
+dev-preview.stdout.log
+dev-preview.stderr.log
 .git-commit-msg.txt

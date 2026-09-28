@@ -1,2 +1,8 @@
-import InfoPage from "@/components/layout/InfoPage";
-export default function AiDisclaimerPage() { return <InfoPage eyebrow="ROOTS / LEGAL" title="AI Disclaimer" intro="AI is used in a limited and governed role within the ROOTS-AI reporting workflow." sections={[{ title: "What AI does", text: "AI assists with language generation from approved inputs and rules." }, { title: "What AI does not do", text: "AI does not diagnose, prescribe, change scores, or invent participant facts." }]} />; }
+import type { Metadata } from "next";
+import LegalPage from "@/components/layout/LegalPage";
+
+export const metadata: Metadata = { title: "AI Disclaimer" };
+
+export default function AiDisclaimerPage() {
+  return <LegalPage eyebrow="ROOTS / LEGAL" title="AI Disclaimer" intro="AI has a limited and governed role in the ROOTS-AI™ reporting workflow." sections={[{ title: "What the model may do", text: "ROOTS-AI™ uses the approved C-02 v1.0.1 deterministic rules to calculate questionnaire scores, classifications, driver outputs, data-quality indicators and eligible content. C-03 v1.0.1 governs report structure, null states and approved explanation objects. An AI language model may assist only in expressing approved information clearly." }, { title: "What the model may not do", text: "The model is not permitted to calculate or change scores, classifications, drivers or null states; diagnose disease; prescribe treatment; interpret laboratory results; or invent participant facts. AI-assisted text can be incomplete or imperfect; fixed validation, logging and fallback rules are applied. Review the underlying answers and limitations, and consult a qualified professional for medical decisions." }]} relatedLinks={[{ label: "Medical Disclaimer", href: "/medical-disclaimer" }, { label: "Privacy Notice", href: "/privacy" }]} />;
+}
