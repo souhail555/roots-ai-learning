@@ -9,6 +9,7 @@ type ContactBody = {
   email?: unknown;
   subject?: unknown;
   message?: unknown;
+  website?: unknown;
   consent?: unknown;
 };
 
@@ -24,6 +25,12 @@ export async function POST(request: Request) {
     return errorResponse("Enter a valid enquiry.", 400);
   }
 
+  // Honeypot: bots fill every field they can see. The response mirrors a success
+  // path so the submission is never confirmed to an automated client.
+  if (typeof body.website === "string" && body.website.trim().length > 0) {
+    return NextResponse.json({ ok: true }, { status: 200, headers: { "Cache-Control": "no-store" } });
+  }
+
   const enquiryType = typeof body.enquiryType === "string" ? body.enquiryType : "";
   const name = typeof body.name === "string" ? body.name.trim() : "";
   const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
@@ -33,7 +40,7 @@ export async function POST(request: Request) {
   if (!enquiryTypes.has(enquiryType)) return errorResponse("Choose an enquiry type.", 400);
   if (name.length < 2 || name.length > 120) return errorResponse("Enter your name.", 400);
   if (!emailPattern.test(email) || email.length > 254) return errorResponse("Enter a valid email address.", 400);
-  if (subject.length < 3 || subject.length > 160) return errorResponse("Add a short subject.", 400);
+  if (subject.length > 160) return errorResponse("Keep the subject under 160 characters.", 400);
   if (message.length < 10 || message.length > 2000) return errorResponse("Your message must be between 10 and 2,000 characters.", 400);
   if (body.consent !== true) return errorResponse("Acknowledge the privacy notice before sending.", 400);
 

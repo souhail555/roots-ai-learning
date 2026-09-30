@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 type ExistingSession = { sessionId: string; completedModules: string[]; updatedAt?: string };
@@ -59,18 +60,23 @@ export default function AssessmentStartPage() {
   return <main className="route-shell">
     <section className="assessment-entry-card">
       <p className="eyebrow">ROOTS / ASSESSMENT</p>
-      <h1>Your ROOTS Biological Assessment™</h1>
-      <p className="route-lede">Answer 73 questions across 13 short modules. Most people finish in about 10–12 minutes. Your answers autosave while this private browser session remains active.</p>
-      <div className="assessment-facts" aria-label="Assessment facts"><span><strong>73</strong> questions</span><span><strong>13</strong> modules</span><span><strong>10–12</strong> minutes</span></div>
+      <h1>Your ROOTS Biological Assessment</h1>
+      <p className="route-lede">Answer 73 questions across 13 short modules. Most people finish in about 10–12 minutes. You can save, pause and resume securely.</p>
+      <ul className="assessment-bullets">
+        <li>Use your usual experience during the last four weeks unless a question says otherwise.</li>
+        <li>There are no &quot;good&quot; answers. Choose what best reflects your experience.</li>
+        <li>N/A is available only where approved and is never treated as zero.</li>
+        <li>Your answers generate educational wellness indicators, not a diagnosis.</li>
+        <li>If you may be in immediate danger, contact local emergency services; this form is not monitored for emergencies.</li>
+      </ul>
       <form className="route-form" onSubmit={startAssessment} noValidate>
-        <label htmlFor="email">Email Address</label>
+        <label htmlFor="email">Email address</label>
         <input id="email" name="email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" required aria-describedby="email-help" />
-        <p id="email-help" className="field-help">Used with your secure session to save and resume. Service access does not enrol you in research.</p>
-        <label className="consent-row" htmlFor="service-consent"><input id="service-consent" name="service-consent" type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} required /><span>I agree to the Terms of Service and acknowledge the Privacy Notice and Medical and AI Disclaimers. I understand that ROOTS-AI™ is educational and not a diagnosis or medical service.</span></label>
+        <p id="email-help" className="field-help">We use your email only to send your secure link. See the <Link href="/privacy">Privacy Notice</Link>.</p>
+        <label className="consent-row" htmlFor="service-consent"><input id="service-consent" name="service-consent" type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} required /><span>I confirm that I am 18 or older.</span></label>
         {error && <p className="form-error" role="alert">{error}</p>}
         <button className="continue-button" type="submit" disabled={isStarting || !email.trim() || !consent}>{isStarting ? "Creating your private session…" : "Begin Assessment"}</button>
       </form>
-      <aside className="assessment-entry-note"><strong>What happens next?</strong><ol><li>Your session opens directly in this browser.</li><li>You can pause and return using the Resume assessment page.</li><li>Your report is created only after review and submission.</li></ol><p>If you may be in immediate danger, contact local emergency services. This assessment is not monitored for emergencies.</p></aside>
     </section>
     {existingSession && <section className="resume-card" aria-labelledby="resume-heading"><div><p className="eyebrow">SAVED SESSION</p><h2 id="resume-heading">Continue where you left off</h2><p>{existingSession.completedModules.length} of 13 modules are complete{existingSession.updatedAt ? ` · Last saved ${new Date(existingSession.updatedAt).toLocaleString()}` : ""}.</p></div><button type="button" className="secondary-button" onClick={() => router.push(`/assessment/${existingSession.sessionId}/resume`)}>Resume assessment</button></section>}
   </main>;

@@ -14,7 +14,11 @@
     "ingest:canonical": "tsx scripts/ingest-canonical.ts",
     "test:e2e": "node scripts/e2e-flow.mjs",
     "test:ai": "tsx scripts/run-ai-boundary-tests.ts",
-    "test:report": "tsx scripts/run-report-integrity-tests.ts"
+    "test:report": "tsx scripts/run-report-integrity-tests.ts",
+    "test:encoding": "node scripts/_encoding-audit.mjs",
+    "test:parity": "node scripts/_parity-audit.mjs",
+    "test:structure": "node scripts/_structural-audit.mjs",
+    "test:visual": "node scripts/_visual-audit.mjs"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.9.0",
@@ -31,6 +35,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.4",
+    "globals": "^15",
     "tailwindcss": "^4",
     "tsx": "^4.20.3",
     "typescript": "^5",

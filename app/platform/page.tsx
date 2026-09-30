@@ -1,6 +1,32 @@
-const available = [["Assessment", "Structured assessment experience."], ["AI Engine", "Governed report engine."]];
-const upcoming = [["Labs", "Laboratory data integration."], ["DNA", "DNA and epigenetic insights."], ["Microbiome", "Microbiome analysis."], ["Wearables", "Wearable integrations."], ["Biological Twin", "ROOTS Biological Twin™."]];
+import type { Metadata } from "next";
+import InfoPage from "@/components/layout/InfoPage";
+
+export const metadata: Metadata = {
+  title: "ROOTS-AI™ Platform",
+  description: "Assessment and governed reporting now; deeper biological layers coming later.",
+};
+
+const available = [
+  { title: "Assessment and governed report engine.", text: "Available now in Phase 1: the structured assessment and the governed report engine." },
+] as const;
+
+const upcoming = [
+  { title: "Laboratory data integration.", text: "Coming Soon — laboratory data integration." },
+  { title: "DNA and epigenetic insights.", text: "Coming Soon — DNA and epigenetic insights." },
+  { title: "Microbiome analysis.", text: "Coming Soon — microbiome analysis." },
+  { title: "Wearable integrations.", text: "Coming Soon — wearable integrations." },
+  { title: "ROOTS Biological Twin™.", text: "Coming Soon — the ROOTS Biological Twin™." },
+] as const;
 
 export default function PlatformPage() {
-  return <main className="marketing-page inner-page"><section className="page-heading compact-heading"><p className="phase-label">Phase 1</p><h1>One Foundation. Deeper Layers Over Time.</h1><p>Phase 1 delivers the assessment and governed report engine. Future layers will expand biological context only after separate validation, governance and implementation.</p></section><section className="platform-grid available-grid">{available.map(([title, text]) => <article key={title}><span className="status available">Available</span><h2>{title}</h2><p>{text}</p></article>)}</section><section className="page-heading platform-heading"><h2>Coming soon</h2></section><section className="platform-grid coming-grid">{upcoming.map(([title, text]) => <article key={title}><span className="status">Coming Soon</span><h2>{title}</h2><p>Coming Soon: {text}</p></article>)}</section><section className="architecture"><h2>Architecture principle</h2><p>Future layers will expand biological context only after separate validation, governance and implementation.</p></section></main>;
+  return <InfoPage
+    eyebrow="ROOTS / PLATFORM"
+    title="One Foundation. Deeper Layers Over Time."
+    intro="Phase 1 delivers the assessment and governed report engine. Future layers will expand biological context only after separate validation, governance and implementation."
+    groups={[
+      { title: "Available now", items: available },
+      { title: "Coming soon", items: upcoming },
+    ]}
+    sections={[{ title: "One connected system", text: "Seven biological domains — one connected view." }]}
+  />;
 }

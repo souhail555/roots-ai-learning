@@ -16,16 +16,18 @@ export default function Header() {
     ["Platform", "/platform"],
     ["Example Report", "/example-report"],
     ["Research", "/research"],
-    ["Project Status", "/project-status"],
     ["About", "/about"],
   ];
-  const mobileLinks = [
-    ["Home", "/"],
-    ...links,
+  const moreLinks = [
     ["Healthcare Professionals", "/healthcare-professionals"],
     ["Pilot Program", "/pilot"],
     ["Contact", "/contact"],
     ["Blog", "/blog"],
+  ];
+  const mobileLinks = [
+    ["Home", "/"],
+    ...links,
+    ...moreLinks,
     ["Privacy", "/privacy"],
     ["Terms", "/terms"],
     ["Cookies", "/cookies"],
@@ -81,11 +83,11 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="site-header-inner">
-        <Link href="/" className="site-logo" aria-label="ROOTS-AI home" onClick={closeMenu}><Image src="/assets/logo-mark.svg" alt="ROOTS-AI" width={40} height={40} /></Link>
+        <Link href="/" className="site-logo" aria-label="ROOTS-AI home" onClick={closeMenu}><Image src="/brand/roots-logo.svg" alt="ROOTS-AI" width={214} height={34} priority /></Link>
         <nav className="site-nav" aria-label="Main navigation">
           {links.map(([label, href]) => <Link key={href} href={href} className={pathname === href ? "active" : ""} aria-current={pathname === href ? "page" : undefined}>{label}</Link>)}
           <button type="button" className="more-nav-button" aria-expanded={moreOpen} aria-controls="more-menu" onClick={() => setMoreOpen((open) => !open)}>More</button>
-          {moreOpen && <div id="more-menu" className="more-menu"><Link href="/pilot" onClick={() => setMoreOpen(false)}>Pilot Program</Link><Link href="/blog" onClick={() => setMoreOpen(false)}>Blog</Link><Link href="/contact" onClick={() => setMoreOpen(false)}>Contact</Link></div>}
+          {moreOpen && <div id="more-menu" className="more-menu">{moreLinks.map(([label, href]) => <Link key={href} href={href} onClick={() => setMoreOpen(false)}>{label}</Link>)}</div>}
         </nav>
         <Link href="/assessment" className="header-cta">Start Your Assessment</Link>
         <button ref={menuButtonRef} className="mobile-menu-button" type="button" aria-label={menuOpen ? "Close navigation" : "Open navigation"} aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={() => setMenuOpen((open) => !open)}>{menuOpen ? "×" : "☰"}</button>

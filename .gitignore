@@ -54,3 +54,11 @@ dev-preview.log
 dev-preview.stdout.log
 dev-preview.stderr.log
 .git-commit-msg.txt
+
+# audit scratch output
+/tmp-shots
+/build-out.log
+/server.log
+/parity.log
+/structural.log
+/visual*.log
