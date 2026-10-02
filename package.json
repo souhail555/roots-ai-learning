@@ -25,8 +25,7 @@
     "next": "16.3.4",
     "puppeteer": "^25.10.0",
     "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "sqlite3": "^6.0.1"
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -43,7 +42,6 @@
   },
   "allowScripts": {
     "puppeteer@25.10.0": true,
-    "sqlite3@6.0.1": true,
     "unrs-resolver@1.12.2": true,
     "esbuild@0.28.2": true
   }

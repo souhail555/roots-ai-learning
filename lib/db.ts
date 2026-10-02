@@ -1,26 +1,13 @@
 /**
  * ROOTS-AI(TM) data-access layer.
  *
- * SQLite is the durable local/self-hosted store. Process-local Maps remain a
- * cache and explicit fallback for runtimes where the native SQLite module or
- * writable filesystem is unavailable. Authorization remains the responsibility
+ * Process-local Maps are used for in-memory storage. Session data is lost
+ * on process restart or redeploy. Authorization remains the responsibility
  * of the route layer; this module never accepts a caller identity.
  */
 
 import { CANONICAL_VERSIONS } from "@/lib/canonical/source";
 import type { CanonicalReport } from "@/lib/canonical/report";
-import {
-  readCanonicalReport as readStoredCanonicalReport,
-  readCanonicalReportById,
-  readLegacyReport,
-  readResult as readStoredResult,
-  readSession as readStoredSession,
-  deleteSession as deleteStoredSession,
-  writeCanonicalReport as writeStoredCanonicalReport,
-  writeLegacyReport,
-  writeResult as writeStoredResult,
-  writeSession as writeStoredSession,
-} from "@/lib/sqliteStore";
 
 export const SESSION_TTL_SECONDS = 60 * 60;
 
@@ -65,36 +52,7 @@ const reports = new Map<string, ReportRecord>();
 const results = new Map<string, ResultRecord>();
 const canonicalReports = new Map<string, CanonicalReportRecord>();
 
-function parseJson<T>(value: string | null | undefined, fallback: T): T {
-  if (!value) return fallback;
-  try { return JSON.parse(value) as T; } catch { return fallback; }
-}
 
-function sessionFromRow(row: Awaited<ReturnType<typeof readStoredSession>>): SessionRecord | null {
-  if (!row) return null;
-  return {
-    id: row.id,
-    createdAt: row.created_at,
-    email: row.email ?? undefined,
-    answers: parseJson<Record<string, unknown>>(row.answers, {}),
-    completedModules: parseJson<string[]>(row.completed_modules, []),
-    updatedAt: row.updated_at,
-    canonicalVersions: { questionnaire: row.questionnaire_version, scoring: row.scoring_version },
-  };
-}
-
-function persistSession(session: SessionRecord): Promise<void> {
-  return writeStoredSession({
-    id: session.id,
-    created_at: session.createdAt,
-    email: session.email ?? null,
-    answers: JSON.stringify(session.answers),
-    completed_modules: JSON.stringify(session.completedModules),
-    updated_at: session.updatedAt ?? new Date().toISOString(),
-    questionnaire_version: session.canonicalVersions.questionnaire,
-    scoring_version: session.canonicalVersions.scoring,
-  });
-}
 
 function isSessionExpired(session: SessionRecord): boolean {
   const expiry = session.expiresAt ?? new Date(new Date(session.createdAt).getTime() + SESSION_TTL_SECONDS * 1000).toISOString();
@@ -110,46 +68,13 @@ async function loadSession(id: string): Promise<SessionRecord | null> {
     }
     return cached;
   }
-  const loaded = sessionFromRow(await readStoredSession(id));
-  if (!loaded) return null;
-  if (isSessionExpired(loaded)) return null;
-  sessions.set(id, loaded);
-  return loaded;
+  return null;
 }
 
 async function loadResult(sessionId: string): Promise<ResultRecord | null> {
   const cached = results.get(sessionId);
   if (cached) return cached;
-  const row = await readStoredResult(sessionId);
-  if (!row) return null;
-  const result: ResultRecord = {
-    sessionId: row.session_id,
-    result: parseJson<unknown>(row.result, null),
-    questionnaireVersion: row.questionnaire_version,
-    scoringVersion: row.scoring_version,
-    createdAt: row.created_at,
-  };
-  results.set(sessionId, result);
-  return result;
-}
-
-function legacyReportFromRow(row: Awaited<ReturnType<typeof readLegacyReport>>): ReportRecord | null {
-  if (!row) return null;
-  return {
-    id: row.id,
-    sessionId: row.session_id,
-    scores: parseJson<Record<string, number>>(row.scores, {}),
-    band: row.band,
-    createdAt: row.created_at,
-    canonicalVersions: { questionnaire: row.questionnaire_version, scoring: row.scoring_version },
-  };
-}
-
-function canonicalReportFromRow(row: Awaited<ReturnType<typeof readStoredCanonicalReport>>): CanonicalReportRecord | null {
-  if (!row) return null;
-  const report = parseJson<CanonicalReport | null>(row.report, null);
-  if (!report) return null;
-  return { id: row.id, assessmentId: row.assessment_id, report, createdAt: row.created_at };
+  return null;
 }
 
 
@@ -167,13 +92,11 @@ export async function createSession(id: string): Promise<SessionRecord> {
     expiresAt: new Date(Date.now() + SESSION_TTL_SECONDS * 1000).toISOString(),
     canonicalVersions: { ...CANONICAL_VERSIONS },
   };
-  await persistSession(session);
   sessions.set(id, session);
   return session;
 }
 
 export async function revokeSession(id: string): Promise<void> {
-  await deleteStoredSession(id);
   sessions.delete(id);
   results.delete(id);
   canonicalReports.delete(id);
@@ -193,7 +116,6 @@ export async function setSessionEmail(sessionId: string, email: string): Promise
   const session = await loadSession(sessionId);
   if (!session) throw new Error(`Session ${sessionId} not found`);
   const updated = { ...session, email, updatedAt: new Date().toISOString() };
-  await persistSession(updated);
   sessions.set(sessionId, updated);
 }
 
@@ -219,7 +141,6 @@ export async function saveModuleAnswers(
       : session.completedModules,
     updatedAt,
   };
-  await persistSession(updated);
   sessions.set(sessionId, updated);
   return updated;
 }
@@ -244,15 +165,6 @@ export async function createReport(
     createdAt: new Date().toISOString(),
     canonicalVersions: { ...session.canonicalVersions },
   };
-  await writeLegacyReport({
-    id: report.id,
-    session_id: report.sessionId,
-    scores: JSON.stringify(report.scores),
-    band: report.band,
-    created_at: report.createdAt,
-    questionnaire_version: report.canonicalVersions.questionnaire,
-    scoring_version: report.canonicalVersions.scoring,
-  });
   reports.set(id, report);
   return report;
 }
@@ -261,11 +173,7 @@ export async function createReport(
  * Retrieve a report by ID. Returns null if not found.
  */
 export async function getReport(id: string): Promise<ReportRecord | null> {
-  const cached = reports.get(id);
-  if (cached) return cached;
-  const loaded = legacyReportFromRow(await readLegacyReport(id));
-  if (loaded) reports.set(id, loaded);
-  return loaded;
+  return reports.get(id) ?? null;
 }
 
 /**
@@ -333,13 +241,6 @@ export async function saveResult(
     scoringVersion: versions.scoring,
     createdAt: new Date().toISOString(),
   };
-  await writeStoredResult({
-    session_id: record.sessionId,
-    result: JSON.stringify(record.result),
-    questionnaire_version: record.questionnaireVersion,
-    scoring_version: record.scoringVersion,
-    created_at: record.createdAt,
-  });
   results.set(sessionId, record);
   return record;
 }
@@ -358,38 +259,23 @@ export async function getResult(sessionId: string): Promise<ResultRecord | null>
  * This is the authoritative source for BOTH the web report and the PDF: neither
  * renderer recalculates anything.
  *
- * SQLite is used when the runtime provides a durable filesystem. The Maps are
- * only caches and a safe in-process fallback. On a provider such as Vercel,
- * /tmp is ephemeral; a ROOTS-owned durable Supabase/Postgres adapter is still
- * required before production persistence can be attested.
+ * Process-local Maps are used for in-memory storage. Session data is lost
+ * on process restart or redeploy.
  */
 export async function saveCanonicalReport(
   report: CanonicalReportRecord,
 ): Promise<CanonicalReportRecord> {
-  const existing = canonicalReports.get(report.id) ?? canonicalReportFromRow(await readCanonicalReportById(report.id));
+  const existing = canonicalReports.get(report.id);
   if (existing) return existing;
-  await writeStoredCanonicalReport({
-    id: report.id,
-    assessment_id: report.assessmentId,
-    report: JSON.stringify(report.report),
-    content_hash: report.report.contentHash,
-    created_at: report.createdAt,
-  });
-  const stored = canonicalReportFromRow(await readCanonicalReportById(report.id));
-  const value = stored ?? report;
-  canonicalReports.set(value.id, value);
-  return value;
+  canonicalReports.set(report.id, report);
+  return report;
 }
 
 /** Retrieve a stored canonical report by its report id. */
 export async function getCanonicalReport(
   id: string,
 ): Promise<CanonicalReportRecord | null> {
-  const cached = canonicalReports.get(id);
-  if (cached) return cached;
-  const loaded = canonicalReportFromRow(await readCanonicalReportById(id));
-  if (loaded) canonicalReports.set(id, loaded);
-  return loaded;
+  return canonicalReports.get(id) ?? null;
 }
 
 /**
@@ -402,9 +288,7 @@ export async function getCanonicalReportByAssessment(
   for (const report of canonicalReports.values()) {
     if (report.assessmentId === assessmentId) return report;
   }
-  const loaded = canonicalReportFromRow(await readStoredCanonicalReport(assessmentId));
-  if (loaded) canonicalReports.set(loaded.id, loaded);
-  return loaded;
+  return null;
 }
 
 /**
