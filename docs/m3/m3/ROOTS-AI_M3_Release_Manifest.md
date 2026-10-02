@@ -11,13 +11,50 @@ content — which is what settles *which version did we review*.
 
 | | |
 |---|---|
+| Release | **M3-RC3** |
 | Repository | https://github.com/ROOTS-AI-Health-Systems/rootai.git |
 | Branch | main |
-| Commit | `48c6639007fb4369160814c3ae3beb1e9b72d170` |
-| Committed | 2026-09-30T07:38:29+05:30 |
+| Commit | `32e1c9c3197990aadd681da1e9b76ed349ac3f5e` |
+| Committed | 2026-10-01T13:07:37+05:30 |
 | Working tree | clean |
-| Manifest generated | 2026-09-30T02:08:30.767Z |
-| Evidence files | 102 |
+| Manifest generated | 2026-10-01T07:38:39.365Z |
+| Evidence files | 104 |
+
+## One release identity
+
+ROOTS review of 30 September 2026, section 1, requires the package header, Submission Index,
+Release Manifest and Closure Register to identify the same release and a clean state. The
+previous package carried three different commits, which was our error.
+
+**Why a name rather than a hash.** A document cannot contain the hash of the commit that
+contains it: writing the hash in changes the commit, so the value is wrong the moment it is
+committed. Regenerating does not converge. The release is therefore identified by a **name**,
+chosen before the commit exists, which an annotated git tag resolves to exactly one commit.
+
+| | |
+|---|---|
+| Release | **M3-RC3** |
+| Evidence hashed at | `32e1c9c3197990aadd681da1e9b76ed349ac3f5e` |
+| Release commit | the commit tagged M3-RC3, which adds only the release-bound documents |
+
+Every document in this release carries the release **name**. The tag resolves it to one commit,
+and that commit is the release. The hashes below were taken from the commit named above, which
+differs from the tagged commit by these three files only:
+
+- `ROOTS-AI_M3_Release_Manifest.md` (this document)
+- `ROOTS-AI_M3_Submission_Index.md`
+- `ROOTS-AI_M3_Closure_Register.md`
+
+Those are exactly the three excluded from the hash list below, for the same reason.
+
+That is checkable in one command, and it is the whole of the difference:
+
+```
+git diff --name-only 32e1c9c3197990aadd681da1e9b76ed349ac3f5e M3-RC3
+```
+
+Every other evidence file is byte-identical in both, so each hash below verifies against the
+tagged release commit as well as against the commit it was taken from.
 
 ## Archive of superseded evidence
 
@@ -32,6 +69,8 @@ new commit.
 | `docs/m3/archive/2026-09-29-3f3d25f/` | 99 |
 | `docs/m3/archive/2026-09-29-d12d2b1/` | 102 |
 | `docs/m3/archive/2026-09-30-48c6639/` | 102 |
+| `docs/m3/archive/2026-09-30-55d0571/` | 104 |
+| `docs/m3/archive/2026-10-01-32e1c9c/` | 104 |
 
 ## Gates
 
@@ -73,55 +112,79 @@ Stated here so the manifest is never read as a completeness claim.
 
 ## Files
 
-SHA-256 of every evidence file at this commit.
+**SHA-256 of the bytes this commit stores**, read with `git cat-file`, not of the working copy.
+The two differ wherever git has normalised line endings, so hashing the working copy produced a
+record that could not be reproduced from a fresh clone. ROOTS raised this on 30 September 2026
+(section 20); the integrity basis is now the immutable git content.
+
+### Exclusions register
+
+ROOTS decision of 30 September 2026, section 1: *"Keep the release-generated documents excluded
+where self-reference would make reproducible hashing impossible, and document those exclusions
+explicitly."* This is that record. **Four paths are excluded and no others.**
+
+| Excluded | Why it cannot be hashed here | How it can still be verified |
+|---|---|---|
+| `ROOTS-AI_M3_Release_Manifest.md` | This document. It hashes the evidence set and is then written into it, so an entry for itself would be the hash of the previous version. | Its SHA-256 is recorded in the next release, and in the archive snapshot taken at this one. |
+| `ROOTS-AI_M3_Submission_Index.md` | Written during this release, after the hashing. Hashing it would record the version issued with the *previous* release. | As above. |
+| `ROOTS-AI_M3_Closure_Register.md` | As above. | As above. |
+| `docs/m3/archive/**` | Superseded snapshots, each already carrying the manifest that hashed it. Re-hashing them would duplicate an existing record and grow without bound. | Each snapshot contains the manifest that described it. |
+
+**Nothing else is excluded.** Every other file the commit stores under `docs/m3` is listed below,
+and every one verifies against the tagged release commit. The exclusion is structural — a
+document cannot contain its own hash — not a judgement about which files matter.
+
+**What this means for the integrity claim.** The manifest does not assert that every evidence
+file at this release is hashed by it. It asserts that every file it lists is hashed correctly
+from the immutable git object, and it names what it does not cover. The previous version
+claimed a self-verification property it could not satisfy; this one does not claim it.
 
 | File | Bytes | SHA-256 |
 |---|---|---|
-| `docs/m3/ROOTS-AI_C03_Amendment_A1_Report_Corrections.md` | 16328 | `96c493239cb625a1e55274c5216ccb6fd5e586739e3610380de20263b2ffa65a` |
-| `docs/m3/ROOTS-AI_M3_AI_Boundary_DB_Tests.sql` | 14038 | `fb87c7bd1d6a089fc20b7736443d3741dc955fe33fde27faf903b5bc2ad95c72` |
+| `docs/m3/ROOTS-AI_C03_Amendment_A1_Report_Corrections.md` | 17723 | `2021646d575ec99dea676495995948ce63215263631adcfe9c4c929b0fc0926c` |
+| `docs/m3/ROOTS-AI_M3_AI_Boundary_DB_Tests.sql` | 13828 | `958e7504d863ce7748a941d6e9fe2e29cfb468921f6a0338e74c83e74eee434d` |
 | `docs/m3/ROOTS-AI_M3_AI_Integration_Evidence.md` | 3531 | `a622c81fdf666f3ea3dd2626f611edcc0e0b5faa3af5d3e0629f4b8c72237d0e` |
 | `docs/m3/ROOTS-AI_M3_AI_Settings.md` | 7383 | `cbef12bfdf231496fab0326084c04bd5c6a239cd2adbcd792f1df21ddb997135` |
 | `docs/m3/ROOTS-AI_M3_Accessibility_Evidence.md` | 10341 | `98c3663462a1a6bd5281cfe265488ab303b456475c6ff8e484f7b52fabbacfb6` |
 | `docs/m3/ROOTS-AI_M3_Backup_and_Restore_Drill_Plan.md` | 7681 | `950957029784d7bc5c94459c81e53b4e6bce36fcb486bba4b48b0c4fd6ff09db` |
-| `docs/m3/ROOTS-AI_M3_C03_Wording_Register.md` | 19865 | `1880ba235f338562d2bf51ab935b462f39ccf41c3429172f4975770a26393332` |
-| `docs/m3/ROOTS-AI_M3_C07_Critical_Row_Trace.md` | 30571 | `7ab5628548a96a2f360d3e62d7ff697becb5c0dd1c2e3fa924af04707c05092c` |
-| `docs/m3/ROOTS-AI_M3_C07_Traceability_Summary.md` | 4086 | `f06d626e4f9b2b38644efae6aef5f3d8ed975087ff7f5974b9322a93394e5b42` |
-| `docs/m3/ROOTS-AI_M3_Closure_Register.md` | 13735 | `9b975ed7a7b34012a2f3606fd3a830e9501371f0874450b008afd405867e33d7` |
-| `docs/m3/ROOTS-AI_M3_Coverage_Evidence.md` | 10082 | `f9fec8e16ae1aa6b6b69da0a59a0c5bcbb8a0d814f9763301939625354106e2c` |
-| `docs/m3/ROOTS-AI_M3_DB_Probe_Execution_Log.md` | 16166 | `295b1788852efcf3eb4cc3f3a01912ae850beaf7f24df02cf053f4c45bbad21e` |
-| `docs/m3/ROOTS-AI_M3_Decision_Log.md` | 35652 | `e5db5aeccb393f5aba968021d26200e82c5560c8154b0de9aa3328b285251a5f` |
+| `docs/m3/ROOTS-AI_M3_C03_Approval_Register.md` | 14080 | `f255f52a3f92bb3497a7a19658077a9cb55858144d3c022d84f2fb3d5a3e5614` |
+| `docs/m3/ROOTS-AI_M3_C03_Wording_Register.md` | 19480 | `e9400bbd318ba5d9996978494454a786c24e0eeb1a9c789e641aa0c28d27df5a` |
+| `docs/m3/ROOTS-AI_M3_C07_Critical_Row_Trace.md` | 31456 | `f0611051b3ab1fd3fd477e4b77b436083e25725233a476a414ab46c39d2f585e` |
+| `docs/m3/ROOTS-AI_M3_C07_Traceability_Summary.md` | 4021 | `3324c4a8d64fb91a43b213cb4f8e49ff118b0f76bf1f5571265703ef305bfd3a` |
+| `docs/m3/ROOTS-AI_M3_Clean_Install_Evidence.md` | 3208 | `60502b7876c1fe9e2e65ea3fcfd262a4f1d911fd1b9e3750700fcf4c631807af` |
+| `docs/m3/ROOTS-AI_M3_Coverage_Evidence.md` | 11376 | `78b7e72df6219587e49e569c696214dac5a18fbaa953d126f6a29c72b902335d` |
+| `docs/m3/ROOTS-AI_M3_DB_Probe_Execution_Log.md` | 16166 | `ed548755149b726bdcc865885411da315540d16b166e0b848470308f8e5dee08` |
+| `docs/m3/ROOTS-AI_M3_Decision_Log.md` | 35087 | `c87b5058120aa0f226dba1e2f14e99e6c94404a7a23726949e5239e22c7ed5c7` |
 | `docs/m3/ROOTS-AI_M3_Decision_Matrix.md` | 16073 | `e54f18f1109f7d3edf51328f680240fae09a791adc978d6354c86cb40f04c3ee` |
 | `docs/m3/ROOTS-AI_M3_Defect_Record_B1_Secure_Link_Provisioning.md` | 9420 | `bb0f280f2678861d2c726f639ba027606d6b559149b2b069334e786327c2ec4a` |
 | `docs/m3/ROOTS-AI_M3_Driver_State_Matrix.md` | 8126 | `d78dca0aa3017dafc3ba5a4536e1a68cb33e9287cd317b5736bda717e013445c` |
 | `docs/m3/ROOTS-AI_M3_E2E_Evidence.md` | 6619 | `549e550e449968bd51b8da5aa3d627ee4cf8ddb0565c4953dd03b8fcabaeb7d9` |
-| `docs/m3/ROOTS-AI_M3_Final_Report_Verification.md` | 7658 | `0f230257aa530d97dbe991bf8db9f11a9e33699104e05d227a944984ea46e7b5` |
+| `docs/m3/ROOTS-AI_M3_Final_Report_Verification.md` | 8086 | `09082a9abc1cacb25d08158d29e842e85b320c93e357230226da88fddb3fec38` |
 | `docs/m3/ROOTS-AI_M3_LEG_Screen_Acceptance.md` | 8970 | `b7dca1d8b9db249b01b2eff7beaa761d202b76eb69920b18185c9317eb0ed17d` |
 | `docs/m3/ROOTS-AI_M3_OWASP_Evidence.md` | 7981 | `fbf8b214e121c5415e3d3c73c5458fd9b46c570fcabab72a083ea3c4fa93658f` |
-| `docs/m3/ROOTS-AI_M3_Package_Integrity_Verification.md` | 3809 | `e065bdaa59123fddf8108adc7cf0247d90dcf63eaaebdb3ca792541c13315ef1` |
+| `docs/m3/ROOTS-AI_M3_Package_Integrity_Verification.md` | 3755 | `190e5a7de01ceefaa393274b2b81f8c696f1bf1f15742bd4adc4690b66993e4e` |
 | `docs/m3/ROOTS-AI_M3_Performance_Evidence.md` | 4874 | `7ce30e050d4d785368f2126d20bdc1b2344a6e8488f497bd333bf5e48d9f3a0d` |
 | `docs/m3/ROOTS-AI_M3_Performance_Test_Plan.md` | 10515 | `c1a5340a919a346fd67bca4d804ac8a699bf0f23ba90fb87e385bcf1c2f99381` |
 | `docs/m3/ROOTS-AI_M3_Point19_Input_Inventory.md` | 8739 | `8c872eb73840134f5c95c3352d95a907cff4677171b71a35a1c9a97dc91b751c` |
 | `docs/m3/ROOTS-AI_M3_Point21_Content_Matrix.md` | 19274 | `69b1da77963007351c38a378f7e1bee1775aacd51e31db3bba9595c676617f9b` |
-| `docs/m3/ROOTS-AI_M3_Point34_Presentation_Boundary.md` | 8532 | `db7d9264ba5ab948f08535d18911513c62469ffae92ff88eea1287682934a6cd` |
-| `docs/m3/ROOTS-AI_M3_Release_Manifest.md` | 16913 | `1b4158f1bffc0046aae5e9d3b73c0915363609a1746a4f719ee5e9a3aece61be` |
+| `docs/m3/ROOTS-AI_M3_Point34_Presentation_Boundary.md` | 10632 | `81b735d4477f9602f0cfef8fc27add6888ad30f255eb77b9622cbda6ec1bdaf0` |
 | `docs/m3/ROOTS-AI_M3_Report_Review_35_Point_Checklist.md` | 10420 | `224d4e536211b714d4887ad2f18e9f4c5620f5d8f04c77a545961b993ab7e25a` |
 | `docs/m3/ROOTS-AI_M3_Responsive_Evidence.md` | 11606 | `262a18e11ff3fd130ae06aa866e21eebdb659759ea1b63e29228bf14d269c753` |
 | `docs/m3/ROOTS-AI_M3_Section7_Presentation_Matrix.md` | 23509 | `6f46d42f3b5e5210b12d3cb5aae7a55d90a106892caa1f7d0eb1face0c6bb26f` |
-| `docs/m3/ROOTS-AI_M3_Security_Evidence.md` | 16781 | `14aa534ad42e09705577c08ae9754ce3ba01947a6a885c2404b9bcd218f931d3` |
-| `docs/m3/ROOTS-AI_M3_Submission_Index.md` | 14898 | `67e8bb49b76879d0c40bde5e9ffe9ebbd2938fc0a13eb78319cc2df2402d069d` |
+| `docs/m3/ROOTS-AI_M3_Security_Evidence.md` | 16510 | `f70dd4df3795087d86046a95af2cd2e8b5406a5de1d7449d4b99087b82c6a4ea` |
 | `docs/m3/ROOTS-AI_M3_Synthetic_Test_Data.md` | 4586 | `27afb64b3d070d2a94853c9840c14533777455ab32843141e25817f64c2a2066` |
-| `docs/m3/ROOTS-AI_M3_Token_Contrast_Evidence.md` | 6417 | `7baf6804e736170762a84c2ddfdf09ff4de5eb47831c17402304f724e739a64e` |
-| `docs/m3/ROOTS-AI_M3_Vendor_Copy_Register.md` | 8703 | `b81f04c87ce4edcac5f07002d8fe14eb51e9044d5a385caa045465e13fa0c399` |
-| `docs/m3/ROOTS-AI_M3_Web_PDF_Parity_Matrix.md` | 12278 | `792885c141018611968140af5b8804add33fc2110b0acb3e4bc768b78e27f94a` |
+| `docs/m3/ROOTS-AI_M3_Token_Contrast_Evidence.md` | 6315 | `20f75f82a25afa1466b578e090c4ff1ca177d3fa454a5e579b2c9e06549de1b7` |
+| `docs/m3/ROOTS-AI_M3_Vendor_Copy_Register.md` | 16759 | `1a0f511338e71f2e818ac15312be830daca8cf487d952a078d10381871a239da` |
+| `docs/m3/ROOTS-AI_M3_Web_PDF_Parity_Matrix.md` | 12135 | `92f66b6870ffc3700cc916b1666ec123dad7c75da18fb7999dbf9b782997a4d6` |
 | `docs/m3/evidence/C07_v1.0.1_M3_VENDOR_COMPLETED.xlsx` | 75017 | `d67bc5e6f9c30f58d3267895cf2163073cec41da32a6bbe8c0e6d98fb7fdcabd` |
 | `docs/m3/evidence/Point21_Content_Matrix_FOR_ROOTS.xlsx` | 11299 | `7e7564d286200d87b3bea5cb2a19146c2251a938a75f498069fe806555646e59` |
-| `docs/m3/evidence/db-probes.csv` | 14894 | `1c65a871e9a0efc0bf6c9b8864fdc7aaf99e7fb4e55b2c4e18a809b845f2fbea` |
-| `docs/m3/evidence/parity-GT-001.pdf` | 22338 | `8b4feb6a33f91ee38146c2eafc570287b84869eff168bd2602e5e8cc76049425` |
-| `docs/m3/evidence/parity-GT-002.pdf` | 25728 | `e1dff094d51e951b133947a9dfd268244c0d7599e0197268f3469cf1bfa75027` |
-| `docs/m3/evidence/parity-GT-013.pdf` | 24753 | `4113cfb4c771ea033b05501a093e74fe4476f3202f104c39945741794da194de` |
-| `docs/m3/evidence/parity-GT-017.pdf` | 24639 | `dd96bcbcc3e0df951200332737681377d0ee95887259f8bd116c0bc150e9793d` |
-| `docs/m3/evidence/parity-GT-020.pdf` | 23654 | `ffb5a089449d273cecf1e922d3e653c18641d1d069e34dce8254152b5de25b8f` |
-| `docs/m3/evidence/parity-input.json` | 158529 | `32e1feae3d7ddf519100a8e1a8ef2e0f3f428fb91ecff08c4be953c129cf60e5` |
+| `docs/m3/evidence/db-probes.csv` | 14894 | `68104dde7573ac86ccd6b431f9169aa2cbee06618accbfa1ba90d2e95cf9a75a` |
+| `docs/m3/evidence/parity-GT-001.pdf` | 22117 | `eb374529d7faf9a504c6c094a426b2660321586416bb867b5054edbce2502035` |
+| `docs/m3/evidence/parity-GT-002.pdf` | 25710 | `37c6b2ddfffaab4ea5b196fa35772314b42c1e4b4527b8ef4c9b929d817c6c8d` |
+| `docs/m3/evidence/parity-GT-013.pdf` | 24742 | `d35da4fa67e3d47041e07d2548a396fd0538e52bb1d381b6d4b933f834c7e68a` |
+| `docs/m3/evidence/parity-GT-017.pdf` | 24622 | `4261e36e539fcba2be3bcb657bafedd87108bcf1d4ed01eb03a8a2b1627588ff` |
+| `docs/m3/evidence/parity-GT-020.pdf` | 23643 | `430a6d5bd2713b024157ffe9995d4c419b884cc1e7b43fee15dcad5cf22e2557` |
+| `docs/m3/evidence/parity-input.json` | 158045 | `e2564a8fc5bf8a00714a4be5336dfea842d95f1d47bba0af67b832d79aefeea1` |
 | `docs/m3/evidence/point21-matrix.json` | 18060 | `9bd938fce985eca987683a1265b4f3aa1b3a6e796bf53026c71a0d430e65f3aa` |
 | `docs/m3/evidence/responsive/ai-disclaimer-1024.jpg` | 167522 | `978d54476a3123f4c220eb2b0c0e7d1693f8cb7cd53067c314d7ec1cfb176afd` |
 | `docs/m3/evidence/responsive/ai-disclaimer-1440.jpg` | 188342 | `11156516c203d6a93d0bd998695a086d775d4d64491225f81fbb764d3edcc0b3` |
@@ -182,11 +245,11 @@ SHA-256 of every evidence file at this commit.
 
 ### Verifying a file
 
-On any machine with the repository at this commit:
+From any clone, without checking anything out:
 
 ```
-git checkout 48c6639007fb4369160814c3ae3beb1e9b72d170
-sha256sum docs/m3/<file>
+git cat-file blob 32e1c9c3197990aadd681da1e9b76ed349ac3f5e:docs/m3/<file> | sha256sum
 ```
 
-A hash that differs means the file is not the one this manifest describes.
+This reads the stored bytes, so it gives the same result on every platform. A hash that differs
+means the file is not the one this manifest describes.

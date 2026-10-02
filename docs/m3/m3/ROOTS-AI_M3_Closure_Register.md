@@ -10,14 +10,20 @@ and the run fails if one does not, so a reference cannot rot into a decoration.
 
 | State | Items | Meaning |
 |---|---|---|
-| **Closed** | 10 | Done and evidenced. Nothing needed from ROOTS. |
-| **Delivered — awaiting ROOTS** | 7 | Done and evidenced. A ROOTS decision closes it. |
-| **Blocked on ROOTS or access** | 6 | Everything we can do is done. The rest needs access, devices or a decision we cannot make. |
+| **Closed** | 11 | Done and evidenced. Nothing further needed from anyone. |
+| **Delivered — awaiting ROOTS decision** | 6 | Vendor work complete. A ROOTS decision closes it, with no further execution. |
+| **Vendor work complete to current dependency — further execution required** | 6 | Vendor work complete as far as the dependency allows. **Further vendor execution is required** once ROOTS supplies the decision, environment or authorisation. |
 | **Open** | 0 | Not started, with the reason given. |
 | Total | 23 | |
 
-The distinction that matters: **nothing below is waiting on us**. The items that are not closed
-are waiting on a decision, a credential or a device, and each says which.
+**A dependency on ROOTS is not a completed acceptance requirement.** The third row is not a
+finished state. Each of those items still needs work from us after ROOTS supplies what it
+depends on: the restore drill has to be run, the conditioned performance tests executed, the
+release-bound verification produced. They are outstanding acceptance requirements, not
+delivered work.
+
+ROOTS raised this on 30 September 2026 (section 21). This register previously said "nothing
+below is waiting on us", which was wrong.
 
 ## Closed
 
@@ -25,6 +31,7 @@ are waiting on a decision, a credential or a device, and each says which.
 |---|---|---|---|---|
 | **Decision 1** | ASM-01 CTA label | "Begin Assessment" confirmed and implemented; the secure-link journey is evidenced end to end. | [`ROOTS-AI_M3_E2E_Evidence.md`](ROOTS-AI_M3_E2E_Evidence.md)<br>[`ROOTS-AI_M3_Decision_Matrix.md`](ROOTS-AI_M3_Decision_Matrix.md) | — |
 | **Decision 4** | Touch targets | All six corrected, including the contact consent link that was previously submitted for a ruling. Every measured control now meets 44 × 44 px at every tested width. | [`ROOTS-AI_M3_Responsive_Evidence.md`](ROOTS-AI_M3_Responsive_Evidence.md)<br>[`ROOTS-AI_M3_Decision_Matrix.md`](ROOTS-AI_M3_Decision_Matrix.md) | — |
+| **Decision 5** | Section 7 paragraphs and bars | Field-by-field presentation matrix supplied, including the accessible output. ROOTS then issued the governing condition on 30 September rather than a case-by-case approval: a paragraph may be suppressed only where its complete approved semantic content is carried by the visible and accessible bar presentation, and the canonical paragraph must remain in the canonical object. That condition is now enforced in code and proved across all 30 Golden Tests — 210 paragraph checks, every semantic part required separately, with the approved domain meaning and classification explanation required to travel with the bars. The predicate is shown able to fail: a paragraph carrying an extra qualifier is rejected. | [`ROOTS-AI_M3_Section7_Presentation_Matrix.md`](ROOTS-AI_M3_Section7_Presentation_Matrix.md)<br>[`ROOTS-AI_M3_Web_PDF_Parity_Matrix.md`](ROOTS-AI_M3_Web_PDF_Parity_Matrix.md) | — |
 | **B1** | Secure-link sign-in defect, recorded as a controlled correction | Provisioning extracted so it is testable, and given a three-state outcome so a provider failure cannot be read as an existing account. 18 tests including the concurrency case, and each confirmation the review names. Verified to fail without the fix. | [`ROOTS-AI_M3_Defect_Record_B1_Secure_Link_Provisioning.md`](ROOTS-AI_M3_Defect_Record_B1_Secure_Link_Provisioning.md)<br>[`provisioning.ts`](../../lib/auth/provisioning.ts)<br>[`provisioning.test.ts`](../../tests/auth/provisioning.test.ts) | — |
 | **B2** | Schema contract regression suite | Every column selected anywhere in the application is checked against the schema, so a query naming a column that does not exist fails a test rather than a request. | [`schemaContract.test.ts`](../../tests/security/schemaContract.test.ts) | — |
 | **B3** | Governed narrative outcomes, and the settings behind them | Ten tests distinguishing generation, missing or misnamed configuration, timeout, invalid response, rejected content and deterministic fallback. All 15 settings in one table, both columns filled: local read from the running configuration, production from `wrangler.jsonc` — which is what a deploy applies, so it is the stronger source than the dashboard. Confirmed against the live console on 30 September 2026: all ten runtime variables and all four secrets matched exactly. | [`outcomes.test.ts`](../../tests/ai/outcomes.test.ts)<br>[`ROOTS-AI_M3_AI_Settings.md`](ROOTS-AI_M3_AI_Settings.md) | — |
@@ -34,19 +41,18 @@ are waiting on a decision, a credential or a device, and each says which.
 | **Section A** | Release manifest, and not overwriting old evidence | A manifest giving a release one description: commit, every evidence file with its SHA-256, the gates, and what is not evidenced. Regeneration no longer destroys the previous set: the archive is taken first, and a second archive at the same commit is refused. | [`ROOTS-AI_M3_Release_Manifest.md`](ROOTS-AI_M3_Release_Manifest.md) | — |
 | **Section F** | Consolidated closure register | This document. | [`ROOTS-AI_M3_Closure_Register.md`](ROOTS-AI_M3_Closure_Register.md) | — |
 
-## Delivered — awaiting ROOTS
+## Delivered — awaiting ROOTS decision
 
 | Ref | Item | What was done | Evidence | What is still needed |
 |---|---|---|---|---|
 | **Decision 2** | Report wording, C-03 traceability, point 26 | C-03 Amendment A1 prepared with each string mapped to source, identifier, permitted section, applicable state and test. | [`ROOTS-AI_C03_Amendment_A1_Report_Corrections.md`](ROOTS-AI_C03_Amendment_A1_Report_Corrections.md) | Approval of the amendment. |
-| **Decision 5** | Section 7 paragraphs and bars | Field-by-field presentation matrix supplied, including the accessible output. | [`ROOTS-AI_M3_Section7_Presentation_Matrix.md`](ROOTS-AI_M3_Section7_Presentation_Matrix.md) | The approval decision on semantic equivalence, which ROOTS retains. |
 | **Decision 6** | Report-review point 21 | 7 × 4 matrix prepared from approved content only, nothing authored. Now also as an editable workbook. | [`ROOTS-AI_M3_Point21_Content_Matrix.md`](ROOTS-AI_M3_Point21_Content_Matrix.md)<br>[`Point21_Content_Matrix_FOR_ROOTS.xlsx`](evidence/Point21_Content_Matrix_FOR_ROOTS.xlsx) | Which combinations require additional approved content. |
-| **Item 7** | C-03 wording: ROOTS-issued against vendor-drafted | All 123 report strings classified by searching the controlled sources, not by a label in our code. 80 from the C-03 pack, 5 from the issued review, 19 ours, 19 too short to classify and reported apart. | [`ROOTS-AI_M3_C03_Wording_Register.md`](ROOTS-AI_M3_C03_Wording_Register.md) | Approval, amendment or rejection of the 19 vendor-drafted strings; confirmation by eye of the 19 short labels. |
+| **Item 7** | C-03 wording: ROOTS-issued against vendor-drafted | All 123 report strings classified by searching the controlled sources, not by a label in our code. 80 from the C-03 pack, 5 from the issued review, 19 ours, 19 too short to classify and reported apart. The 19 were then put to ROOTS individually in an approval register, and ROOTS ruled on 30 September. The five it approved are frozen by SHA-256, so editing one fails the run. | [`ROOTS-AI_M3_C03_Wording_Register.md`](ROOTS-AI_M3_C03_Wording_Register.md)<br>[`ROOTS-AI_M3_C03_Approval_Register.md`](ROOTS-AI_M3_C03_Approval_Register.md) | 14 of the 19 were settled by ROOTS on 30 September: 5 approved for incorporation, 9 resolved under the final rule (two changed, seven retained against the clause each satisfies). What remains is confirmation of provenance for the 5 recorded as ROOTS-issued — two of which we have had to record as composites rather than verbatim ROOTS text, and which therefore need a ruling — and confirmation by eye of the 19 short labels. |
 | **D2** | C-07 line-by-line proof for the critical rows | 204 field comparisons across the 38 scoring rows, three ways: what C-07 states, what controlled C-01 says, what the build serves. It found one disagreement. | [`ROOTS-AI_M3_C07_Critical_Row_Trace.md`](ROOTS-AI_M3_C07_Critical_Row_Trace.md) | Confirmation that C-01 governs on Q14 validation and the C-07 row is stale; and which further families, if any, need the same treatment. |
 | **D5** | Coverage configuration, explicitly accepted | Three configuration decisions stated with what each rejects and what changes if ROOTS says no. The aggregate section runs the alternative and prints what a per-file rule would reject today. | [`ROOTS-AI_M3_Coverage_Evidence.md`](ROOTS-AI_M3_Coverage_Evidence.md) | Acceptance of D5-1, D5-2 and D5-3, or the alternatives named against each. |
 | **D7** | Legal screen loose ends | Two closed: the 25 legal screenshots are in the responsive evidence, and the vendor copy register the code pointed at — which did not exist — now does. Three restated as questions with the alternative beside each. | [`ROOTS-AI_M3_LEG_Screen_Acceptance.md`](ROOTS-AI_M3_LEG_Screen_Acceptance.md)<br>[`ROOTS-AI_M3_Vendor_Copy_Register.md`](ROOTS-AI_M3_Vendor_Copy_Register.md) | Cookie table columns; effective date on three notices; anonymous-visitor consent record. Plus approval of the 70 vendor strings. |
 
-## Blocked on ROOTS or access
+## Vendor work complete to current dependency — further execution required
 
 | Ref | Item | What was done | Evidence | What is still needed |
 |---|---|---|---|---|
@@ -63,18 +69,17 @@ The same requests as above, without the surrounding detail.
 
 1. **Decision 2** — Approval of the amendment.
 2. **Decision 3** — Visual verification of the candidate tokens.
-3. **Decision 5** — The approval decision on semantic equivalence, which ROOTS retains.
-4. **Decision 6** — Which combinations require additional approved content.
-5. **Item 1** — — (completing it is Decision 6, not this item)
-6. **Item 2** — The plausibility ranges. C-01 defines none, and point 19 forbids inventing them.
-7. **Item 3** — Target locales; UTC or participant time zone; whether a translated C-03/C-04 pack is planned.
-8. **Item 7** — Approval, amendment or rejection of the 19 vendor-drafted strings; confirmation by eye of the 19 short labels.
-9. **Item 11** — Agreement to the conditions, and a non-production project to run against.
-10. **Item 13** — Production credentials and a restore target. The vendor does not hold these and should not.
-11. **D2** — Confirmation that C-01 governs on Q14 validation and the C-07 row is stale; and which further families, if any, need the same treatment.
-12. **D4** — Which document carried the other number. We cannot locate it in anything we hold, and would rather ask than infer.
-13. **D5** — Acceptance of D5-1, D5-2 and D5-3, or the alternatives named against each.
-14. **D7** — Cookie table columns; effective date on three notices; anonymous-visitor consent record. Plus approval of the 70 vendor strings.
+3. **Decision 6** — Which combinations require additional approved content.
+4. **Item 1** — — (completing it is Decision 6, not this item)
+5. **Item 2** — The plausibility ranges. C-01 defines none, and point 19 forbids inventing them.
+6. **Item 3** — Target locales; UTC or participant time zone; whether a translated C-03/C-04 pack is planned.
+7. **Item 7** — 14 of the 19 were settled by ROOTS on 30 September: 5 approved for incorporation, 9 resolved under the final rule (two changed, seven retained against the clause each satisfies). What remains is confirmation of provenance for the 5 recorded as ROOTS-issued — two of which we have had to record as composites rather than verbatim ROOTS text, and which therefore need a ruling — and confirmation by eye of the 19 short labels.
+8. **Item 11** — Agreement to the conditions, and a non-production project to run against.
+9. **Item 13** — Production credentials and a restore target. The vendor does not hold these and should not.
+10. **D2** — Confirmation that C-01 governs on Q14 validation and the C-07 row is stale; and which further families, if any, need the same treatment.
+11. **D4** — Which document carried the other number. We cannot locate it in anything we hold, and would rather ask than infer.
+12. **D5** — Acceptance of D5-1, D5-2 and D5-3, or the alternatives named against each.
+13. **D7** — Cookie table columns; effective date on three notices; anonymous-visitor consent record. Plus approval of the 70 vendor strings.
 
 ## What cannot be evidenced from a repository
 
