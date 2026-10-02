@@ -2,19 +2,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const footerNav = [
-  ["Home", "/"],
-  ["How It Works", "/how-it-works"],
-  ["Platform", "/platform"],
-  ["Research", "/research"],
-  ["Healthcare Professionals", "/healthcare-professionals"],
-  ["Example Report", "/example-report"],
-  ["About", "/about"],
-  ["Pilot Program", "/pilot"],
-  ["Contact", "/contact"],
-  ["Blog", "/blog"],
-] as const;
-
 const COOKIE_COPY = "We use essential technologies to keep ROOTS-AI™ secure. With your permission, we may use limited analytics on public pages. We do not use advertising pixels or session replay on assessment, report, sign-in or admin pages.";
 
 export default function Footer() {
@@ -24,12 +11,6 @@ export default function Footer() {
         <Link href="/" className="footer-logo" aria-label="ROOTS-AI home">
           <Image src="/brand/roots-logo.svg" alt="ROOTS-AI" width={214} height={34} />
         </Link>
-        <nav className="footer-nav" aria-label="Footer navigation">
-          {footerNav.map(([label, href]) => (
-            <Link key={href} href={href}>{label}</Link>
-          ))}
-          <Link href="/assessment" className="footer-nav-cta">Start Your Assessment</Link>
-        </nav>
         <div className="footer-grid">
           <div><strong>Product</strong><Link href="/assessment">Assessment</Link><Link href="/example-report">Example Report</Link><Link href="/how-it-works">How It Works</Link><Link href="/platform">Platform</Link></div>
           <div><strong>Company</strong><Link href="/about">About</Link><Link href="/research">Research</Link><Link href="/healthcare-professionals">Healthcare Professionals</Link><Link href="/pilot">Pilot Program</Link><Link href="/contact">Contact</Link><Link href="/blog">Blog</Link></div>
