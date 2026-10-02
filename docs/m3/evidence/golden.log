@@ -1,0 +1,196 @@
+
+> roots-ai-learning@0.1.0 test:golden
+> tsx scripts/run-golden-tests.ts
+
+ROOTS-AI(TM) M2 - C-02 Canonical Golden Tests
+Questionnaire: C-01 v1.0.1 CORRECTED
+Scoring:       C-02 v1.0.1 CORRECTED
+Total tests:   30
+
+=== Golden Test Evidence (Test ID -> Input -> Expected -> Actual -> PASS/FAIL) ===
+
+[GT-001] All scored items at minimum burden
+  INPUT    : {"Q9":"STABLE","Q10":"NVR","Q11":"NVR","Q12":"NONE","Q46":"D5_7","Q47":"M60_PLUS","Q48":"MIXED","Q16":"H7_9","Q17":"NVR","Q18":"NVR","Q19":"NVR","Q20":"NVR","Q21":"NVR","Q22":"NVR","Q23":"NVR","Q24":"NVR","Q25":"NVR","Q26":"ALW","Q27":"NVR","Q28":"ALW","Q29":"NVR","Q30":"NVR","Q31":"NVR","Q32":"NVR","Q33":"NVR","Q34":"NVR","Q35":"NVR","Q36":"NVR","Q37":"NVR","Q38":"NVR","Q39":"NVR","Q40":"NVR","Q41":"NVR","Q42":"NVR","Q43":"NVR","Q44":"NVR","Q45":"NVR","Q49":"NVR","Q50":"NVR","Q51":"NVR"}
+  EXPECTED : {"domains":{"MR":0,"SR":0,"HS":0,"SL":0,"IB":0,"CH":0,"BS":0},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":0,"opportunity":100,"recovery_potential":96,"protective_count":5,"confidence":93,"drivers":[]}
+  ACTUAL   : {"domains":{"MR":0,"SR":0,"HS":0,"SL":0,"IB":0,"CH":0,"BS":0},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":0,"opportunity":100,"recovery_potential":96,"protective_count":5,"confidence":93,"drivers":[]}
+  RESULT   : PASS
+
+[GT-002] All scored items at maximum burden
+  INPUT    : {"Q9":"RAPID","Q10":"ALW","Q11":"ALW","Q12":"FIVE_PLUS","Q46":"D0","Q47":"LT10","Q48":"NONE","Q16":"LT5","Q17":"ALW","Q18":"ALW","Q19":"ALW","Q20":"ALW","Q21":"ALW","Q22":"ALW","Q23":"ALW","Q24":"ALW","Q25":"ALW","Q26":"NVR","Q27":"ALW","Q28":"NVR","Q29":"ALW","Q30":"ALW","Q31":"ALW","Q32":"ALW","Q33":"ALW","Q34":"ALW","Q35":"ALW","Q36":"ALW","Q37":"ALW","Q38":"ALW","Q39":"ALW","Q40":"ALW","Q41":"ALW","Q42":"ALW","Q43":"ALW","Q44":"ALW","Q45":"ALW","Q49":"ALW","Q50":"ALW","Q51":"ALW"}
+  EXPECTED : {"domains":{"MR":100,"SR":100,"HS":100,"SL":100,"IB":100,"CH":100,"BS":100},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":100,"opportunity":50,"recovery_potential":66,"protective_count":5,"confidence":93,"drivers":["MR+HS co-primary","SR"]}
+  ACTUAL   : {"domains":{"MR":100,"SR":100,"HS":100,"SL":100,"IB":100,"CH":100,"BS":100},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":100,"opportunity":50,"recovery_potential":66,"protective_count":5,"confidence":93,"drivers":["MR+HS co-primary","SR"]}
+  RESULT   : PASS
+
+[GT-003] All scored items at midpoint
+  INPUT    : {"Q9":"GRADUAL","Q10":"SMT","Q11":"SMT","Q12":"TWO","Q46":"D3_4","Q47":"M30_59","Q48":"AEROBIC","Q16":"GT9","Q17":"SMT","Q18":"SMT","Q19":"SMT","Q20":"SMT","Q21":"SMT","Q22":"SMT","Q23":"SMT","Q24":"SMT","Q25":"SMT","Q26":"SMT","Q27":"SMT","Q28":"SMT","Q29":"SMT","Q30":"SMT","Q31":"SMT","Q32":"SMT","Q33":"SMT","Q34":"SMT","Q35":"SMT","Q36":"SMT","Q37":"SMT","Q38":"SMT","Q39":"SMT","Q40":"SMT","Q41":"SMT","Q42":"SMT","Q43":"SMT","Q44":"SMT","Q45":"SMT","Q49":"SMT","Q50":"SMT","Q51":"SMT"}
+  EXPECTED : {"domains":{"MR":50,"SR":50,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":50,"opportunity":75,"recovery_potential":81,"protective_count":5,"confidence":93,"drivers":["MR+HS co-primary","SR"]}
+  ACTUAL   : {"domains":{"MR":50,"SR":50,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":50,"opportunity":75,"recovery_potential":81,"protective_count":5,"confidence":93,"drivers":["MR+HS co-primary","SR"]}
+  RESULT   : PASS
+
+[GT-004] MR only at maximum
+  INPUT    : {"Q9":"RAPID","Q10":"ALW","Q11":"ALW","Q12":"FIVE_PLUS","Q46":"D0","Q47":"LT10","Q48":"NONE","Q16":"H7_9","Q17":"NVR","Q18":"NVR","Q19":"NVR","Q20":"NVR","Q21":"NVR","Q22":"NVR","Q23":"NVR","Q24":"NVR","Q25":"NVR","Q26":"ALW","Q27":"NVR","Q28":"ALW","Q29":"NVR","Q30":"NVR","Q31":"NVR","Q32":"NVR","Q33":"NVR","Q34":"NVR","Q35":"NVR","Q36":"NVR","Q37":"NVR","Q38":"NVR","Q39":"NVR","Q40":"NVR","Q41":"NVR","Q42":"NVR","Q43":"NVR","Q44":"NVR","Q45":"NVR","Q49":"NVR","Q50":"NVR","Q51":"NVR"}
+  EXPECTED : {"domains":{"MR":100,"SR":0,"HS":0,"SL":0,"IB":0,"CH":0,"BS":0},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":14,"opportunity":93,"recovery_potential":91.8,"protective_count":5,"confidence":93,"drivers":["MR"]}
+  ACTUAL   : {"domains":{"MR":100,"SR":0,"HS":0,"SL":0,"IB":0,"CH":0,"BS":0},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":14,"opportunity":93,"recovery_potential":91.8,"protective_count":5,"confidence":93,"drivers":["MR"]}
+  RESULT   : PASS
+
+[GT-005] SR only at maximum
+  INPUT    : {"Q9":"STABLE","Q10":"NVR","Q11":"NVR","Q12":"NONE","Q46":"D5_7","Q47":"M60_PLUS","Q48":"MIXED","Q16":"LT5","Q17":"ALW","Q18":"ALW","Q19":"ALW","Q20":"ALW","Q21":"ALW","Q22":"ALW","Q23":"NVR","Q24":"NVR","Q25":"NVR","Q26":"ALW","Q27":"NVR","Q28":"ALW","Q29":"NVR","Q30":"NVR","Q31":"NVR","Q32":"NVR","Q33":"NVR","Q34":"NVR","Q35":"NVR","Q36":"NVR","Q37":"NVR","Q38":"NVR","Q39":"NVR","Q40":"NVR","Q41":"NVR","Q42":"NVR","Q43":"NVR","Q44":"NVR","Q45":"NVR","Q49":"NVR","Q50":"NVR","Q51":"NVR"}
+  EXPECTED : {"domains":{"MR":0,"SR":100,"HS":0,"SL":0,"IB":0,"CH":0,"BS":0},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":14,"opportunity":93,"recovery_potential":91.8,"protective_count":5,"confidence":93,"drivers":["SR"]}
+  ACTUAL   : {"domains":{"MR":0,"SR":100,"HS":0,"SL":0,"IB":0,"CH":0,"BS":0},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":14,"opportunity":93,"recovery_potential":91.8,"protective_count":5,"confidence":93,"drivers":["SR"]}
+  RESULT   : PASS
+
+[GT-006] HS only at maximum
+  INPUT    : {"Q9":"STABLE","Q10":"NVR","Q11":"NVR","Q12":"NONE","Q46":"D5_7","Q47":"M60_PLUS","Q48":"MIXED","Q16":"H7_9","Q17":"NVR","Q18":"NVR","Q19":"NVR","Q20":"NVR","Q21":"NVR","Q22":"NVR","Q23":"ALW","Q24":"ALW","Q25":"ALW","Q26":"NVR","Q27":"ALW","Q28":"NVR","Q29":"ALW","Q30":"ALW","Q31":"NVR","Q32":"NVR","Q33":"NVR","Q34":"NVR","Q35":"NVR","Q36":"NVR","Q37":"NVR","Q38":"NVR","Q39":"NVR","Q40":"NVR","Q41":"NVR","Q42":"NVR","Q43":"NVR","Q44":"NVR","Q45":"NVR","Q49":"NVR","Q50":"NVR","Q51":"NVR"}
+  EXPECTED : {"domains":{"MR":0,"SR":0,"HS":100,"SL":0,"IB":0,"CH":0,"BS":0},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":14,"opportunity":93,"recovery_potential":91.8,"protective_count":5,"confidence":93,"drivers":["HS"]}
+  ACTUAL   : {"domains":{"MR":0,"SR":0,"HS":100,"SL":0,"IB":0,"CH":0,"BS":0},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":14,"opportunity":93,"recovery_potential":91.8,"protective_count":5,"confidence":93,"drivers":["HS"]}
+  RESULT   : PASS
+
+[GT-007] SL only at maximum
+  INPUT    : {"Q9":"STABLE","Q10":"NVR","Q11":"NVR","Q12":"NONE","Q46":"D5_7","Q47":"M60_PLUS","Q48":"MIXED","Q16":"H7_9","Q17":"NVR","Q18":"NVR","Q19":"NVR","Q20":"NVR","Q21":"NVR","Q22":"NVR","Q23":"NVR","Q24":"NVR","Q25":"NVR","Q26":"ALW","Q27":"NVR","Q28":"ALW","Q29":"NVR","Q30":"NVR","Q31":"ALW","Q32":"ALW","Q33":"ALW","Q34":"ALW","Q35":"NVR","Q36":"NVR","Q37":"NVR","Q38":"NVR","Q39":"NVR","Q40":"NVR","Q41":"NVR","Q42":"NVR","Q43":"NVR","Q44":"NVR","Q45":"NVR","Q49":"NVR","Q50":"NVR","Q51":"NVR"}
+  EXPECTED : {"domains":{"MR":0,"SR":0,"HS":0,"SL":100,"IB":0,"CH":0,"BS":0},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":14,"opportunity":93,"recovery_potential":91.8,"protective_count":5,"confidence":93,"drivers":["SL"]}
+  ACTUAL   : {"domains":{"MR":0,"SR":0,"HS":0,"SL":100,"IB":0,"CH":0,"BS":0},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":14,"opportunity":93,"recovery_potential":91.8,"protective_count":5,"confidence":93,"drivers":["SL"]}
+  RESULT   : PASS
+
+[GT-008] IB only at maximum
+  INPUT    : {"Q9":"STABLE","Q10":"NVR","Q11":"NVR","Q12":"NONE","Q46":"D5_7","Q47":"M60_PLUS","Q48":"MIXED","Q16":"H7_9","Q17":"NVR","Q18":"NVR","Q19":"NVR","Q20":"NVR","Q21":"NVR","Q22":"NVR","Q23":"NVR","Q24":"NVR","Q25":"NVR","Q26":"ALW","Q27":"NVR","Q28":"ALW","Q29":"NVR","Q30":"NVR","Q31":"NVR","Q32":"NVR","Q33":"NVR","Q34":"NVR","Q35":"ALW","Q36":"ALW","Q37":"ALW","Q38":"ALW","Q39":"ALW","Q40":"ALW","Q41":"NVR","Q42":"NVR","Q43":"NVR","Q44":"NVR","Q45":"NVR","Q49":"NVR","Q50":"NVR","Q51":"NVR"}
+  EXPECTED : {"domains":{"MR":0,"SR":0,"HS":0,"SL":0,"IB":100,"CH":0,"BS":0},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":14,"opportunity":93,"recovery_potential":91.8,"protective_count":5,"confidence":93,"drivers":["IB"]}
+  ACTUAL   : {"domains":{"MR":0,"SR":0,"HS":0,"SL":0,"IB":100,"CH":0,"BS":0},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":14,"opportunity":93,"recovery_potential":91.8,"protective_count":5,"confidence":93,"drivers":["IB"]}
+  RESULT   : PASS
+
+[GT-009] CH only at maximum
+  INPUT    : {"Q9":"STABLE","Q10":"NVR","Q11":"NVR","Q12":"NONE","Q46":"D5_7","Q47":"M60_PLUS","Q48":"MIXED","Q16":"H7_9","Q17":"NVR","Q18":"NVR","Q19":"NVR","Q20":"NVR","Q21":"NVR","Q22":"NVR","Q23":"NVR","Q24":"NVR","Q25":"NVR","Q26":"ALW","Q27":"NVR","Q28":"ALW","Q29":"NVR","Q30":"NVR","Q31":"NVR","Q32":"NVR","Q33":"NVR","Q34":"NVR","Q35":"NVR","Q36":"NVR","Q37":"NVR","Q38":"NVR","Q39":"NVR","Q40":"NVR","Q41":"ALW","Q42":"ALW","Q43":"ALW","Q44":"ALW","Q45":"ALW","Q49":"NVR","Q50":"NVR","Q51":"NVR"}
+  EXPECTED : {"domains":{"MR":0,"SR":0,"HS":0,"SL":0,"IB":0,"CH":100,"BS":0},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":14,"opportunity":93,"recovery_potential":91.8,"protective_count":5,"confidence":93,"drivers":["CH"]}
+  ACTUAL   : {"domains":{"MR":0,"SR":0,"HS":0,"SL":0,"IB":0,"CH":100,"BS":0},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":14,"opportunity":93,"recovery_potential":91.8,"protective_count":5,"confidence":93,"drivers":["CH"]}
+  RESULT   : PASS
+
+[GT-010] BS only at maximum
+  INPUT    : {"Q9":"STABLE","Q10":"NVR","Q11":"NVR","Q12":"NONE","Q46":"D5_7","Q47":"M60_PLUS","Q48":"MIXED","Q16":"H7_9","Q17":"NVR","Q18":"NVR","Q19":"NVR","Q20":"NVR","Q21":"NVR","Q22":"NVR","Q23":"NVR","Q24":"NVR","Q25":"NVR","Q26":"ALW","Q27":"NVR","Q28":"ALW","Q29":"NVR","Q30":"NVR","Q31":"NVR","Q32":"NVR","Q33":"NVR","Q34":"NVR","Q35":"NVR","Q36":"NVR","Q37":"NVR","Q38":"NVR","Q39":"NVR","Q40":"NVR","Q41":"NVR","Q42":"NVR","Q43":"NVR","Q44":"NVR","Q45":"NVR","Q49":"ALW","Q50":"ALW","Q51":"ALW"}
+  EXPECTED : {"domains":{"MR":0,"SR":0,"HS":0,"SL":0,"IB":0,"CH":0,"BS":100},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":14,"opportunity":93,"recovery_potential":91.8,"protective_count":5,"confidence":93,"drivers":["BS"]}
+  ACTUAL   : {"domains":{"MR":0,"SR":0,"HS":0,"SL":0,"IB":0,"CH":0,"BS":100},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":14,"opportunity":93,"recovery_potential":91.8,"protective_count":5,"confidence":93,"drivers":["BS"]}
+  RESULT   : PASS
+
+[GT-011] Domain classification boundary 25
+  INPUT    : {"Q9":"GRADUAL","Q10":"SMT","Q11":"SMT","Q12":"TWO","Q46":"D3_4","Q47":"M30_59","Q48":"AEROBIC","Q16":"GT9","Q17":"SMT","Q18":"SMT","Q19":"SMT","Q20":"SMT","Q21":"SMT","Q22":"SMT","Q23":"SMT","Q24":"SMT","Q25":"SMT","Q26":"SMT","Q27":"SMT","Q28":"SMT","Q29":"SMT","Q30":"SMT","Q31":"RLY","Q32":"RLY","Q33":"RLY","Q34":"RLY","Q35":"SMT","Q36":"SMT","Q37":"SMT","Q38":"SMT","Q39":"SMT","Q40":"SMT","Q41":"SMT","Q42":"SMT","Q43":"SMT","Q44":"SMT","Q45":"SMT","Q49":"SMT","Q50":"SMT","Q51":"SMT"}
+  EXPECTED : {"domains":{"MR":50,"SR":50,"HS":50,"SL":25,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":46,"opportunity":77,"recovery_potential":82.2,"protective_count":5,"confidence":93,"drivers":["MR+HS co-primary","SR"]}
+  ACTUAL   : {"domains":{"MR":50,"SR":50,"HS":50,"SL":25,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":46,"opportunity":77,"recovery_potential":82.2,"protective_count":5,"confidence":93,"drivers":["MR+HS co-primary","SR"]}
+  RESULT   : PASS
+
+[GT-012] Domain classification boundary 50
+  INPUT    : {"Q9":"GRADUAL","Q10":"SMT","Q11":"SMT","Q12":"TWO","Q46":"D3_4","Q47":"M30_59","Q48":"AEROBIC","Q16":"GT9","Q17":"SMT","Q18":"SMT","Q19":"SMT","Q20":"SMT","Q21":"SMT","Q22":"SMT","Q23":"SMT","Q24":"SMT","Q25":"SMT","Q26":"SMT","Q27":"SMT","Q28":"SMT","Q29":"SMT","Q30":"SMT","Q31":"SMT","Q32":"SMT","Q33":"SMT","Q34":"SMT","Q35":"SMT","Q36":"SMT","Q37":"SMT","Q38":"SMT","Q39":"SMT","Q40":"SMT","Q41":"SMT","Q42":"SMT","Q43":"SMT","Q44":"SMT","Q45":"SMT","Q49":"SMT","Q50":"SMT","Q51":"SMT"}
+  EXPECTED : {"domains":{"MR":50,"SR":50,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":50,"opportunity":75,"recovery_potential":81,"protective_count":5,"confidence":93,"drivers":["MR+HS co-primary","SR"]}
+  ACTUAL   : {"domains":{"MR":50,"SR":50,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":50,"opportunity":75,"recovery_potential":81,"protective_count":5,"confidence":93,"drivers":["MR+HS co-primary","SR"]}
+  RESULT   : PASS
+
+[GT-013] Domain classification boundary 75
+  INPUT    : {"Q9":"GRADUAL","Q10":"SMT","Q11":"SMT","Q12":"TWO","Q46":"D3_4","Q47":"M30_59","Q48":"AEROBIC","Q16":"GT9","Q17":"SMT","Q18":"SMT","Q19":"SMT","Q20":"SMT","Q21":"SMT","Q22":"SMT","Q23":"SMT","Q24":"SMT","Q25":"SMT","Q26":"SMT","Q27":"SMT","Q28":"SMT","Q29":"SMT","Q30":"SMT","Q31":"OFT","Q32":"OFT","Q33":"OFT","Q34":"OFT","Q35":"SMT","Q36":"SMT","Q37":"SMT","Q38":"SMT","Q39":"SMT","Q40":"SMT","Q41":"SMT","Q42":"SMT","Q43":"SMT","Q44":"SMT","Q45":"SMT","Q49":"SMT","Q50":"SMT","Q51":"SMT"}
+  EXPECTED : {"domains":{"MR":50,"SR":50,"HS":50,"SL":75,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":54,"opportunity":73,"recovery_potential":79.8,"protective_count":5,"confidence":93,"drivers":["SL","MR","HS"]}
+  ACTUAL   : {"domains":{"MR":50,"SR":50,"HS":50,"SL":75,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":54,"opportunity":73,"recovery_potential":79.8,"protective_count":5,"confidence":93,"drivers":["SL","MR","HS"]}
+  RESULT   : PASS
+
+[GT-014] Reverse-scored Q26 raw Always becomes zero burden
+  INPUT    : {"Q9":"GRADUAL","Q10":"SMT","Q11":"SMT","Q12":"TWO","Q46":"D3_4","Q47":"M30_59","Q48":"AEROBIC","Q16":"GT9","Q17":"SMT","Q18":"SMT","Q19":"SMT","Q20":"SMT","Q21":"SMT","Q22":"SMT","Q23":"SMT","Q24":"SMT","Q25":"SMT","Q26":"ALW","Q27":"SMT","Q28":"SMT","Q29":"SMT","Q30":"SMT","Q31":"SMT","Q32":"SMT","Q33":"SMT","Q34":"SMT","Q35":"SMT","Q36":"SMT","Q37":"SMT","Q38":"SMT","Q39":"SMT","Q40":"SMT","Q41":"SMT","Q42":"SMT","Q43":"SMT","Q44":"SMT","Q45":"SMT","Q49":"SMT","Q50":"SMT","Q51":"SMT"}
+  EXPECTED : {"domains":{"MR":50,"SR":50,"HS":44,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":49,"opportunity":75.5,"recovery_potential":81.3,"protective_count":5,"confidence":92,"drivers":["MR+SR co-primary","CH"]}
+  ACTUAL   : {"domains":{"MR":50,"SR":50,"HS":44,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":49,"opportunity":75.5,"recovery_potential":81.3,"protective_count":5,"confidence":92,"drivers":["MR+SR co-primary","CH"]}
+  RESULT   : PASS
+
+[GT-015] Reverse-scored Q28 raw Never becomes maximum burden
+  INPUT    : {"Q9":"GRADUAL","Q10":"SMT","Q11":"SMT","Q12":"TWO","Q46":"D3_4","Q47":"M30_59","Q48":"AEROBIC","Q16":"GT9","Q17":"SMT","Q18":"SMT","Q19":"SMT","Q20":"SMT","Q21":"SMT","Q22":"SMT","Q23":"SMT","Q24":"SMT","Q25":"SMT","Q26":"SMT","Q27":"SMT","Q28":"NVR","Q29":"SMT","Q30":"SMT","Q31":"SMT","Q32":"SMT","Q33":"SMT","Q34":"SMT","Q35":"SMT","Q36":"SMT","Q37":"SMT","Q38":"SMT","Q39":"SMT","Q40":"SMT","Q41":"SMT","Q42":"SMT","Q43":"SMT","Q44":"SMT","Q45":"SMT","Q49":"SMT","Q50":"SMT","Q51":"SMT"}
+  EXPECTED : {"domains":{"MR":50,"SR":50,"HS":56,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":51,"opportunity":74.5,"recovery_potential":80.7,"protective_count":5,"confidence":92,"drivers":["HS","MR","SR"]}
+  ACTUAL   : {"domains":{"MR":50,"SR":50,"HS":56,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":51,"opportunity":74.5,"recovery_potential":80.7,"protective_count":5,"confidence":92,"drivers":["HS","MR","SR"]}
+  RESULT   : PASS
+
+[GT-016] Exactly 50% coverage for four-item SL domain remains calculable
+  INPUT    : {"Q9":"GRADUAL","Q10":"SMT","Q11":"SMT","Q12":"TWO","Q46":"D3_4","Q47":"M30_59","Q48":"AEROBIC","Q16":"GT9","Q17":"SMT","Q18":"SMT","Q19":"SMT","Q20":"SMT","Q21":"SMT","Q22":"SMT","Q23":"SMT","Q24":"SMT","Q25":"SMT","Q26":"SMT","Q27":"SMT","Q28":"SMT","Q29":"SMT","Q30":"SMT","Q31":"SMT","Q32":"SMT","Q35":"SMT","Q36":"SMT","Q37":"SMT","Q38":"SMT","Q39":"SMT","Q40":"SMT","Q41":"SMT","Q42":"SMT","Q43":"SMT","Q44":"SMT","Q45":"SMT","Q49":"SMT","Q50":"SMT","Q51":"SMT"}
+  EXPECTED : {"domains":{"MR":50,"SR":50,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":0.5,"IB":1,"CH":1,"BS":1},"biological_state":50,"opportunity":75,"recovery_potential":81,"protective_count":5,"confidence":90,"drivers":["MR+HS co-primary","SR"]}
+  ACTUAL   : {"domains":{"MR":50,"SR":50,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":0.5,"IB":1,"CH":1,"BS":1},"biological_state":50,"opportunity":75,"recovery_potential":81,"protective_count":5,"confidence":90,"drivers":["MR+HS co-primary","SR"]}
+  RESULT   : PASS
+
+[GT-017] Below 50% coverage makes SL null
+  INPUT    : {"Q9":"GRADUAL","Q10":"SMT","Q11":"SMT","Q12":"TWO","Q46":"D3_4","Q47":"M30_59","Q48":"AEROBIC","Q16":"GT9","Q17":"SMT","Q18":"SMT","Q19":"SMT","Q20":"SMT","Q21":"SMT","Q22":"SMT","Q23":"SMT","Q24":"SMT","Q25":"SMT","Q26":"SMT","Q27":"SMT","Q28":"SMT","Q29":"SMT","Q30":"SMT","Q31":"SMT","Q35":"SMT","Q36":"SMT","Q37":"SMT","Q38":"SMT","Q39":"SMT","Q40":"SMT","Q41":"SMT","Q42":"SMT","Q43":"SMT","Q44":"SMT","Q45":"SMT","Q49":"SMT","Q50":"SMT","Q51":"SMT"}
+  EXPECTED : {"domains":{"MR":50,"SR":50,"HS":50,"SL":null,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":0.25,"IB":1,"CH":1,"BS":1},"biological_state":50,"opportunity":75,"recovery_potential":81,"protective_count":5,"confidence":89,"drivers":["MR+HS co-primary","SR"]}
+  ACTUAL   : {"domains":{"MR":50,"SR":50,"HS":50,"SL":null,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":0.25,"IB":1,"CH":1,"BS":1},"biological_state":50,"opportunity":75,"recovery_potential":81,"protective_count":5,"confidence":89,"drivers":["MR+HS co-primary","SR"]}
+  RESULT   : PASS
+
+[GT-018] N/A excluded from numerator and denominator
+  INPUT    : {"Q9":"GRADUAL","Q10":"SMT","Q11":"SMT","Q12":"TWO","Q46":"D3_4","Q47":"M30_59","Q48":"AEROBIC","Q16":"GT9","Q20":"SMT","Q21":"SMT","Q22":"SMT","Q23":"SMT","Q24":"SMT","Q25":"SMT","Q26":"SMT","Q27":"SMT","Q28":"SMT","Q29":"SMT","Q30":"SMT","Q31":"SMT","Q32":"SMT","Q33":"SMT","Q34":"SMT","Q35":"SMT","Q36":"SMT","Q37":"SMT","Q38":"SMT","Q39":"SMT","Q40":"SMT","Q41":"SMT","Q42":"SMT","Q43":"SMT","Q44":"SMT","Q45":"SMT","Q49":"SMT","Q50":"SMT","Q51":"SMT"}
+  EXPECTED : {"domains":{"MR":50,"SR":50,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":0.5714285714285714,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":50,"opportunity":75,"recovery_potential":81,"protective_count":5,"confidence":89,"drivers":["MR+HS co-primary","SR"]}
+  ACTUAL   : {"domains":{"MR":50,"SR":50,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":0.5714285714285714,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":50,"opportunity":75,"recovery_potential":81,"protective_count":5,"confidence":89,"drivers":["MR+HS co-primary","SR"]}
+  RESULT   : PASS
+
+[GT-019] Five available domains permit Biological State
+  INPUT    : {"Q23":"SMT","Q24":"SMT","Q25":"SMT","Q26":"SMT","Q27":"SMT","Q28":"SMT","Q29":"SMT","Q30":"SMT","Q31":"SMT","Q32":"SMT","Q33":"SMT","Q34":"SMT","Q35":"SMT","Q36":"SMT","Q37":"SMT","Q38":"SMT","Q39":"SMT","Q40":"SMT","Q41":"SMT","Q42":"SMT","Q43":"SMT","Q44":"SMT","Q45":"SMT","Q49":"SMT","Q50":"SMT","Q51":"SMT"}
+  EXPECTED : {"domains":{"MR":null,"SR":null,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":0,"SR":0,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":50,"opportunity":75,"recovery_potential":81,"protective_count":5,"confidence":75,"drivers":["HS+CH co-primary","SL"]}
+  ACTUAL   : {"domains":{"MR":null,"SR":null,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":0,"SR":0,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":50,"opportunity":75,"recovery_potential":81,"protective_count":5,"confidence":75,"drivers":["HS+CH co-primary","SL"]}
+  RESULT   : PASS
+
+[GT-020] Four available domains make Biological State null
+  INPUT    : {"Q31":"SMT","Q32":"SMT","Q33":"SMT","Q34":"SMT","Q35":"SMT","Q36":"SMT","Q37":"SMT","Q38":"SMT","Q39":"SMT","Q40":"SMT","Q41":"SMT","Q42":"SMT","Q43":"SMT","Q44":"SMT","Q45":"SMT","Q49":"SMT","Q50":"SMT","Q51":"SMT"}
+  EXPECTED : {"domains":{"MR":null,"SR":null,"HS":null,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":0,"SR":0,"HS":0,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":null,"opportunity":null,"recovery_potential":null,"protective_count":5,"confidence":65,"drivers":["CH+SL co-primary","IB"]}
+  ACTUAL   : {"domains":{"MR":null,"SR":null,"HS":null,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":0,"SR":0,"HS":0,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":null,"opportunity":null,"recovery_potential":null,"protective_count":5,"confidence":65,"drivers":["CH+SL co-primary","IB"]}
+  RESULT   : PASS
+
+[GT-021] Co-primary driver tie within three points
+  INPUT    : {"Q9":"STABLE","Q10":"NVR","Q11":"NVR","Q12":"NONE","Q46":"D5_7","Q47":"M60_PLUS","Q48":"MIXED","Q16":"LT5","Q17":"ALW","Q18":"ALW","Q19":"ALW","Q20":"ALW","Q21":"ALW","Q22":"ALW","Q23":"NVR","Q24":"NVR","Q25":"NVR","Q26":"ALW","Q27":"NVR","Q28":"ALW","Q29":"NVR","Q30":"NVR","Q31":"ALW","Q32":"ALW","Q33":"ALW","Q34":"ALW","Q35":"NVR","Q36":"NVR","Q37":"NVR","Q38":"NVR","Q39":"NVR","Q40":"NVR","Q41":"NVR","Q42":"NVR","Q43":"NVR","Q44":"NVR","Q45":"NVR","Q49":"NVR","Q50":"NVR","Q51":"NVR"}
+  EXPECTED : {"domains":{"MR":0,"SR":100,"HS":0,"SL":100,"IB":0,"CH":0,"BS":0},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":29,"opportunity":85.5,"recovery_potential":87.3,"protective_count":5,"confidence":93,"drivers":["SR+SL co-primary"]}
+  ACTUAL   : {"domains":{"MR":0,"SR":100,"HS":0,"SL":100,"IB":0,"CH":0,"BS":0},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":29,"opportunity":85.5,"recovery_potential":87.3,"protective_count":5,"confidence":93,"drivers":["SR+SL co-primary"]}
+  RESULT   : PASS
+
+[GT-022] No driver when every domain is below 25
+  INPUT    : {"Q9":"STABLE","Q10":"NVR","Q11":"NVR","Q12":"NONE","Q46":"D5_7","Q47":"M60_PLUS","Q48":"MIXED","Q16":"H7_9","Q17":"NVR","Q18":"NVR","Q19":"NVR","Q20":"NVR","Q21":"NVR","Q22":"NVR","Q23":"NVR","Q24":"NVR","Q25":"NVR","Q26":"ALW","Q27":"NVR","Q28":"ALW","Q29":"NVR","Q30":"NVR","Q31":"NVR","Q32":"NVR","Q33":"NVR","Q34":"NVR","Q35":"NVR","Q36":"NVR","Q37":"NVR","Q38":"NVR","Q39":"NVR","Q40":"NVR","Q41":"NVR","Q42":"NVR","Q43":"NVR","Q44":"NVR","Q45":"NVR","Q49":"NVR","Q50":"NVR","Q51":"NVR"}
+  EXPECTED : {"domains":{"MR":0,"SR":0,"HS":0,"SL":0,"IB":0,"CH":0,"BS":0},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":0,"opportunity":100,"recovery_potential":96,"protective_count":5,"confidence":93,"drivers":[]}
+  ACTUAL   : {"domains":{"MR":0,"SR":0,"HS":0,"SL":0,"IB":0,"CH":0,"BS":0},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":0,"opportunity":100,"recovery_potential":96,"protective_count":5,"confidence":93,"drivers":[]}
+  RESULT   : PASS
+
+[GT-023] Low answer confidence reduces ROOTS Confidence
+  INPUT    : {"Q9":"GRADUAL","Q10":"SMT","Q11":"SMT","Q12":"TWO","Q46":"D3_4","Q47":"M30_59","Q48":"AEROBIC","Q16":"GT9","Q17":"SMT","Q18":"SMT","Q19":"SMT","Q20":"SMT","Q21":"SMT","Q22":"SMT","Q23":"SMT","Q24":"SMT","Q25":"SMT","Q26":"SMT","Q27":"SMT","Q28":"SMT","Q29":"SMT","Q30":"SMT","Q31":"SMT","Q32":"SMT","Q33":"SMT","Q34":"SMT","Q35":"SMT","Q36":"SMT","Q37":"SMT","Q38":"SMT","Q39":"SMT","Q40":"SMT","Q41":"SMT","Q42":"SMT","Q43":"SMT","Q44":"SMT","Q45":"SMT","Q49":"SMT","Q50":"SMT","Q51":"SMT"}
+  EXPECTED : {"domains":{"MR":50,"SR":50,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":50,"opportunity":75,"recovery_potential":81,"protective_count":5,"confidence":78,"drivers":["MR+HS co-primary","SR"]}
+  ACTUAL   : {"domains":{"MR":50,"SR":50,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":50,"opportunity":75,"recovery_potential":81,"protective_count":5,"confidence":78,"drivers":["MR+HS co-primary","SR"]}
+  RESULT   : PASS
+
+[GT-024] High answer confidence and consistent responses
+  INPUT    : {"Q9":"IDENTIFIABLE","Q10":"RLY","Q11":"RLY","Q12":"ONE","Q46":"D3_4","Q47":"M30_59","Q48":"RESISTANCE","Q16":"H6_7","Q17":"RLY","Q18":"RLY","Q19":"RLY","Q20":"RLY","Q21":"RLY","Q22":"RLY","Q23":"RLY","Q24":"RLY","Q25":"RLY","Q26":"OFT","Q27":"RLY","Q28":"OFT","Q29":"RLY","Q30":"RLY","Q31":"RLY","Q32":"RLY","Q33":"RLY","Q34":"RLY","Q35":"RLY","Q36":"RLY","Q37":"RLY","Q38":"RLY","Q39":"RLY","Q40":"RLY","Q41":"RLY","Q42":"RLY","Q43":"RLY","Q44":"RLY","Q45":"RLY","Q49":"RLY","Q50":"RLY","Q51":"RLY"}
+  EXPECTED : {"domains":{"MR":25,"SR":25,"HS":25,"SL":25,"IB":25,"CH":25,"BS":25},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":25,"opportunity":87.5,"recovery_potential":88.5,"protective_count":5,"confidence":100,"drivers":["MR+HS co-primary","SR"]}
+  ACTUAL   : {"domains":{"MR":25,"SR":25,"HS":25,"SL":25,"IB":25,"CH":25,"BS":25},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":25,"opportunity":87.5,"recovery_potential":88.5,"protective_count":5,"confidence":100,"drivers":["MR+HS co-primary","SR"]}
+  RESULT   : PASS
+
+[GT-025] Young age, no conditions, no medicines, five protective factors
+  INPUT    : {"Q9":"GRADUAL","Q10":"SMT","Q11":"SMT","Q12":"TWO","Q46":"D3_4","Q47":"M30_59","Q48":"AEROBIC","Q16":"GT9","Q17":"SMT","Q18":"SMT","Q19":"SMT","Q20":"SMT","Q21":"SMT","Q22":"SMT","Q23":"SMT","Q24":"SMT","Q25":"SMT","Q26":"SMT","Q27":"SMT","Q28":"SMT","Q29":"SMT","Q30":"SMT","Q31":"SMT","Q32":"SMT","Q33":"SMT","Q34":"SMT","Q35":"SMT","Q36":"SMT","Q37":"SMT","Q38":"SMT","Q39":"SMT","Q40":"SMT","Q41":"SMT","Q42":"SMT","Q43":"SMT","Q44":"SMT","Q45":"SMT","Q49":"SMT","Q50":"SMT","Q51":"SMT"}
+  EXPECTED : {"domains":{"MR":50,"SR":50,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":50,"opportunity":75,"recovery_potential":85,"protective_count":5,"confidence":93,"drivers":["MR+HS co-primary","SR"]}
+  ACTUAL   : {"domains":{"MR":50,"SR":50,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":50,"opportunity":75,"recovery_potential":85,"protective_count":5,"confidence":93,"drivers":["MR+HS co-primary","SR"]}
+  RESULT   : PASS
+
+[GT-026] Older age, multiple conditions and medicines, no protective factors
+  INPUT    : {"Q9":"GRADUAL","Q10":"SMT","Q11":"SMT","Q12":"TWO","Q46":"D3_4","Q47":"M30_59","Q48":"AEROBIC","Q16":"GT9","Q17":"SMT","Q18":"SMT","Q19":"SMT","Q20":"SMT","Q21":"SMT","Q22":"SMT","Q23":"SMT","Q24":"SMT","Q25":"SMT","Q26":"SMT","Q27":"SMT","Q28":"SMT","Q29":"SMT","Q30":"SMT","Q31":"SMT","Q32":"SMT","Q33":"SMT","Q34":"SMT","Q35":"SMT","Q36":"SMT","Q37":"SMT","Q38":"SMT","Q39":"SMT","Q40":"SMT","Q41":"SMT","Q42":"SMT","Q43":"SMT","Q44":"SMT","Q45":"SMT","Q49":"SMT","Q50":"SMT","Q51":"SMT"}
+  EXPECTED : {"domains":{"MR":50,"SR":50,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":50,"opportunity":75,"recovery_potential":27.8,"protective_count":0,"confidence":93,"drivers":["MR+HS co-primary","SR"]}
+  ACTUAL   : {"domains":{"MR":50,"SR":50,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":50,"opportunity":75,"recovery_potential":27.8,"protective_count":0,"confidence":93,"drivers":["MR+HS co-primary","SR"]}
+  RESULT   : PASS
+
+[GT-027] Activity minimum burden mapping
+  INPUT    : {"Q9":"GRADUAL","Q10":"SMT","Q11":"SMT","Q12":"TWO","Q46":"D5_7","Q47":"M60_PLUS","Q48":"MIXED","Q16":"GT9","Q17":"SMT","Q18":"SMT","Q19":"SMT","Q20":"SMT","Q21":"SMT","Q22":"SMT","Q23":"SMT","Q24":"SMT","Q25":"SMT","Q26":"SMT","Q27":"SMT","Q28":"SMT","Q29":"SMT","Q30":"SMT","Q31":"SMT","Q32":"SMT","Q33":"SMT","Q34":"SMT","Q35":"SMT","Q36":"SMT","Q37":"SMT","Q38":"SMT","Q39":"SMT","Q40":"SMT","Q41":"SMT","Q42":"SMT","Q43":"SMT","Q44":"SMT","Q45":"SMT","Q49":"SMT","Q50":"SMT","Q51":"SMT"}
+  EXPECTED : {"domains":{"MR":29,"SR":50,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":47,"opportunity":76.5,"recovery_potential":81.9,"protective_count":5,"confidence":91,"drivers":["HS+SR co-primary","CH"]}
+  ACTUAL   : {"domains":{"MR":29,"SR":50,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":47,"opportunity":76.5,"recovery_potential":81.9,"protective_count":5,"confidence":91,"drivers":["HS+SR co-primary","CH"]}
+  RESULT   : PASS
+
+[GT-028] Activity maximum burden mapping
+  INPUT    : {"Q9":"GRADUAL","Q10":"SMT","Q11":"SMT","Q12":"TWO","Q46":"D0","Q47":"LT10","Q48":"NONE","Q16":"GT9","Q17":"SMT","Q18":"SMT","Q19":"SMT","Q20":"SMT","Q21":"SMT","Q22":"SMT","Q23":"SMT","Q24":"SMT","Q25":"SMT","Q26":"SMT","Q27":"SMT","Q28":"SMT","Q29":"SMT","Q30":"SMT","Q31":"SMT","Q32":"SMT","Q33":"SMT","Q34":"SMT","Q35":"SMT","Q36":"SMT","Q37":"SMT","Q38":"SMT","Q39":"SMT","Q40":"SMT","Q41":"SMT","Q42":"SMT","Q43":"SMT","Q44":"SMT","Q45":"SMT","Q49":"SMT","Q50":"SMT","Q51":"SMT"}
+  EXPECTED : {"domains":{"MR":71,"SR":50,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":53,"opportunity":73.5,"recovery_potential":80.1,"protective_count":5,"confidence":91,"drivers":["MR","HS","SR"]}
+  ACTUAL   : {"domains":{"MR":71,"SR":50,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":53,"opportunity":73.5,"recovery_potential":80.1,"protective_count":5,"confidence":91,"drivers":["MR","HS","SR"]}
+  RESULT   : PASS
+
+[GT-029] One missing item in every domain
+  INPUT    : {"Q10":"SMT","Q11":"SMT","Q12":"TWO","Q46":"D3_4","Q47":"M30_59","Q48":"AEROBIC","Q17":"SMT","Q18":"SMT","Q19":"SMT","Q20":"SMT","Q21":"SMT","Q22":"SMT","Q24":"SMT","Q25":"SMT","Q26":"SMT","Q27":"SMT","Q28":"SMT","Q29":"SMT","Q30":"SMT","Q32":"SMT","Q33":"SMT","Q34":"SMT","Q36":"SMT","Q37":"SMT","Q38":"SMT","Q39":"SMT","Q40":"SMT","Q42":"SMT","Q43":"SMT","Q44":"SMT","Q45":"SMT","Q50":"SMT","Q51":"SMT"}
+  EXPECTED : {"domains":{"MR":50,"SR":50,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":0.8571428571428571,"SR":0.8571428571428571,"HS":0.875,"SL":0.75,"IB":0.8333333333333334,"CH":0.8,"BS":0.6666666666666666},"biological_state":50,"opportunity":75,"recovery_potential":81,"protective_count":5,"confidence":84,"drivers":["MR+HS co-primary","SR"]}
+  ACTUAL   : {"domains":{"MR":50,"SR":50,"HS":50,"SL":50,"IB":50,"CH":50,"BS":50},"coverage":{"MR":0.8571428571428571,"SR":0.8571428571428571,"HS":0.875,"SL":0.75,"IB":0.8333333333333334,"CH":0.8,"BS":0.6666666666666666},"biological_state":50,"opportunity":75,"recovery_potential":81,"protective_count":5,"confidence":84,"drivers":["MR+HS co-primary","SR"]}
+  RESULT   : PASS
+
+[GT-030] Mixed high-burden profile with complete data
+  INPUT    : {"Q9":"CYCLING","Q10":"OFT","Q11":"OFT","Q12":"THREE_FOUR","Q46":"D1_2","Q47":"M10_29","Q48":"LIGHT","Q16":"H6_7","Q17":"RLY","Q18":"RLY","Q19":"RLY","Q20":"RLY","Q21":"RLY","Q22":"RLY","Q23":"ALW","Q24":"ALW","Q25":"ALW","Q26":"NVR","Q27":"ALW","Q28":"NVR","Q29":"ALW","Q30":"ALW","Q31":"ALW","Q32":"ALW","Q33":"ALW","Q34":"ALW","Q35":"OFT","Q36":"OFT","Q37":"OFT","Q38":"OFT","Q39":"OFT","Q40":"OFT","Q41":"SMT","Q42":"SMT","Q43":"SMT","Q44":"SMT","Q45":"SMT","Q49":"ALW","Q50":"ALW","Q51":"ALW"}
+  EXPECTED : {"domains":{"MR":75,"SR":25,"HS":100,"SL":100,"IB":75,"CH":50,"BS":100},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":75,"opportunity":62.5,"recovery_potential":73.5,"protective_count":5,"confidence":93,"drivers":["HS+SL co-primary","BS"]}
+  ACTUAL   : {"domains":{"MR":75,"SR":25,"HS":100,"SL":100,"IB":75,"CH":50,"BS":100},"coverage":{"MR":1,"SR":1,"HS":1,"SL":1,"IB":1,"CH":1,"BS":1},"biological_state":75,"opportunity":62.5,"recovery_potential":73.5,"protective_count":5,"confidence":93,"drivers":["HS+SL co-primary","BS"]}
+  RESULT   : PASS
+
+=== Summary ===
+Total : 30
+Passed: 30
+Failed: 0
+Acceptance (all tests PASS, >= 30 canonical): MET

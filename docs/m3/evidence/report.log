@@ -1,0 +1,50 @@
+
+> roots-ai-learning@0.1.0 test:report
+> tsx scripts/run-report-integrity-tests.ts
+
+RP-01     | PASS | Canonical report contains 19/19 governed sections
+          | sections=19; contracted count=19; indexes contiguous=true
+RP-02     | PASS | Content hash is deterministic across recomputation
+          | hash=5b2ab2d6d49e53597c7cc131...; identical across 3 independent computations=true
+RP-03     | PASS | Content hash is independent of construction timestamp
+          | 2020 hash=441de18a629db066...; 2030 hash=441de18a629db066...; identical=true
+RP-04     | PASS | Tampering with an authoritative value breaks integrity
+          | pristine integrity=true; tampered integrity=false (must be false)
+RP-05     | PASS | Tampering with a domain score breaks integrity
+          | integrity after domain tamper=false (must be false)
+RP-06     | PASS | Integrity guard accepts valid reports and rejects invalid ones
+          | valid accepted=true; forged hash rejected=true
+RP-07     | PASS | Report drivers are the exact deterministic C-02 output
+          | report drivers=[]; engine drivers=[]
+RP-08     | PASS | Co-primary pair is preserved as a single governed entry
+          | coPrimary=true; combined entries=["MR+HS co-primary"]; drivers=["MR+HS co-primary","SR"]
+RP-09     | PASS | Zero-length driver array is preserved (no invented driver)
+          | drivers=[] (length 0); biologicalState=null
+RP-10     | PASS | Missing data stays explicit: no imputation or invented filler
+          | all domains null=true; no fabricated numeric equivalents=true; sample="Metabolic ResistanceΓäó: not enough information to score."
+RP-11     | PASS | C-03 corrected 19-section content and explicit limitations are present
+          | titles=19; content-backed=true; limitations=1; null-state copy remains explicit=true
+RP-12     | PASS | Every visualised value has a text/numeric equivalent
+          | 12 required equivalents present (state, opportunity, recovery, drivers, count, 7 domains)
+RP-13     | PASS | Null domain state is stated in text (colour alone never communicates)
+          | domain.MR text equivalent="Metabolic ResistanceΓäó: not enough information to score."
+RP-14     | PASS | Report identity, timestamps and versions are retained
+          | questionnaire="C-01 v1.0.1 CORRECTED"; scoring="C-02 v1.0.1 CORRECTED"; report="C-03 v1.0.1 CORRECTED"; constructedAt=2026-09-30T06:23:18.575Z
+RP-15     | PASS | PDF route shares the canonical source and cannot recalculate
+          | reads stored canonical record=true; asserts integrity=true; imports scoring engine=false (must be false); report hash=c14a6b0114bdd38c...
+RP-16     | PASS | Web report reads the stored record; no client-side recalculation
+          | imports scoring engine=false (must be false); uses sessionStorage=false (must be false); reads report API=true
+RP-17     | PASS | Identical answers produce an identical canonical record
+          | contentHash a=982d56dfbf1c3792...; b=982d56dfbf1c3792...; full record identical=true
+RP-18     | PASS | Different deterministic results produce different hashes
+          | burden-0 hash=eb228a0ded4ca320...; burden-4 hash=f6691de74f7596e5...; distinct=true
+RP-19     | PASS | AI provenance is recorded as governed fallback when unavailable
+          | usedFallback=true; fallbackVersion="AI-FALLBACK v1.0.0"; reason="No narrative transport configured."; provider="unconfigured"
+RP-20     | PASS | Pipeline integrity guard blocks a forged stored report
+          | forged-hash report rejected before serving=true
+
+=== Summary ===
+Total : 20
+Passed: 20
+Failed: 0
+Acceptance (all report-integrity tests PASS): MET

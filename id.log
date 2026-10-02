@@ -1,0 +1,29 @@
+﻿=== HEAD ===
+8c7edeeb58786a37a134482ecbbbaf93dffbe32c
+=== git status (porcelain) ===
+M app/ai-disclaimer/page.tsx
+ M app/api/contact/route.ts
+ M app/assessment/page.tsx
+ M app/blog/page.tsx
+ M app/contact/page.tsx
+ M app/globals.css
+ M app/layout.tsx
+ M components/layout/Footer.tsx
+ M components/layout/LegalPage.tsx
+ M data/app.db
+ D docs/m3/M3_DECISION_LOG.md
+ D docs/m3/M3_DEPLOYMENT_RUNBOOK.md
+ D docs/m3/M3_IMPLEMENTATION_STATUS.md
+ D docs/m3/M3_POINT21_CONTENT_MATRIX.md
+ D docs/m3/M3_SIX_ITEM_DECISION_MATRIX.md
+?? components/layout/CookieBanner.tsx
+?? docs/m3/ROOTS-AI_M3_AI_Boundary_DB_Tests.sql
+?? docs/m3/evidence-package/
+?? docs/m3/evidence/
+?? docs/m3/m3/
+?? glog.log
+?? m3.log
+?? scripts/capture-m3-evidence.ps1
+?? scripts/inspect-c07-workbook.ts
+=== count changed ===
+changed=24

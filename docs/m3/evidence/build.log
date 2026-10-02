@@ -1,0 +1,68 @@
+
+> roots-ai-learning@0.1.0 build
+> next build
+
+Γû▓ Next.js 16.3.4 (Turbopack)
+node.exe : ΓÜá Warning: Next.js ignored package-lock.json in C:\Users\user because it is outside the current Git repository (C:\Users\user\roots-ai-learning).
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ΓÜá Warning: Ne...s-ai-learning).:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ To use this directory, set `turbopack.root` in your Next.js config.
+
+Γ£ô Running next.config.ts took 33ms
+
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 4.2s
+  Running TypeScript ...
+  Finished TypeScript in 1840ms ...
+  Collecting page data using 19 workers ...
+  Generating static pages using 19 workers (0/23) ...
+  Generating static pages using 19 workers (5/23) 
+  Generating static pages using 19 workers (11/23) 
+  Generating static pages using 19 workers (17/23) 
+Γ£ô Generating static pages using 19 workers (23/23) in 722ms
+  Finalizing page optimization ...
+
+Route (app)
+Γöî Γùï /
+Γö£ Γùï /_not-found
+Γö£ Γùï /about
+Γö£ Γùï /ai-disclaimer
+Γö£ ╞Æ /api/assessment/session
+Γö£ ╞Æ /api/assessment/sessions
+Γö£ ╞Æ /api/assessment/sessions/[sessionId]
+Γö£ ╞Æ /api/assessment/sessions/[sessionId]/answers
+Γö£ ╞Æ /api/assessment/sessions/[sessionId]/progress
+Γö£ ╞Æ /api/assessment/sessions/[sessionId]/report
+Γö£ ╞Æ /api/assessment/sessions/[sessionId]/report/pdf
+Γö£ ╞Æ /api/assessment/sessions/[sessionId]/result
+Γö£ ╞Æ /api/contact
+Γö£ Γùï /assessment
+Γö£ ╞Æ /assessment/[sessionId]/module/[moduleId]
+Γö£ ╞Æ /assessment/[sessionId]/resume
+Γö£ ╞Æ /assessment/[sessionId]/review
+Γö£ ╞Æ /assessment/[sessionId]/submitted
+Γö£ Γùï /assessment/start
+Γö£ Γùï /blog
+Γö£ ╞Æ /blog/[slug]
+Γö£ Γùï /contact
+Γö£ Γùï /cookies
+Γö£ Γùï /example-report
+Γö£ Γùï /healthcare-professionals
+Γö£ Γùï /how-it-works
+Γö£ Γùï /medical-disclaimer
+Γö£ Γùï /pilot
+Γö£ Γùï /platform
+Γö£ Γùï /privacy
+Γö£ Γùï /project-status
+Γö£ ╞Æ /report/[reportId]
+Γö£ Γùï /research
+Γöö Γùï /terms
+
+
+Γùï  (Static)   prerendered as static content
+╞Æ  (Dynamic)  server-rendered on demand
+

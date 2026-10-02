@@ -1,0 +1,10 @@
+﻿14: | Commit | b74de6fb3e61b507c86ba2b90b3ed25c424158b8 |
+15: | Working tree clean | **no — uncommitted changes present** |
+18: > **This submission is not yet release-ready.**
+21: > repository, branch, commit and build. That association cannot be made while the project is
+22: > untracked or the working tree is dirty, so no commit reference is printed above rather than
+25: > **Action required before submission:** commit the delivered state to the ROOTS-owned
+26: > repository, re-run every gate in the table below against that commit, and regenerate this
+28: > the delivered commit passes — the decision is explicit on that point.
+32: Each must be re-run against the delivered commit; results from an earlier build are not
+58: | [`docs/m3/ROOTS-AI_M3_Release_Manifest.md`](../../docs/m3/ROOTS-AI_M3_Release_Manifest.md) — Release manifest | ROOTS review of 29 Sep 2026, section A — commit, SHA-256 of every evidence file, gates, and what is not evidenced | 17 KB | `npm run release:manifest` |

@@ -1,0 +1,12 @@
+﻿d04a324 exists_in_repo = False
+b74de6f exists_in_repo = False
+48c6639 exists_in_repo = False
+3f3d25f exists_in_repo = False
+d12d2b1 exists_in_repo = False
+=== branches ===
+* master
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/master
+=== remotes ===
+origin	https://github.com/souhail555/roots-ai-learning.git (fetch)
+origin	https://github.com/souhail555/roots-ai-learning.git (push)

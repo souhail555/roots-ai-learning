@@ -1,0 +1,50 @@
+
+> roots-ai-learning@0.1.0 test:ai
+> tsx scripts/run-ai-boundary-tests.ts
+
+AI-01     | PASS | Approved projection carries no raw answers
+          | projection keys = [versionIdentity, biologicalState, biologicalStateLabel, band, domains, drivers, coPrimary, scoredDomainCount, methodologyStatement]
+AI-02     | PASS | Read-only projection cannot alter the authoritative result
+          | authoritative scoring identical after mutation attempt: true
+AI-03     | PASS | Score-bearing key in AI output is rejected
+          | code=score_injection; Response contained a key outside the narrative-only schema: "biologicalState". Only sections[{index,narrative}] is permitted.
+AI-04     | PASS | Nested score key inside a section is rejected
+          | code=score_injection; Response contained a key outside the narrative-only schema: "score". Only sections[{index,narrative}] is permitted.
+AI-05     | PASS | Malformed AI output is rejected
+          | string=malformed_output; no-sections=schema_violation; null=malformed_output
+AI-06     | PASS | Hallucinated numeric value is rejected
+          | invented value "91" is not in the approved projection
+AI-07     | PASS | Genuine projection values are not false-flagged
+          | no false positive on approved values
+AI-08     | PASS | Prohibited diagnostic/prescriptive language is rejected
+          | diagnostic=you have ; prescriptive=treatment plan; medication=dose; eligibility-decision=eligible for
+AI-09     | PASS | Alarmist and certainty language is rejected
+          | alarmist=life-threatening; certainty=you will develop; certainty=definitive
+AI-10     | PASS | Validator rejects prohibited language end-to-end
+          | code=prohibited_language; Section 3 contained prohibited term "medication".
+AI-11     | PASS | AI cannot add or reindex report sections
+          | sections=19 (expected 19); contiguous=true; injected present=false
+AI-12     | PASS | Content hash is independent of AI narrative
+          | no-narrative=3ec903f4c3d0b43a...; with-narrative=3ec903f4c3d0b43a...
+AI-13     | PASS | Disabling AI does not change deterministic scoring
+          | narrative code=disabled; scoring unchanged=true
+AI-14     | PASS | Timeout uses fallback and preserves the deterministic result
+          | code=timeout; hash preserved=true; integrity=true
+AI-15     | PASS | Retry recovers a transient provider failure
+          | attempts=3 (expected 3); final=accepted
+AI-16     | PASS | Retry exhaustion falls back deterministically
+          | attempts=3 (expected 3 = retries+1); final=transport_error
+AI-17     | PASS | Prohibited language is not retried (deterministic failure)
+          | attempts=1 (expected 1: retrying cannot fix a governed-language violation); code=prohibited_language
+AI-18     | PASS | Governed fallback preserves deterministic C-03 content and records a safe reason
+          | deterministic content preserved=true; all marked fallback=true; fallback reason safe=true
+AI-19     | PASS | AI module has no import path to the engine or to storage
+          | imports scoring=false; imports db=false; imports supabase=false
+AI-20     | PASS | AI boundary exposes no persistence or write-back path
+          | no save/update/upsert/insert call exists in the AI boundary module
+
+=== Summary ===
+Total : 20
+Passed: 20
+Failed: 0
+Acceptance (all AI-governance tests PASS): MET
