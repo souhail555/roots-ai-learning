@@ -34,6 +34,8 @@ export default function CookieBanner() {
   const visible = !isExcluded && decision === null;
 
   function record(choice: "accepted" | "rejected") {
+    setDecision(choice);
+
     // No persistent visitor identifier is stored: only the choice, its version and a timestamp.
     try {
       window.localStorage.setItem(
@@ -43,7 +45,6 @@ export default function CookieBanner() {
     } catch {
       // Storage failure must not block the page.
     }
-    setDecision(choice);
   }
 
   if (!visible) return null;

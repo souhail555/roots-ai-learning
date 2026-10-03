@@ -83,7 +83,7 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="site-header-inner">
-        <Link href="/" className="site-logo" aria-label="ROOTS-AI home" onClick={closeMenu}><Image src="/brand/roots-logo.svg" alt="ROOTS-AI" width={214} height={34} priority /></Link>
+        <Link href="/" className="site-logo" aria-label="ROOTS-AI home" onClick={closeMenu}><Image src="/brand/roots-logo.png" alt="ROOTS-AI" width={214} height={34} priority /></Link>
         <nav className="site-nav" aria-label="Main navigation">
           {links.map(([label, href]) => <Link key={href} href={href} className={pathname === href ? "active" : ""} aria-current={pathname === href ? "page" : undefined}>{label}</Link>)}
           <button type="button" className="more-nav-button" aria-expanded={moreOpen} aria-controls="more-menu" onClick={() => setMoreOpen((open) => !open)}>More</button>

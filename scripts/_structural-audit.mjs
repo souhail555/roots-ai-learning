@@ -69,7 +69,7 @@ for (const route of ROUTES) {
 }
 
 // 3. The brand wordmark referenced by the header and footer must exist and be valid SVG.
-for (const asset of ["public/brand/roots-logo.svg", "app/favicon.ico"]) {
+for (const asset of ["public/brand/roots-logo.png", "app/favicon.ico"]) {
   checked += 1;
   if (!fs.existsSync(asset)) { problems.push(`missing brand asset: ${asset}`); continue; }
   if (asset.endsWith(".svg")) {
@@ -80,11 +80,11 @@ for (const asset of ["public/brand/roots-logo.svg", "app/favicon.ico"]) {
   }
 }
 
-// 4. The header must use the wordmark, not the legacy mark.
+// 4. The header must use the provided brand asset, not the legacy mark.
 const header = fs.readFileSync("components/layout/Header.tsx", "utf8");
 checked += 1;
 if (header.includes("logo-mark.svg")) problems.push("Header still uses the legacy logo-mark.svg");
-if (!header.includes("/brand/roots-logo.svg")) problems.push("Header does not use /brand/roots-logo.svg");
+if (!header.includes("/brand/roots-logo.png")) problems.push("Header does not use /brand/roots-logo.png");
 
 // 5. Header navigation must match the live site (no Project Status in the top bar).
 checked += 1;
